@@ -11,10 +11,6 @@ pip install conjugate
 ## Usage
 
 ```python 
-import numpy as np
-
-import matplotlib.pyplot as plt
-
 from conjugate.distributions import Beta, NegativeBinomial
 from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
 
@@ -30,6 +26,8 @@ posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
 posterior_predictive: NegativeBinomial = binomial_beta_posterior_predictive(n=N, beta=posterior) 
 
 # Figure
+import matplotlib.pyplot as plt
+
 fig, axes = plt.subplots(ncols=2)
 
 ax = axes[0]
