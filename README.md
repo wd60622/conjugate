@@ -47,3 +47,47 @@ plt.show()
 ```
 
 <img height=400 src="images/binomial-beta.png" title="Binomial Beta Comparison">
+
+Though the plotting is meant for numpy and python numbers, the conjugate models work with anything that works like numbers. 
+
+For instance, using SQL Builder
+
+```python
+from pypika import Field 
+
+# Columns from table in database
+N = Field("N")
+X = Field("X")
+
+# Conjugate prior
+prior = Beta(alpha=1, beta=1)
+posterior = binomial_beta(n=N, x=X, beta_prior=prior)
+
+print("Posterior alpha:", posterior.alpha)
+print("Posterior beta:", posterior.beta)
+# Posterior alpha: 1+"X"
+# Posterior beta: 1+"N"-"X"
+```
+
+Example using PyMC 
+
+```python 
+import pymc as pm 
+
+alpha = pm.Gamma.dist(alpha=1, beta=20)
+beta = pm.Gamma.dist(alpha=1, beta=20)
+
+# Observed Data
+N = 10
+X = 4
+
+# Conjugate prior 
+prior = Beta(alpha=alpha, beta=beta)
+posterior = binomial_beta(n=N, x=X, beta_prior=prior)
+
+# Reconstruct the posterior distribution with PyMC
+prior_dist = pm.Beta.dist(alpha=prior.alpha, beta=prior.beta)
+posterior_dist = pm.Beta.dist(alpha=posterior.alpha, beta=posterior.beta)
+
+samples = pm.draw([alpha, beta, prior_dist, posterior_dist], draws=1000)
+```

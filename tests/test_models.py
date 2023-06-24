@@ -71,6 +71,7 @@ class Value:
     "alpha_prior, beta_prior, n, x, alpha_post, beta_post",
     [
         (1, 1, 10, 5, 6, 6),
+        # Things that work like numbers
         (
             Value("alpha_prior"),
             Value("beta_prior"),
