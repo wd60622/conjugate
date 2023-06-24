@@ -41,10 +41,10 @@ def binomial_beta_posterior_predictive(n, beta: Beta) -> BetaBinomial:
 
 
 def get_dirichlet_posterior_params(alpha_prior: NUMERIC, x: NUMERIC) -> NUMERIC:
-    if isinstance(x, (np.ndarray, int, float)):
+    try: 
         return alpha_prior + x
-
-    return [alpha_prior_i + x_i for alpha_prior_i, x_i in zip(alpha_prior, x)]
+    except Exception:
+        return [alpha_prior_i + x_i for alpha_prior_i, x_i in zip(alpha_prior, x)]
 
 
 get_categorical_dirichlet_posterior_params = get_dirichlet_posterior_params
