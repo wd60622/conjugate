@@ -48,6 +48,44 @@ plt.show()
 
 <img height=400 src="images/binomial-beta.png" title="Binomial Beta Comparison">
 
+## Vectorized Inputs
+
+All data and priors will allow for vectorized assuming the shapes work for broadcasting. 
+
+The plotting also supports arrays of results
+
+```python 
+import numpy as np
+
+# Analytics 
+prior = Beta(alpha=1, beta=np.array([1, 5]))
+posterior = binomial_beta(n=N, x=x, beta_prior=prior)
+
+# Figure
+ax = prior.plot_pdf(label=lambda i: f"prior {i}")
+posterior.plot_pdf(ax=ax, label=lambda i: f"posterior {i}")
+ax.axvline(x=x / N, ymax=0.05, color="black", linestyle="--", label="MLE")
+ax.legend()
+plt.show()
+```
+
+<img height=400 src="images/vectorized-plot.png" title="Vectorized Priors and Posterior">
+
+And the distributions can be indexed for subsets. 
+
+```python
+beta = np.arange(1, 10)
+prior = Beta(alpha=1, beta=beta)
+
+idx = [0, 5, -1]
+prior_subset = prior[idx]
+prior_subset.plot_pdf(label = lambda i: f"prior {i}")
+plt.legend()
+plt.show()
+```
+<img height=400 src="images/sliced-distribution.png" title="Sliced Distribution">
+
+
 ## Additional Usages
 
 Though the plotting is meant for numpy and python numbers, the conjugate models work with anything that works like numbers. 
