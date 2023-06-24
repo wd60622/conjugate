@@ -8,7 +8,7 @@ Bayesian conjugate models in Python
 pip install conjugate-models
 ```
 
-## Usage
+## Basic Usage
 
 ```python 
 from conjugate.distributions import Beta, NegativeBinomial
@@ -48,16 +48,19 @@ plt.show()
 
 <img height=400 src="images/binomial-beta.png" title="Binomial Beta Comparison">
 
+## Additional Usages
+
 Though the plotting is meant for numpy and python numbers, the conjugate models work with anything that works like numbers. 
 
-For instance, using SQL Builder
+For instance, Bayesian models in SQL using SQL Builder
 
 ```python
 from pypika import Field 
 
+
 # Columns from table in database
-N = Field("N")
-X = Field("X")
+N = Field("total")
+X = Field("successes")
 
 # Conjugate prior
 prior = Beta(alpha=1, beta=1)
@@ -65,11 +68,23 @@ posterior = binomial_beta(n=N, x=X, beta_prior=prior)
 
 print("Posterior alpha:", posterior.alpha)
 print("Posterior beta:", posterior.beta)
-# Posterior alpha: 1+"X"
-# Posterior beta: 1+"N"-"X"
+# Posterior alpha: 1+"successes"
+# Posterior beta: 1+"total"-"successes"
+
+# Priors can be fields too
+alpha = Field("previous_successes")
+beta = Field("previous_failures")
+
+prior = Beta(alpha=alpha, beta=beta)
+posterior = binomial_beta(n=N, x=X, beta_prior=prior)
+
+print("Posterior alpha:", posterior.alpha)
+print("Posterior beta:", posterior.beta)
+# Posterior alpha: "previous_successes"+"successes"
+# Posterior beta: "previous_failures"+"total"-"successes"
 ```
 
-Example using PyMC 
+Using PyMC distributions for sampling with additional uncertainty
 
 ```python 
 import pymc as pm 
