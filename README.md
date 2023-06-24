@@ -5,7 +5,7 @@ Bayesian conjugate models in Python
 ## Installation
 
 ```bash 
-pip install conjugate
+pip install conjugate-models
 ```
 
 ## Usage

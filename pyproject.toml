@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "conjugate"
+name = "conjugate-models"
 version = "0.1.0"
 description = "Bayesian Conjugate Models in Python"
 authors = ["Will Dean <wd60622@gmail.com>"]
