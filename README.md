@@ -95,7 +95,6 @@ For instance, Bayesian models in SQL using SQL Builder
 ```python
 from pypika import Field 
 
-
 # Columns from table in database
 N = Field("total")
 X = Field("successes")
