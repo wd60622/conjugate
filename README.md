@@ -155,7 +155,7 @@ rng = np.random.default_rng(42)
 
 # Observed Data
 n_times = 75
-p = np.repeat(0.75, n_times)
+p = np.repeat(0.5, n_times)
 samples = rng.binomial(n=1, p=p, size=n_times)
 
 # Model
