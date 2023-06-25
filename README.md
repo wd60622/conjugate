@@ -110,16 +110,16 @@ print("Posterior beta:", posterior.beta)
 # Posterior beta: 1+"total"-"successes"
 
 # Priors can be fields too
-alpha = Field("previous_successes")
-beta = Field("previous_failures")
+alpha = Field("previous_successes") - 1
+beta = Field("previous_failures") - 1
 
 prior = Beta(alpha=alpha, beta=beta)
 posterior = binomial_beta(n=N, x=X, beta_prior=prior)
 
 print("Posterior alpha:", posterior.alpha)
 print("Posterior beta:", posterior.beta)
-# Posterior alpha: "previous_successes"+"successes"
-# Posterior beta: "previous_failures"+"total"-"successes"
+# Posterior alpha: "previous_successes"-1+"successes"
+# Posterior beta: "previous_failures"-1+"total"-"successes"
 ```
 
 Using PyMC distributions for sampling with additional uncertainty
@@ -144,3 +144,63 @@ posterior_dist = pm.Beta.dist(alpha=posterior.alpha, beta=posterior.beta)
 
 samples = pm.draw([alpha, beta, prior_dist, posterior_dist], draws=1000)
 ```
+
+## Simple Model
+
+Simple model, sure. Useful model, potentially.
+
+Constant probability of success, `p`, for `n` trials.
+
+```python
+rng = np.random.default_rng(42)
+
+# Observed Data
+n_times = 75
+p = np.repeat(0.75, n_times)
+samples = rng.binomial(n=1, p=p, size=n_times)
+
+# Model
+n = np.arange(n_times) + 1
+prior = Beta(alpha=1, beta=1)
+posterior = binomial_beta(n=n, x=samples.cumsum(), beta_prior=prior)
+
+# Figure
+plt.plot(n, p, color="black", label="true p", linestyle="--")
+plt.scatter(n, samples, color="black", label="observed samples")
+plt.plot(n, posterior.dist.mean(), color="red", label="posterior mean")
+# fill between the 95% credible interval
+plt.fill_between(
+    n, 
+    posterior.dist.ppf(0.025),
+    posterior.dist.ppf(0.975),
+    color="red",
+    alpha=0.2,
+    label="95% credible interval",
+)
+padding = 0.025
+plt.ylim(0 - padding, 1 + padding)
+plt.xlim(1, n_times)
+plt.legend(loc="best")
+plt.xlabel("Number of trials")
+plt.ylabel("Probability")
+plt.show()
+```
+
+<img height=400 src="images/constant-probability.png" title="Constant Probability">
+
+Even with a moving probability, this simple to implement model can be useful.
+
+```python 
+...
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+p_raw = rng.normal(loc=0, scale=0.2, size=n_times).cumsum()
+p = sigmoid(p_raw)
+
+...
+```
+
+
+<img height=400 src="images/moving-probability.png" title="Moving Probability">
