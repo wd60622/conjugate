@@ -5,8 +5,6 @@ Taken from https://en.wikipedia.org/wiki/Conjugate_prior
 """
 from typing import Tuple
 
-import numpy as np
-
 from conjugate.distributions import (
     Beta,
     Dirichlet,

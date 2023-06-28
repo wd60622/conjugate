@@ -11,7 +11,7 @@ pip install conjugate-models
 ## Basic Usage
 
 ```python 
-from conjugate.distributions import Beta, NegativeBinomial
+from conjugate.distributions import Beta, BetaBinomial
 from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
 
 # Observed Data
@@ -20,10 +20,10 @@ N = 10
 
 # Analytics
 prior = Beta(1, 1)
-prior_predictive: NegativeBinomial = binomial_beta_posterior_predictive(n=N, beta=prior)
+prior_predictive: BetaBinomial = binomial_beta_posterior_predictive(n=N, beta=prior)
 
 posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
-posterior_predictive: NegativeBinomial = binomial_beta_posterior_predictive(n=N, beta=posterior) 
+posterior_predictive: BetaBinomial = binomial_beta_posterior_predictive(n=N, beta=posterior) 
 
 # Figure
 import matplotlib.pyplot as plt
@@ -47,6 +47,20 @@ plt.show()
 ```
 
 <img height=400 src="images/binomial-beta.png" title="Binomial Beta Comparison">
+
+## Scipy Random Variables
+
+Most of the distributions are built on top of scipy random variables giving access to moments, quantiles, etc. Access them with the `dist` attribute.
+
+```python
+beta = Beta(alpha=1, beta=1)
+scipy_beta = beta.dist
+
+print(scipy_beta.mean())
+# 0.5
+print(scipy_dist.ppf([0.025, 0.975]))
+# [0.025 0.975]
+```
 
 ## Vectorized Inputs
 
@@ -203,3 +217,8 @@ p = sigmoid(p_raw)
 
 
 <img height=400 src="images/moving-probability.png" title="Moving Probability">
+
+
+## Resources
+
+- [Conjugate Priors](https://en.wikipedia.org/wiki/Conjugate_prior)

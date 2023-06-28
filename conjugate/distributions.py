@@ -38,6 +38,13 @@ class Beta(ContinuousPlotDistMixin, SliceMixin):
         beta = get_beta_param_from_mean_and_alpha(mean=mean, alpha=alpha)
         return cls(alpha=alpha, beta=beta)
 
+    @classmethod 
+    def from_successes_and_failures(cls, successes: int, failures: int) -> "Beta":
+        """Alternative constructor."""
+        alpha = successes + 1
+        beta = failures + 1
+        return cls(alpha=alpha, beta=beta)
+
     @property
     def dist(self):
         return stats.beta(self.alpha, self.beta)
@@ -72,8 +79,7 @@ class Dirichlet(SamplePlotDistMixin):
 
 @dataclass
 class Exponential(ContinuousPlotDistMixin, SliceMixin):
-    """Plotting exponential distribution
-
+    """
     Implementation from:
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.expon.html
 
@@ -89,11 +95,6 @@ class Exponential(ContinuousPlotDistMixin, SliceMixin):
 @dataclass
 class Gamma(ContinuousPlotDistMixin, SliceMixin):
     """
-
-    CLV Paper uses the alpha beta parameterization for lambda
-
-    f(λ|r,α) = αrλr−1e−λα / Γ(r) , λ > 0.
-
     https://en.wikipedia.org/wiki/Gamma_distribution
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gamma.html
 
@@ -107,9 +108,6 @@ class Gamma(ContinuousPlotDistMixin, SliceMixin):
         return stats.gamma(a=self.alpha, scale=1 / self.beta)
 
     def __mul__(self, other):
-        if not isinstance(other, (int, float, np.ndarray)):
-            raise NotImplementedError
-
         return Gamma(alpha=self.alpha * other, beta=self.beta)
 
     __rmul__ = __mul__
@@ -125,9 +123,6 @@ class NegativeBinomial(DiscretePlotMixin, SliceMixin):
         return stats.nbinom(n=self.n, p=self.p)
 
     def __mul__(self, other):
-        if not isinstance(other, (int, float, np.ndarray)):
-            raise NotImplementedError
-
         return NegativeBinomial(n=self.n * other, p=self.p)
 
     __rmul__ = __mul__
@@ -142,9 +137,6 @@ class Poisson(DiscretePlotMixin, SliceMixin):
         return stats.poisson(self.lam)
 
     def __mul__(self, other):
-        if not isinstance(other, (int, float, np.ndarray)):
-            raise NotImplementedError
-
         return Poisson(lam=self.lam * other)
 
     __rmul__ = __mul__
@@ -165,3 +157,10 @@ class BetaBinomial(DiscretePlotMixin, SliceMixin):
     @property
     def dist(self):
         return stats.betabinom(self.n, self.alpha, self.beta)
+
+
+@dataclass
+class BetaNegativeBinomial(DiscretePlotMixin, SliceMixin):
+    n: NUMERIC
+    alpha: NUMERIC
+    beta: NUMERIC
