@@ -10,6 +10,7 @@ from conjugate.distributions import (
     Dirichlet,
     Gamma,
     NegativeBinomial,
+    BetaNegativeBinomial,
     BetaBinomial,
 )
 from conjugate._typing import NUMERIC
@@ -38,8 +39,29 @@ def binomial_beta_posterior_predictive(n, beta: Beta) -> BetaBinomial:
     return BetaBinomial(n=n, alpha=beta.alpha, beta=beta.beta)
 
 
+def negative_binomial_beta(r, n, x, beta_prior: Beta) -> Beta:
+    """Posterior distribution for a negative binomial likelihood with a beta prior"""
+    alpha_post = beta_prior.alpha + (r * n)
+    beta_post = beta_prior.beta + x
+
+    return Beta(alpha=alpha_post, beta=beta_post)
+
+
+def negative_binomial_beta_posterior_predictive(r, beta: Beta) -> BetaNegativeBinomial:
+    """Posterior predictive distribution for a negative binomial likelihood with a beta prior"""
+    return BetaNegativeBinomial(r=r, alpha=beta.alpha, beta=beta.beta)
+
+
+def geometric_beta(x, n, beta_prior: Beta) -> Beta:
+    """Posterior distribution for a geometric likelihood with a beta prior"""
+    alpha_post = beta_prior.alpha + n
+    beta_post = beta_prior.beta + x
+
+    return Beta(alpha=alpha_post, beta=beta_post)
+
+
 def get_dirichlet_posterior_params(alpha_prior: NUMERIC, x: NUMERIC) -> NUMERIC:
-    try: 
+    try:
         return alpha_prior + x
     except Exception:
         return [alpha_prior_i + x_i for alpha_prior_i, x_i in zip(alpha_prior, x)]

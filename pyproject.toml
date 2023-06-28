@@ -23,6 +23,7 @@ pytest = "^7.3.2"
 pytest-cov = "^4.1.0"
 pypika = "^0.48.9"
 pymc = "^5.5.0"
+black = "^23.3.0"
 
 [build-system]
 requires = ["poetry-core"]

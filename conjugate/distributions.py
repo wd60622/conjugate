@@ -38,7 +38,7 @@ class Beta(ContinuousPlotDistMixin, SliceMixin):
         beta = get_beta_param_from_mean_and_alpha(mean=mean, alpha=alpha)
         return cls(alpha=alpha, beta=beta)
 
-    @classmethod 
+    @classmethod
     def from_successes_and_failures(cls, successes: int, failures: int) -> "Beta":
         """Alternative constructor."""
         alpha = successes + 1
@@ -160,7 +160,16 @@ class BetaBinomial(DiscretePlotMixin, SliceMixin):
 
 
 @dataclass
-class BetaNegativeBinomial(DiscretePlotMixin, SliceMixin):
+class BetaNegativeBinomial(SliceMixin):
     n: NUMERIC
     alpha: NUMERIC
     beta: NUMERIC
+
+
+@dataclass
+class Geometric(DiscretePlotMixin, SliceMixin):
+    p: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.geom(self.p)
