@@ -22,6 +22,7 @@ LABEL_INPUT = Union[str, Iterable[str], Callable[[int], str]]
 
 
 class PlotDistMixin:
+    """Base mixin in order to support plotting. Requires the dist attribute of the scipy distribution."""
     @property
     def dist(self) -> Distribution:
         raise NotImplementedError("Implement this property in the subclass.")
@@ -78,7 +79,18 @@ class PlotDistMixin:
 
 
 class ContinuousPlotDistMixin(PlotDistMixin):
+    """Functionality for plot_pdf method of continuous distributions."""
     def plot_pdf(self, ax: Optional[plt.Axes] = None, **kwargs) -> plt.Axes:
+        """Plot the pdf of distribution
+
+        Args: 
+            ax: matplotlib Axes, optional
+            **kwargs: Additonal kwargs to pass to matplotlib
+
+        Returns: 
+            new or modified Axes
+        
+        """
         ax = self._settle_axis(ax=ax)
 
         x = self._create_x_values()
@@ -107,10 +119,12 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         return ax
 
 
-class SamplePlotDistMixin(ContinuousPlotDistMixin):
+class DirichletPlotDistMixin(ContinuousPlotDistMixin):
+    """Plot the pdf using samples from the dirichlet distribution."""
     def plot_pdf(
         self, ax: Optional[plt.Axes] = None, samples: int = 1_000, **kwargs
     ) -> plt.Axes:
+        """Plots the pdf """
         distribution_samples = self.dist.rvs(size=samples)
 
         ax = self._settle_axis(ax=ax)
@@ -128,6 +142,7 @@ class SamplePlotDistMixin(ContinuousPlotDistMixin):
 
 
 class DiscretePlotMixin(PlotDistMixin):
+    """Adding the plot_pmf method to class."""
     def plot_pmf(
         self, ax: Optional[plt.Axes] = None, mark: str = "o-", **kwargs
     ) -> plt.Axes:

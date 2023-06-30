@@ -1,4 +1,5 @@
-# conjugate priors
+# Conjugate Models
+
 Bayesian conjugate models in Python
 
 
@@ -46,27 +47,11 @@ ax.legend()
 plt.show()
 ```
 
-<img height=400 src="docs/images/binomial-beta.png" title="Binomial Beta Comparison">
+<img height=400 src="images/binomial-beta.png" title="Binomial Beta Comparison">
 
-More examples on in the documentation
+## Additional Features
 
-
-
-## Scipy Random Variables
-
-Most of the distributions are built on top of scipy random variables giving access to moments, quantiles, etc. Access them with the `dist` attribute.
-
-```python
-beta = Beta(alpha=1, beta=1)
-scipy_beta = beta.dist
-
-print(scipy_beta.mean())
-# 0.5
-print(scipy_dist.ppf([0.025, 0.975]))
-# [0.025 0.975]
-```
-
-## Vectorized Inputs
+### Vectorized Inputs
 
 All data and priors will allow for vectorized assuming the shapes work for broadcasting. 
 
@@ -89,7 +74,9 @@ plt.show()
 
 <img height=400 src="images/vectorized-plot.png" title="Vectorized Priors and Posterior">
 
-And the distributions can be indexed for subsets. 
+### Indexing Parameters
+
+The distributions can be indexed for subsets. 
 
 ```python
 beta = np.arange(1, 10)
@@ -104,7 +91,7 @@ plt.show()
 <img height=400 src="images/sliced-distribution.png" title="Sliced Distribution">
 
 
-## Additional Usages
+### Generalized Numerical Inputs
 
 Though the plotting is meant for numpy and python numbers, the conjugate models work with anything that works like numbers. 
 
@@ -162,7 +149,23 @@ posterior_dist = pm.Beta.dist(alpha=posterior.alpha, beta=posterior.beta)
 samples = pm.draw([alpha, beta, prior_dist, posterior_dist], draws=1000)
 ```
 
-## Simple Model
+### Unsupported Posterior Predictive Distributions
+
+The geometric beta model posterior predictive doesn't have a common dist, but what doesn't mean the posterior predictive can be used. For instance, PyMC can be used to fill in this gap.
+
+```python 
+from conjugate.models import geometric_beta
+
+prior = Beta(1, 1)
+posterior: Beta = geometric_beta(x=1, n=10, beta_prior=prior)
+
+posterior_dist = pm.Beta.dist(alpha=posterior.alpha, beta=posterior.beta)
+geometric_posterior_predictive = pm.Geometric.dist(posterior_dist)
+
+posterior_predictive_samples = pm.draw(geometric_posterior_predictive, draws=100)
+```
+
+## Too Simple?
 
 Simple model, sure. Useful model, potentially.
 

@@ -25,6 +25,12 @@ pypika = "^0.48.9"
 pymc = "^5.5.0"
 black = "^23.3.0"
 
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.4.3"
+mkdocs-material = "^9.1.17"
+mkdocstrings = {extras = ["python"], version = "^0.22.0"}
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

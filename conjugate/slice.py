@@ -2,6 +2,7 @@ from dataclasses import asdict
 
 
 class SliceMixin:
+    """Mixin in order to slice the parameters"""
     def __getitem__(self, key):
         params = asdict(self)
 

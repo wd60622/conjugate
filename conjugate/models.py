@@ -1,6 +1,6 @@
-"""Common Conjugate models
+"""For more on these models, check out the <a href=https://en.wikipedia.org/wiki/Conjugate_prior#Table_of_conjugate_distributions>Conjugate Prior Wikipedia Table</a>
 
-Taken from https://en.wikipedia.org/wiki/Conjugate_prior
+Below are the supported models
 
 """
 from typing import Tuple
@@ -25,8 +25,18 @@ def get_binomial_beta_posterior_params(
     return alpha_post, beta_post
 
 
-def binomial_beta(n, x, beta_prior: Beta) -> Beta:
-    """Posterior distribution for a binomial likelihood with a beta prior"""
+def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
+    """Posterior distribution for a binomial likelihood with a beta prior. 
+
+    Args: 
+        n: total number of trials 
+        x: sucesses from that trials
+        beta_prior: Beta distribution prior
+    
+    Returns: 
+        Beta distribution posterior
+    
+    """
     alpha_post, beta_post = get_binomial_beta_posterior_params(
         beta_prior.alpha, beta_prior.beta, n, x
     )
@@ -34,13 +44,26 @@ def binomial_beta(n, x, beta_prior: Beta) -> Beta:
     return Beta(alpha=alpha_post, beta=beta_post)
 
 
-def binomial_beta_posterior_predictive(n, beta: Beta) -> BetaBinomial:
-    """Posterior predictive distribution for a binomial likelihood with a beta prior"""
+def binomial_beta_posterior_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
+    """Posterior predictive distribution for a binomial likelihood with a beta prior. 
+    
+    Args: 
+        n: number of trials
+        beta: Beta distribution
+
+    Returns: 
+        BetaBinomial posterior predictive distribution
+
+    """
     return BetaBinomial(n=n, alpha=beta.alpha, beta=beta.beta)
 
 
 def negative_binomial_beta(r, n, x, beta_prior: Beta) -> Beta:
-    """Posterior distribution for a negative binomial likelihood with a beta prior"""
+    """Posterior distribution for a negative binomial likelihood with a beta prior. 
+    
+    Args: 
+        
+    """
     alpha_post = beta_prior.alpha + (r * n)
     beta_post = beta_prior.beta + x
 
@@ -75,10 +98,18 @@ def categorical_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
 
     return Dirichlet(alpha=alpha_post)
 
-
 get_multinomial_dirichlet_posterior_params = get_dirichlet_posterior_params
-
 multinomial_dirichlet = categorical_dirichlet
+multinomial_dirichlet.__doc__ = """Posterior distribution of Multinomial model with Dirichlet prior. 
+
+Args: 
+    x: counts
+    dirichlet_prior: Dirichlet prior on the counts
+
+Returns: 
+    Dirichlet posterior distribution
+
+"""
 
 
 def get_poisson_gamma_posterior_params(
