@@ -1,6 +1,6 @@
 """These are the supported distributions based on the conjugate models.
 
-Many have the `dist` attribute which is a <a href=https://docs.scipy.org/doc/scipy/reference/stats.html>scipy.stats distribution object. From there, 
+Many have the `dist` attribute which is a <a href=https://docs.scipy.org/doc/scipy/reference/stats.html>scipy.stats distribution</a> object. From there, 
 you can use the methods from scipy.stats to get the pdf, cdf, etc.
 
 Distributions can be plotted using the `plot_pmf` or `plot_pdf` methods of the distribution.

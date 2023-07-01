@@ -7,7 +7,7 @@ theme:
 
 repo_name: Conjugate
 repo_url: https://github.com/wd60622/conjugate
-edit_uri: blob/main/docs/
+# edit_uri: blob/main/docs/
 site_url: https://wd60622.github.io/conjugate
 
 nav:

@@ -90,27 +90,37 @@ def get_dirichlet_posterior_params(alpha_prior: NUMERIC, x: NUMERIC) -> NUMERIC:
         return [alpha_prior_i + x_i for alpha_prior_i, x_i in zip(alpha_prior, x)]
 
 
-get_categorical_dirichlet_posterior_params = get_dirichlet_posterior_params
+def get_categorical_dirichlet_posterior_params(
+    alpha_prior: NUMERIC, x: NUMERIC
+) -> NUMERIC:
+    return get_dirichlet_posterior_params(alpha_prior, x)
 
 
 def categorical_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
+    """Posterior distribution of Categorical model with Dirichlet prior."""
     alpha_post = get_dirichlet_posterior_params(dirichlet_prior.alpha, x)
 
     return Dirichlet(alpha=alpha_post)
 
-get_multinomial_dirichlet_posterior_params = get_dirichlet_posterior_params
-multinomial_dirichlet = categorical_dirichlet
-multinomial_dirichlet.__doc__ = """Posterior distribution of Multinomial model with Dirichlet prior. 
+def get_multi_categorical_dirichlet_posterior_params(
+    alpha_prior: NUMERIC, x: NUMERIC
+) -> NUMERIC:
+    return get_dirichlet_posterior_params(alpha_prior, x)
 
-Args: 
-    x: counts
-    dirichlet_prior: Dirichlet prior on the counts
+def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
+    """Posterior distribution of Multinomial model with Dirichlet prior. 
 
-Returns: 
-    Dirichlet posterior distribution
+    Args: 
+        x: counts
+        dirichlet_prior: Dirichlet prior on the counts
 
-"""
+    Returns: 
+        Dirichlet posterior distribution
 
+    """
+    alpha_post = get_dirichlet_posterior_params(dirichlet_prior.alpha, x)
+
+    return Dirichlet(alpha=alpha_post)
 
 def get_poisson_gamma_posterior_params(
     alpha: NUMERIC, beta: NUMERIC, x_total: NUMERIC, n: NUMERIC
@@ -152,4 +162,11 @@ def poisson_gamma_posterior_predictive(
 
 # Just happen to be the same as above
 get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
-exponential_gamma = poisson_gamma
+
+def exponetial_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
+    """Posterior distribution for an exponential likelihood with a gamma prior"""
+    alpha_post, beta_post = get_exponential_gamma_posterior_params(
+        alpha=gamma_prior.alpha, beta=gamma_prior.beta, x_total=x_total, n=n
+    )
+
+    return Gamma(alpha=alpha_post, beta=beta_post)
