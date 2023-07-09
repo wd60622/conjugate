@@ -1,10 +1,13 @@
 [tool.poetry]
 name = "conjugate-models"
-version = "0.1.0"
+version = "0.1.1"
 description = "Bayesian Conjugate Models in Python"
 authors = ["Will Dean <wd60622@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+homepage = "https://wd60622.github.io/conjugate/"
+documentation = "https://wd60622.github.io/conjugate/"
+repository = "https://github.com/wd60622/conjugate"
 packages = [
     { include = "conjugate" },
     { include = "conjugate/py.typed" },
@@ -24,6 +27,7 @@ pytest-cov = "^4.1.0"
 pypika = "^0.48.9"
 pymc = "^5.5.0"
 black = "^23.3.0"
+ipython = "8.8.0"
 
 
 [tool.poetry.group.docs.dependencies]

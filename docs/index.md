@@ -1,3 +1,7 @@
+---
+hide:
+    - navigation 
+---
 # Conjugate Models
 
 Bayesian conjugate models in Python

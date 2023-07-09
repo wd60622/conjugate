@@ -20,6 +20,29 @@ class Distribution(Protocol):
 
 LABEL_INPUT = Union[str, Iterable[str], Callable[[int], str]]
 
+def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
+    """
+
+    https://stackoverflow.com/questions/73662931/matplotlib-plot-a-numpy-array-as-many-lines-with-a-single-label
+    """
+    if yy.ndim == 1:
+        return label
+
+    ncols = yy.shape[1]
+    if ncols != 1:
+        if isinstance(label, str):
+            return [f"{label} {i}" for i in range(1, ncols + 1)]
+
+        if callable(label):
+            return [label(i) for i in range(1, ncols + 1)]
+            
+        if isinstance(label, Iterable):
+            return label
+
+        raise ValueError("Label must be a string, iterable, or callable.")
+
+    return label
+
 
 class PlotDistMixin:
     """Base mixin in order to support plotting. Requires the dist attribute of the scipy distribution."""
@@ -51,29 +74,6 @@ class PlotDistMixin:
 
         return x
 
-    def _resolve_label(self, label: LABEL_INPUT, yy: np.ndarray):
-        """
-
-        https://stackoverflow.com/questions/73662931/matplotlib-plot-a-numpy-array-as-many-lines-with-a-single-label
-        """
-        if yy.ndim == 1:
-            return label
-
-        ncols = yy.shape[1]
-        if ncols != 1:
-            if isinstance(label, Iterable):
-                return label
-
-            if isinstance(label, str):
-                label = lambda i: f"{label} {i}"
-
-            if callable(label):
-                return [label(i) for i in range(1, ncols + 1)]
-
-            raise ValueError("Label must be a string, iterable, or callable.")
-
-        return label
-
     def _settle_axis(self, ax: Optional[plt.Axes] = None) -> plt.Axes:
         return ax if ax is not None else plt.gca()
 
@@ -97,9 +97,30 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         x = self._reshape_x_values(x)
 
         return self._create_plot_on_axis(x, ax, **kwargs)
+    
+    @property 
+    def min_value(self) -> float:
+        if not hasattr(self, "_min_value"):
+            self._min_value = 0.0
+
+        return self._min_value
+    
+    @min_value.setter
+    def min_value(self, value: float) -> None:
+        self._min_value = value
+
+    def set_min_value(self, value: float) -> "ContinuousPlotDistMixin":
+        """Set the minimum value for plotting."""
+        self.min_value = value
+
+        return self
+
+    def set_bounds(self, lower: float, upper: float) -> "ContinuousPlotDistMixin":
+        """Set both the min and max values for plotting."""
+        return self.set_min_value(lower).set_max_value(upper)
 
     def _create_x_values(self) -> np.ndarray:
-        return np.linspace(0, self.max_value, 100)
+        return np.linspace(self.min_value, self.max_value, 100)
 
     def _setup_labels(self, ax) -> None:
         ax.set_xlabel("Domain")
@@ -109,7 +130,7 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         yy = self.dist.pdf(x)
         if "label" in kwargs:
             label = kwargs.pop("label")
-            label = self._resolve_label(label, yy)
+            label = resolve_label(label, yy)
         else:
             label = None
 
@@ -160,7 +181,7 @@ class DiscretePlotMixin(PlotDistMixin):
         yy = self.dist.pmf(x)
         if "label" in kwargs:
             label = kwargs.pop("label")
-            label = self._resolve_label(label, yy)
+            label = resolve_label(label, yy)
         else:
             label = None
 
