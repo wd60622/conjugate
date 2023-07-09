@@ -45,6 +45,12 @@ nav:
   - Examples: 
     - Binomial Model: examples/binomial.md
     - Scaling Distributions: examples/scaling-distributions.md
+    - SciPy Distributions: examples/scipy-connection.md
+    - Plotting: examples/plotting.md
+    - Vectorized Operations: examples/vectorized-inputs.md
+    - Indexing: examples/indexing.md
+    - Generalized Numerical Inputs: examples/generalized-inputs.md
+    - Unsupported Distributions: examples/pymc-sampling.md
 
 plugins:
 - search
