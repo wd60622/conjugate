@@ -8,21 +8,27 @@
       
       
       
+        <link rel="canonical" href="https://wd60622.github.io/conjugate/examples/plotting/">
       
       
-      <link rel="icon" href="/conjugate/assets/images/favicon.png">
+        <link rel="prev" href="../scipy-connection/">
+      
+      
+        <link rel="next" href="../vectorized-inputs/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.18">
     
     
       
-        <title>Conjugate Models</title>
+        <title>Plotting - Conjugate Models</title>
       
     
     
-      <link rel="stylesheet" href="/conjugate/assets/stylesheets/main.26e3688c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
       
         
-        <link rel="stylesheet" href="/conjugate/assets/stylesheets/palette.ecc896b0.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
       
       
 
@@ -38,9 +44,9 @@
       
     
     
-      <link rel="stylesheet" href="/conjugate/assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("/conjugate/",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -67,6 +73,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#plotting-distributions" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -97,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Plotting
             
           </span>
         </div>
@@ -198,7 +209,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="/conjugate/." class="md-tabs__link">
+    <a href="../.." class="md-tabs__link">
       Overview
     </a>
   </li>
@@ -213,7 +224,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/conjugate/distributions/" class="md-tabs__link">
+      <a href="../../distributions/" class="md-tabs__link">
         Modules
       </a>
     </li>
@@ -223,13 +234,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="/conjugate/examples/binomial/" class="md-tabs__link">
+      <a href="../binomial/" class="md-tabs__link md-tabs__link--active">
         Examples
       </a>
     </li>
@@ -288,7 +301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         Overview
       </a>
     </li>
@@ -340,7 +353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/distributions/" class="md-nav__link">
+      <a href="../../distributions/" class="md-nav__link">
         Distributions
       </a>
     </li>
@@ -354,7 +367,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/models/" class="md-nav__link">
+      <a href="../../models/" class="md-nav__link">
         Models
       </a>
     </li>
@@ -368,7 +381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/mixins/" class="md-nav__link">
+      <a href="../../mixins/" class="md-nav__link">
         Mixins
       </a>
     </li>
@@ -388,16 +401,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-        
-      
-      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
       
       
         
@@ -424,7 +437,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           Examples
@@ -437,7 +450,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/examples/binomial/" class="md-nav__link">
+      <a href="../binomial/" class="md-nav__link">
         Binomial Model
       </a>
     </li>
@@ -451,7 +464,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/examples/scaling-distributions/" class="md-nav__link">
+      <a href="../scaling-distributions/" class="md-nav__link">
         Scaling Distributions
       </a>
     </li>
@@ -465,7 +478,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/examples/scipy-connection/" class="md-nav__link">
+      <a href="../scipy-connection/" class="md-nav__link">
         SciPy Distributions
       </a>
     </li>
@@ -477,11 +490,21 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="/conjugate/examples/plotting/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Plotting
       </a>
+      
     </li>
   
 
@@ -493,7 +516,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/examples/vectorized-inputs/" class="md-nav__link">
+      <a href="../vectorized-inputs/" class="md-nav__link">
         Vectorized Operations
       </a>
     </li>
@@ -507,7 +530,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/examples/indexing/" class="md-nav__link">
+      <a href="../indexing/" class="md-nav__link">
         Indexing
       </a>
     </li>
@@ -521,7 +544,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/examples/generalized-inputs/" class="md-nav__link">
+      <a href="../generalized-inputs/" class="md-nav__link">
         Generalized Numerical Inputs
       </a>
     </li>
@@ -535,7 +558,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/conjugate/examples/pymc-sampling/" class="md-nav__link">
+      <a href="../pymc-sampling/" class="md-nav__link">
         Unsupported Distributions
       </a>
     </li>
@@ -566,6 +589,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -577,8 +602,42 @@
             <div class="md-content" data-md-component="content">
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+  
+  
+
+
+<h1 id="plotting-distributions">Plotting Distributions</h1>
+<p>All the distributions can be plotted using the <code>plot_pdf</code> and <code>plot_pmf</code> methods. The <code>plot_pdf</code> method is used for continuous distributions and the <code>plot_pmf</code> method is used for discrete distributions.</p>
+<p>There is limited support for some distributions like the <code>Dirichlet</code> or those without a <code>dist</code> scipy.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">conjugate.distributions</span> <span class="kn">import</span> <span class="n">Beta</span><span class="p">,</span> <span class="n">Gamma</span><span class="p">,</span> <span class="n">Normal</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">beta</span> <span class="o">=</span> <span class="n">Beta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">gamma</span> <span class="o">=</span> <span class="n">Gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">normal</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">bound</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">normal</span><span class="p">]</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="s2">&quot;normal&quot;</span><span class="p">]</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">dist</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">bound</span><span class="p">)</span><span class="o">.</span><span class="n">plot_pdf</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></div>
+<p><img alt="Plotting Distributions" src="../../images/plotting-example.png" /></p>
+<p>The plotting is also supported for <a href="../vectorized-inputs/">vectorized inputs</a>.</p>
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -630,10 +689,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "/conjugate/", "features": ["navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.expand", "navigation.top"], "search": "/conjugate/assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.expand", "navigation.top"], "search": "../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="/conjugate/assets/javascripts/bundle.220ee61c.min.js"></script>
+      <script src="../../assets/javascripts/bundle.220ee61c.min.js"></script>
       
     
   </body>
