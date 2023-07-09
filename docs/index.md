@@ -1,3 +1,7 @@
+---
+hide:
+    - navigation 
+---
 # Conjugate Models
 
 Bayesian conjugate models in Python
@@ -49,121 +53,14 @@ plt.show()
 
 <img height=400 src="images/binomial-beta.png" title="Binomial Beta Comparison">
 
-## Additional Features
+## Features
 
-### Vectorized Inputs
-
-All data and priors will allow for vectorized assuming the shapes work for broadcasting. 
-
-The plotting also supports arrays of results
-
-```python 
-import numpy as np
-
-# Analytics 
-prior = Beta(alpha=1, beta=np.array([1, 5]))
-posterior = binomial_beta(n=N, x=x, beta_prior=prior)
-
-# Figure
-ax = prior.plot_pdf(label=lambda i: f"prior {i}")
-posterior.plot_pdf(ax=ax, label=lambda i: f"posterior {i}")
-ax.axvline(x=x / N, ymax=0.05, color="black", linestyle="--", label="MLE")
-ax.legend()
-plt.show()
-```
-
-<img height=400 src="images/vectorized-plot.png" title="Vectorized Priors and Posterior">
-
-### Indexing Parameters
-
-The distributions can be indexed for subsets. 
-
-```python
-beta = np.arange(1, 10)
-prior = Beta(alpha=1, beta=beta)
-
-idx = [0, 5, -1]
-prior_subset = prior[idx]
-prior_subset.plot_pdf(label = lambda i: f"prior {i}")
-plt.legend()
-plt.show()
-```
-<img height=400 src="images/sliced-distribution.png" title="Sliced Distribution">
-
-
-### Generalized Numerical Inputs
-
-Though the plotting is meant for numpy and python numbers, the conjugate models work with anything that works like numbers. 
-
-For instance, Bayesian models in SQL using SQL Builder
-
-```python
-from pypika import Field 
-
-# Columns from table in database
-N = Field("total")
-X = Field("successes")
-
-# Conjugate prior
-prior = Beta(alpha=1, beta=1)
-posterior = binomial_beta(n=N, x=X, beta_prior=prior)
-
-print("Posterior alpha:", posterior.alpha)
-print("Posterior beta:", posterior.beta)
-# Posterior alpha: 1+"successes"
-# Posterior beta: 1+"total"-"successes"
-
-# Priors can be fields too
-alpha = Field("previous_successes") - 1
-beta = Field("previous_failures") - 1
-
-prior = Beta(alpha=alpha, beta=beta)
-posterior = binomial_beta(n=N, x=X, beta_prior=prior)
-
-print("Posterior alpha:", posterior.alpha)
-print("Posterior beta:", posterior.beta)
-# Posterior alpha: "previous_successes"-1+"successes"
-# Posterior beta: "previous_failures"-1+"total"-"successes"
-```
-
-Using PyMC distributions for sampling with additional uncertainty
-
-```python 
-import pymc as pm 
-
-alpha = pm.Gamma.dist(alpha=1, beta=20)
-beta = pm.Gamma.dist(alpha=1, beta=20)
-
-# Observed Data
-N = 10
-X = 4
-
-# Conjugate prior 
-prior = Beta(alpha=alpha, beta=beta)
-posterior = binomial_beta(n=N, x=X, beta_prior=prior)
-
-# Reconstruct the posterior distribution with PyMC
-prior_dist = pm.Beta.dist(alpha=prior.alpha, beta=prior.beta)
-posterior_dist = pm.Beta.dist(alpha=posterior.alpha, beta=posterior.beta)
-
-samples = pm.draw([alpha, beta, prior_dist, posterior_dist], draws=1000)
-```
-
-### Unsupported Posterior Predictive Distributions
-
-The geometric beta model posterior predictive doesn't have a common dist, but what doesn't mean the posterior predictive can be used. For instance, PyMC can be used to fill in this gap.
-
-```python 
-from conjugate.models import geometric_beta
-
-prior = Beta(1, 1)
-posterior: Beta = geometric_beta(x=1, n=10, beta_prior=prior)
-
-posterior_dist = pm.Beta.dist(alpha=posterior.alpha, beta=posterior.beta)
-geometric_posterior_predictive = pm.Geometric.dist(posterior_dist)
-
-posterior_predictive_samples = pm.draw(geometric_posterior_predictive, draws=100)
-```
+- [Connection to Scipy Distributions](examples/scipy-connection.md) with `dist` attribute
+- [Built in Plotting](examples/plotting.md) with `plot_pdf` and `plot_pmf` methods
+- [Vectorized Operations](examples/vectorized-inputs.md) for parameters and data
+- [Indexing Parameters](examples/indexing.md) for subsetting and slicing
+- [Generalized Numerical Inputs](examples/generalized-inputs.md) for inputs other than builtins and numpy arrays
+- [Unsupported Distributions](examples/pymc-sampling.md) for sampling from unsupported distributions
 
 ## Too Simple?
 

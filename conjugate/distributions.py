@@ -92,6 +92,29 @@ class Beta(ContinuousPlotDistMixin, SliceMixin):
         return stats.beta(self.alpha, self.beta)
 
 
+@dataclass 
+class Binomial(DiscretePlotMixin, SliceMixin):
+    """Binomial distribution.
+    
+    Args: 
+        n: number of trials
+        p: probability of success
+    
+    """
+    n: NUMERIC
+    p: NUMERIC
+
+    def __post_init__(self):
+        if isinstance(self.n, np.ndarray):
+            self.max_value = self.n.max()
+        else:
+            self.max_value = self.n
+
+    @property
+    def dist(self):
+        return stats.binom(n=self.n, p=self.p)
+
+
 class VectorizedDist:
     def __init__(self, params: np.ndarray, dist: Any):
         self.params = params
@@ -266,3 +289,47 @@ class Geometric(DiscretePlotMixin, SliceMixin):
     @property
     def dist(self):
         return stats.geom(self.p)
+
+
+@dataclass
+class Normal(ContinuousPlotDistMixin, SliceMixin):
+    """Normal distribution.
+    
+    Args:
+        mu: mean
+        sigma: standard deviation
+
+    """
+    mu: NUMERIC
+    sigma: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.norm(self.mu, self.sigma)
+    
+    def __mul__(self, other):
+        sigma = ((self.sigma ** 2) * other) ** 0.5
+        return Normal(mu=self.mu * other, sigma=sigma)
+    
+    __rmul__ = __mul__
+
+
+@dataclass
+class Uniform(ContinuousPlotDistMixin, SliceMixin):
+    """Uniform distribution.
+    
+    Args:
+        low: lower bound
+        high: upper bound
+
+    """
+    low: NUMERIC
+    high: NUMERIC
+
+    def __post_init__(self):
+        self.min_value = self.low
+        self.max_value = self.high
+
+    @property
+    def dist(self):
+        return stats.uniform(self.low, self.high)
