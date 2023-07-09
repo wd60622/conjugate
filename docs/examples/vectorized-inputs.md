@@ -24,4 +24,4 @@ ax.legend()
 plt.show()
 ```
 
-<img height=400 src="images/vectorized-plot.png" title="Vectorized Priors and Posterior">
+![Vectorized Priors and Posterior](images/vectorized-plot.png)
