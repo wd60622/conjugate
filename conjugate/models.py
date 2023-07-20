@@ -26,16 +26,16 @@ def get_binomial_beta_posterior_params(
 
 
 def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
-    """Posterior distribution for a binomial likelihood with a beta prior. 
+    """Posterior distribution for a binomial likelihood with a beta prior.
 
-    Args: 
-        n: total number of trials 
+    Args:
+        n: total number of trials
         x: sucesses from that trials
         beta_prior: Beta distribution prior
-    
-    Returns: 
+
+    Returns:
         Beta distribution posterior
-    
+
     """
     alpha_post, beta_post = get_binomial_beta_posterior_params(
         beta_prior.alpha, beta_prior.beta, n, x
@@ -45,13 +45,13 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
 
 
 def binomial_beta_posterior_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
-    """Posterior predictive distribution for a binomial likelihood with a beta prior. 
-    
-    Args: 
+    """Posterior predictive distribution for a binomial likelihood with a beta prior.
+
+    Args:
         n: number of trials
         beta: Beta distribution
 
-    Returns: 
+    Returns:
         BetaBinomial posterior predictive distribution
 
     """
@@ -59,10 +59,10 @@ def binomial_beta_posterior_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
 
 
 def negative_binomial_beta(r, n, x, beta_prior: Beta) -> Beta:
-    """Posterior distribution for a negative binomial likelihood with a beta prior. 
-    
-    Args: 
-        
+    """Posterior distribution for a negative binomial likelihood with a beta prior.
+
+    Args:
+
     """
     alpha_post = beta_prior.alpha + (r * n)
     beta_post = beta_prior.beta + x
@@ -75,10 +75,24 @@ def negative_binomial_beta_posterior_predictive(r, beta: Beta) -> BetaNegativeBi
     return BetaNegativeBinomial(r=r, alpha=beta.alpha, beta=beta.beta)
 
 
-def geometric_beta(x, n, beta_prior: Beta) -> Beta:
-    """Posterior distribution for a geometric likelihood with a beta prior"""
+def geometric_beta(x_total, n, beta_prior: Beta, one_start: bool = True) -> Beta:
+    """Posterior distribution for a geometric likelihood with a beta prior.
+
+    Args:
+        x_total: sum of all trials outcomes
+        n: total number of trials
+        beta_prior: Beta distribution prior
+        one_start: whether to outcomes start at 1, defaults to True. False is 0 start.
+
+    Returns:
+        Beta distribution posterior
+
+    """
     alpha_post = beta_prior.alpha + n
-    beta_post = beta_prior.beta + x
+    beta_post = beta_prior.beta + x_total
+
+    if one_start:
+        beta_post = beta_post - n
 
     return Beta(alpha=alpha_post, beta=beta_post)
 
@@ -102,25 +116,28 @@ def categorical_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
 
     return Dirichlet(alpha=alpha_post)
 
+
 def get_multi_categorical_dirichlet_posterior_params(
     alpha_prior: NUMERIC, x: NUMERIC
 ) -> NUMERIC:
     return get_dirichlet_posterior_params(alpha_prior, x)
 
-def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
-    """Posterior distribution of Multinomial model with Dirichlet prior. 
 
-    Args: 
+def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
+    """Posterior distribution of Multinomial model with Dirichlet prior.
+
+    Args:
         x: counts
         dirichlet_prior: Dirichlet prior on the counts
 
-    Returns: 
+    Returns:
         Dirichlet posterior distribution
 
     """
     alpha_post = get_dirichlet_posterior_params(dirichlet_prior.alpha, x)
 
     return Dirichlet(alpha=alpha_post)
+
 
 def get_poisson_gamma_posterior_params(
     alpha: NUMERIC, beta: NUMERIC, x_total: NUMERIC, n: NUMERIC
@@ -162,6 +179,7 @@ def poisson_gamma_posterior_predictive(
 
 # Just happen to be the same as above
 get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
+
 
 def exponetial_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
     """Posterior distribution for an exponential likelihood with a gamma prior"""

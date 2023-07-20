@@ -19,6 +19,7 @@ from conjugate.models import (
     get_binomial_beta_posterior_params,
     binomial_beta,
     multinomial_dirichlet,
+    geometric_beta,
     get_poisson_gamma_posterior_params,
     poisson_gamma,
     poisson_gamma_posterior_predictive,
@@ -132,6 +133,22 @@ def test_handle_vectorize_values(alpha, beta, N, x) -> None:
 
     ax = posterior.plot_pdf()
     assert isinstance(ax, plt.Axes)
+
+
+def test_geometric_beta_model() -> None:
+    prior = Beta(alpha=1, beta=1)
+
+    N = 10
+    X_TOTAL = 12
+
+    posterior_one_start = geometric_beta(x_total=X_TOTAL, n=N, beta_prior=prior)
+    poisterior_zero_start = geometric_beta(
+        x_total=X_TOTAL, n=N, beta_prior=prior, one_start=False
+    )
+
+    assert isinstance(posterior_one_start, Beta)
+    assert isinstance(poisterior_zero_start, Beta)
+    assert posterior_one_start.dist.mean() > poisterior_zero_start.dist.mean()
 
 
 def test_poisson_gamma_analysis() -> None:
