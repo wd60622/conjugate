@@ -62,10 +62,10 @@ def get_beta_param_from_mean_and_alpha(
 class Beta(ContinuousPlotDistMixin, SliceMixin):
     """Beta distribution.
 
-    Args: 
+    Args:
         alpha: shape parameter
         beta: shape parameter
-    
+
     """
 
     alpha: NUMERIC
@@ -92,15 +92,16 @@ class Beta(ContinuousPlotDistMixin, SliceMixin):
         return stats.beta(self.alpha, self.beta)
 
 
-@dataclass 
+@dataclass
 class Binomial(DiscretePlotMixin, SliceMixin):
     """Binomial distribution.
-    
-    Args: 
+
+    Args:
         n: number of trials
         p: probability of success
-    
+
     """
+
     n: NUMERIC
     p: NUMERIC
 
@@ -131,10 +132,11 @@ class VectorizedDist:
 class Dirichlet(DirichletPlotDistMixin):
     """Dirichlet distribution.
 
-    Args: 
+    Args:
         alpha: shape parameter
-    
+
     """
+
     alpha: NUMERIC
 
     def __post_init__(self) -> None:
@@ -152,9 +154,9 @@ class Dirichlet(DirichletPlotDistMixin):
 class Exponential(ContinuousPlotDistMixin, SliceMixin):
     """Exponential distribution.
 
-    Args: 
+    Args:
         lam: rate parameter
-    
+
     """
 
     lam: NUMERIC
@@ -167,11 +169,11 @@ class Exponential(ContinuousPlotDistMixin, SliceMixin):
 @dataclass
 class Gamma(ContinuousPlotDistMixin, SliceMixin):
     """Gamma distribution.
-    
+
     <a href=https://en.wikipedia.org/wiki/Gamma_distribution>Gamma Distribution</a>
     <a href=https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gamma.html>Scipy Docmentation</a>
 
-    Args: 
+    Args:
         alpha: shape parameter
         beta: rate parameter
     """
@@ -192,12 +194,13 @@ class Gamma(ContinuousPlotDistMixin, SliceMixin):
 @dataclass
 class NegativeBinomial(DiscretePlotMixin, SliceMixin):
     """Negative binomial distribution.
-    
-    Args: 
+
+    Args:
         n: number of successes
         p: probability of success
-    
+
     """
+
     n: NUMERIC
     p: NUMERIC
 
@@ -219,6 +222,7 @@ class Poisson(DiscretePlotMixin, SliceMixin):
         lam: rate parameter
 
     """
+
     lam: NUMERIC
 
     @property
@@ -230,22 +234,23 @@ class Poisson(DiscretePlotMixin, SliceMixin):
 
     __rmul__ = __mul__
 
-    def __add__(self, other) -> "Poisson": 
+    def __add__(self, other) -> "Poisson":
         return Poisson(self.lam + other.lam)
-    
+
     __radd__ = __add__
 
 
 @dataclass
 class BetaBinomial(DiscretePlotMixin, SliceMixin):
     """Beta binomial distribution.
-    
+
     Args:
         n: number of trials
         alpha: shape parameter
         beta: shape parameter
-    
+
     """
+
     n: NUMERIC
     alpha: NUMERIC
     beta: NUMERIC
@@ -264,13 +269,14 @@ class BetaBinomial(DiscretePlotMixin, SliceMixin):
 @dataclass
 class BetaNegativeBinomial(SliceMixin):
     """Beta negative binomial distribution.
-    
+
     Args:
         n: number of successes
         alpha: shape parameter
 
-    
+
     """
+
     n: NUMERIC
     alpha: NUMERIC
     beta: NUMERIC
@@ -279,11 +285,12 @@ class BetaNegativeBinomial(SliceMixin):
 @dataclass
 class Geometric(DiscretePlotMixin, SliceMixin):
     """Geometric distribution.
-    
+
     Args:
         p: probability of success
 
     """
+
     p: NUMERIC
 
     @property
@@ -294,35 +301,37 @@ class Geometric(DiscretePlotMixin, SliceMixin):
 @dataclass
 class Normal(ContinuousPlotDistMixin, SliceMixin):
     """Normal distribution.
-    
+
     Args:
         mu: mean
         sigma: standard deviation
 
     """
+
     mu: NUMERIC
     sigma: NUMERIC
 
     @property
     def dist(self):
         return stats.norm(self.mu, self.sigma)
-    
+
     def __mul__(self, other):
-        sigma = ((self.sigma ** 2) * other) ** 0.5
+        sigma = ((self.sigma**2) * other) ** 0.5
         return Normal(mu=self.mu * other, sigma=sigma)
-    
+
     __rmul__ = __mul__
 
 
 @dataclass
 class Uniform(ContinuousPlotDistMixin, SliceMixin):
     """Uniform distribution.
-    
+
     Args:
         low: lower bound
         high: upper bound
 
     """
+
     low: NUMERIC
     high: NUMERIC
 

@@ -20,6 +20,7 @@ class Distribution(Protocol):
 
 LABEL_INPUT = Union[str, Iterable[str], Callable[[int], str]]
 
+
 def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
     """
 
@@ -35,7 +36,7 @@ def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
 
         if callable(label):
             return [label(i) for i in range(1, ncols + 1)]
-            
+
         if isinstance(label, Iterable):
             return label
 
@@ -46,6 +47,7 @@ def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
 
 class PlotDistMixin:
     """Base mixin in order to support plotting. Requires the dist attribute of the scipy distribution."""
+
     @property
     def dist(self) -> Distribution:
         raise NotImplementedError("Implement this property in the subclass.")
@@ -80,16 +82,17 @@ class PlotDistMixin:
 
 class ContinuousPlotDistMixin(PlotDistMixin):
     """Functionality for plot_pdf method of continuous distributions."""
+
     def plot_pdf(self, ax: Optional[plt.Axes] = None, **kwargs) -> plt.Axes:
         """Plot the pdf of distribution
 
-        Args: 
+        Args:
             ax: matplotlib Axes, optional
             **kwargs: Additonal kwargs to pass to matplotlib
 
-        Returns: 
+        Returns:
             new or modified Axes
-        
+
         """
         ax = self._settle_axis(ax=ax)
 
@@ -97,14 +100,14 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         x = self._reshape_x_values(x)
 
         return self._create_plot_on_axis(x, ax, **kwargs)
-    
-    @property 
+
+    @property
     def min_value(self) -> float:
         if not hasattr(self, "_min_value"):
             self._min_value = 0.0
 
         return self._min_value
-    
+
     @min_value.setter
     def min_value(self, value: float) -> None:
         self._min_value = value
@@ -142,10 +145,11 @@ class ContinuousPlotDistMixin(PlotDistMixin):
 
 class DirichletPlotDistMixin(ContinuousPlotDistMixin):
     """Plot the pdf using samples from the dirichlet distribution."""
+
     def plot_pdf(
         self, ax: Optional[plt.Axes] = None, samples: int = 1_000, **kwargs
     ) -> plt.Axes:
-        """Plots the pdf """
+        """Plots the pdf"""
         distribution_samples = self.dist.rvs(size=samples)
 
         ax = self._settle_axis(ax=ax)
@@ -156,7 +160,7 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
 
             yy = kde(xx)
 
-            ax.plot(xx, yy)
+            ax.plot(xx, yy, **kwargs)
 
         self._setup_labels(ax=ax)
         return ax
@@ -164,6 +168,7 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
 
 class DiscretePlotMixin(PlotDistMixin):
     """Adding the plot_pmf method to class."""
+
     def plot_pmf(
         self, ax: Optional[plt.Axes] = None, mark: str = "o-", **kwargs
     ) -> plt.Axes:
