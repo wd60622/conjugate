@@ -14,6 +14,7 @@ from conjugate.distributions import (
     Gamma,
     NegativeBinomial,
     Poisson,
+    NormalInverseGamma,
 )
 from conjugate.models import (
     get_binomial_beta_posterior_params,
@@ -24,6 +25,7 @@ from conjugate.models import (
     poisson_gamma,
     poisson_gamma_posterior_predictive,
     get_exponential_gamma_posterior_params,
+    linear_regression,
 )
 
 
@@ -185,3 +187,48 @@ def test_multinomial_dirichlet_analysis(alpha) -> None:
     assert isinstance(posterior.alpha, np.ndarray)
 
     assert posterior.dist.mean().shape == alpha.shape
+
+
+def test_linear_regression() -> None:
+    n_points = 100
+
+    SIGMA = 1
+    INTERCEPT = 5
+    SLOPE = 2
+
+    rng = np.random.default_rng(42)
+
+    x = np.linspace(-5, 5, n_points)
+
+    y = INTERCEPT + SLOPE * x + rng.normal(loc=0, scale=SIGMA, size=n_points)
+
+    X = np.stack(
+        [
+            np.ones_like(x),
+            x,
+        ]
+    ).T
+
+    prior = NormalInverseGamma(
+        mu=np.array([0, 0]),
+        delta_inverse=np.array(
+            [
+                [5, 0],
+                [0, 5],
+            ]
+        ),
+        alpha=1,
+        beta=10,
+    )
+
+    posterior = linear_regression(X, y, prior)
+
+    beta_samples, sigma_samples = posterior.sample_beta(size=100, return_sigma=True)
+
+    def between(x, lower, upper):
+        return lower <= x <= upper
+
+    q = [0.025, 0.975]
+    assert between(INTERCEPT, *np.quantile(beta_samples[:, 0], q=q))
+    assert between(SLOPE, *np.quantile(beta_samples[:, 1], q=q))
+    assert between(SIGMA, *np.quantile(sigma_samples, q=q))

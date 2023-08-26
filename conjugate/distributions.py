@@ -35,7 +35,7 @@ Below are the currently supported distributions
 
 """
 from dataclasses import dataclass
-from typing import Any, Tuple
+from typing import Any, Tuple, Union
 
 import numpy as np
 
@@ -347,3 +347,52 @@ class Uniform(ContinuousPlotDistMixin, SliceMixin):
     @property
     def dist(self):
         return stats.uniform(self.low, self.high)
+
+
+@dataclass
+class NormalInverseGamma:
+    """Normal inverse gamma distribution."""
+
+    mu: NUMERIC
+    delta_inverse: NUMERIC
+    alpha: NUMERIC
+    beta: NUMERIC
+
+    def sample_sigma(self, size: int) -> NUMERIC:
+        """Sample sigma from the inverse gamma distribution.
+
+        Args:
+            size: number of samples
+
+        Returns:
+            sigma: samples from the inverse gamma distribution
+
+        """
+        return 1 / stats.gamma(a=self.alpha, scale=1 / self.beta).rvs(size=size)
+
+    def sample_beta(
+        self, size: int, return_sigma: bool = False
+    ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
+        """Sample beta from the normal distribution.
+
+        Args:
+            size: number of samples
+            return_sigma: whether to return sigma as well
+
+        Returns:
+            samples from the normal distribution and optionally sigma
+
+        """
+        sigma = self.sample_sigma(size=size)
+
+        beta = np.stack(
+            [
+                stats.multivariate_normal(self.mu, s * self.delta_inverse).rvs(size=1)
+                for s in sigma
+            ]
+        )
+
+        if return_sigma:
+            return beta, sigma
+
+        return beta

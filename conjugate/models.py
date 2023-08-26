@@ -5,6 +5,8 @@ Below are the supported models
 """
 from typing import Tuple
 
+import numpy as np
+
 from conjugate.distributions import (
     Beta,
     Dirichlet,
@@ -12,6 +14,7 @@ from conjugate.distributions import (
     NegativeBinomial,
     BetaNegativeBinomial,
     BetaBinomial,
+    NormalInverseGamma,
 )
 from conjugate._typing import NUMERIC
 
@@ -188,3 +191,55 @@ def exponetial_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
     )
 
     return Gamma(alpha=alpha_post, beta=beta_post)
+
+
+def linear_regression(
+    X: NUMERIC,
+    y: NUMERIC,
+    normal_inverse_gamma_prior: NormalInverseGamma,
+    inv=np.linalg.inv,
+) -> NormalInverseGamma:
+    """Posterior distribution for a linear regression model with a normal inverse gamma prior.
+
+    Derivation taken from this blog [here](https://gregorygundersen.com/blog/2020/02/04/bayesian-linear-regression/).
+
+    Args:
+        X: design matrix
+        y: response vector
+        normal_inverse_gamma_prior: NormalInverseGamma prior
+        inv: function to invert matrix, defaults to np.linalg.inv
+
+    Returns:
+        NormalInverseGamma posterior distribution
+
+    """
+    N = X.shape[0]
+
+    delta = inv(normal_inverse_gamma_prior.delta_inverse)
+
+    delta_post = (X.T @ X) + delta
+    delta_post_inverse = inv(delta_post)
+
+    mu_post = (
+        # (B, B)
+        delta_post_inverse
+        # (B, 1)
+        # (B, B) * (B, 1) +  (B, N) * (N, 1)
+        @ (delta @ normal_inverse_gamma_prior.mu + X.T @ y)
+    )
+
+    alpha_post = normal_inverse_gamma_prior.alpha + (0.5 * N)
+    beta_post = normal_inverse_gamma_prior.beta + (
+        0.5
+        * (
+            (y.T @ y)
+            # (1, B) * (B, B) * (B, 1)
+            + (normal_inverse_gamma_prior.mu.T @ delta @ normal_inverse_gamma_prior.mu)
+            # (1, B) * (B, B) * (B, 1)
+            - (mu_post.T @ delta_post @ mu_post)
+        )
+    )
+
+    return NormalInverseGamma(
+        mu=mu_post, delta_inverse=delta_post_inverse, alpha=alpha_post, beta=beta_post
+    )
