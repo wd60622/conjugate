@@ -166,7 +166,7 @@ class Exponential(ContinuousPlotDistMixin, SliceMixin):
         return stats.expon(scale=self.lam)
 
     def __mul__(self, other):
-        return Gamma(alpha=other, beta=self.lam)
+        return Gamma(alpha=other, beta=1 / self.lam)
 
     __rmul__ = __mul__
 
