@@ -35,7 +35,7 @@ def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
             return [f"{label} {i}" for i in range(1, ncols + 1)]
 
         if callable(label):
-            return [label(i) for i in range(1, ncols + 1)]
+            return [label(i) for i in range(ncols)]
 
         if isinstance(label, Iterable):
             return label
@@ -67,6 +67,27 @@ class PlotDistMixin:
         self.max_value = value
 
         return self
+
+    @property
+    def min_value(self) -> float:
+        if not hasattr(self, "_min_value"):
+            self._min_value = 0.0
+
+        return self._min_value
+
+    @min_value.setter
+    def min_value(self, value: float) -> None:
+        self._min_value = value
+
+    def set_min_value(self, value: float) -> "PlotDistMixin":
+        """Set the minimum value for plotting."""
+        self.min_value = value
+
+        return self
+
+    def set_bounds(self, lower: float, upper: float) -> "PlotDistMixin":
+        """Set both the min and max values for plotting."""
+        return self.set_min_value(lower).set_max_value(upper)
 
     def _reshape_x_values(self, x: np.ndarray) -> np.ndarray:
         """Make sure that the values are ready for plotting."""
@@ -100,27 +121,6 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         x = self._reshape_x_values(x)
 
         return self._create_plot_on_axis(x, ax, **kwargs)
-
-    @property
-    def min_value(self) -> float:
-        if not hasattr(self, "_min_value"):
-            self._min_value = 0.0
-
-        return self._min_value
-
-    @min_value.setter
-    def min_value(self, value: float) -> None:
-        self._min_value = value
-
-    def set_min_value(self, value: float) -> "ContinuousPlotDistMixin":
-        """Set the minimum value for plotting."""
-        self.min_value = value
-
-        return self
-
-    def set_bounds(self, lower: float, upper: float) -> "ContinuousPlotDistMixin":
-        """Set both the min and max values for plotting."""
-        return self.set_min_value(lower).set_max_value(upper)
 
     def _create_x_values(self) -> np.ndarray:
         return np.linspace(self.min_value, self.max_value, 100)
@@ -180,10 +180,18 @@ class DiscretePlotMixin(PlotDistMixin):
         return self._create_plot_on_axis(x, ax, mark, **kwargs)
 
     def _create_x_values(self) -> np.ndarray:
-        return np.arange(0, self.max_value + 1, 1)
+        return np.arange(self.min_value, self.max_value + 1, 1)
 
-    def _create_plot_on_axis(self, x, ax, mark, **kwargs) -> plt.Axes:
+    def _create_plot_on_axis(
+        self, x, ax, mark, conditional: bool = False, **kwargs
+    ) -> plt.Axes:
         yy = self.dist.pmf(x)
+        if conditional:
+            yy = yy / np.sum(yy)
+            ylabel = f"Conditional Probability $f(x|{self.min_value} \\leq x \\leq {self.max_value})$"
+        else:
+            ylabel = "Probability $f(x)$"
+
         if "label" in kwargs:
             label = kwargs.pop("label")
             label = resolve_label(label, yy)
@@ -191,10 +199,14 @@ class DiscretePlotMixin(PlotDistMixin):
             label = None
 
         ax.plot(x, yy, mark, label=label, **kwargs)
-        if self.max_value <= 15:
+
+        if self.max_value - self.min_value < 15:
             ax.set_xticks(x.ravel())
+        else:
+            ax.set_xticks(x.ravel(), minor=True)
+            ax.set_xticks(x[::5].ravel())
 
         ax.set_xlabel("Domain")
-        ax.set_ylabel("Probability $f(x)$")
+        ax.set_ylabel(ylabel)
         ax.set_ylim(0, None)
         return ax

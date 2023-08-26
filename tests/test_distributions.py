@@ -8,6 +8,7 @@ from conjugate.distributions import (
     Beta,
     Dirichlet,
     Gamma,
+    Exponential,
     NegativeBinomial,
     Poisson,
 )
@@ -76,14 +77,15 @@ def test_slicing(alpha, beta, result_alpha, result_beta):
 
 
 @pytest.mark.parametrize(
-    "dist, result_int",
+    "dist, result_dist",
     [
         (Poisson(1), Poisson(2)),
         (Gamma(1, 1), Gamma(2, 1)),
         (NegativeBinomial(1, 1), NegativeBinomial(2, 1)),
+        (Exponential(1), Gamma(2, 1)),
     ],
 )
-def test_distribution(dist, result_int) -> None:
+def test_distribution(dist, result_dist) -> None:
     if hasattr(dist, "plot_pdf"):
         with pytest.raises(ValueError):
             dist.plot_pdf()
@@ -100,8 +102,19 @@ def test_distribution(dist, result_int) -> None:
         ax = dist.plot_pmf()
     assert isinstance(ax, plt.Axes)
 
-    other = 2 * dist
-    assert other == result_int
+    if result_dist is not None:
+        other = 2 * dist
+        assert other == result_dist
+
+    lower, upper = -20, 20
+
+    assert dist.min_value != lower
+    assert dist.max_value != upper
+
+    dist.set_bounds(lower, upper)
+
+    assert dist.min_value == lower
+    assert dist.max_value == upper
 
 
 @pytest.mark.parametrize(
