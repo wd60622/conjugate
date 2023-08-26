@@ -14,7 +14,7 @@ from conjugate.plot import resolve_label
         ("label", np.ones(shape=(3, 2)), ["label 1", "label 2"]),
         ("label", np.ones(shape=(2, 3)), ["label 1", "label 2", "label 3"]),
         (
-            lambda i: f"another {i} label",
+            lambda i: f"another {i + 1} label",
             np.ones(shape=(2, 3)),
             ["another 1 label", "another 2 label", "another 3 label"],
         ),
