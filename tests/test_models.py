@@ -189,18 +189,20 @@ def test_multinomial_dirichlet_analysis(alpha) -> None:
     assert posterior.dist.mean().shape == alpha.shape
 
 
-def test_linear_regression() -> None:
+@pytest.mark.parametrize(
+    "intercept, slope, sigma",
+    [
+        (5, 2, 1),
+        (5, 2, 1.1),
+    ],
+)
+def test_linear_regression(intercept, slope, sigma) -> None:
     n_points = 100
-
-    SIGMA = 1
-    INTERCEPT = 5
-    SLOPE = 2
-
     rng = np.random.default_rng(42)
 
     x = np.linspace(-5, 5, n_points)
 
-    y = INTERCEPT + SLOPE * x + rng.normal(loc=0, scale=SIGMA, size=n_points)
+    y = intercept + slope * x + rng.normal(loc=0, scale=sigma, size=n_points)
 
     X = np.stack(
         [
@@ -223,12 +225,15 @@ def test_linear_regression() -> None:
 
     posterior = linear_regression(X, y, prior)
 
-    beta_samples, sigma_samples = posterior.sample_beta(size=100, return_sigma=True)
+    beta_samples, variance_samples = posterior.sample_beta(
+        size=500, return_variance=True, random_state=rng
+    )
+    sigma_samples = variance_samples**0.5
 
     def between(x, lower, upper):
         return lower <= x <= upper
 
     q = [0.025, 0.975]
-    assert between(INTERCEPT, *np.quantile(beta_samples[:, 0], q=q))
-    assert between(SLOPE, *np.quantile(beta_samples[:, 1], q=q))
-    assert between(SIGMA, *np.quantile(sigma_samples, q=q))
+    assert between(intercept, *np.quantile(beta_samples[:, 0], q=q))
+    assert between(slope, *np.quantile(beta_samples[:, 1], q=q))
+    assert between(sigma, *np.quantile(sigma_samples, q=q))
