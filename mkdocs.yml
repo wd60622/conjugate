@@ -51,6 +51,7 @@ nav:
     - Indexing: examples/indexing.md
     - Generalized Numerical Inputs: examples/generalized-inputs.md
     - Unsupported Distributions: examples/pymc-sampling.md
+    - Bayesian Update: examples/bayesian-update.md
 
 plugins:
 - search

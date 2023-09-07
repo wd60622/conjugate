@@ -350,6 +350,24 @@ class Uniform(ContinuousPlotDistMixin, SliceMixin):
 
 
 @dataclass
+class InverseGamma(ContinuousPlotDistMixin, SliceMixin):
+    """InverseGamma distribution.
+
+    Args:
+        alpha: shape
+        beta: scale
+
+    """
+
+    alpha: NUMERIC
+    beta: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.invgamma(a=self.alpha, scale=self.beta)
+
+
+@dataclass
 class NormalInverseGamma:
     """Normal inverse gamma distribution."""
 
@@ -358,41 +376,60 @@ class NormalInverseGamma:
     alpha: NUMERIC
     beta: NUMERIC
 
-    def sample_sigma(self, size: int) -> NUMERIC:
-        """Sample sigma from the inverse gamma distribution.
+    @classmethod
+    def from_inverse_gamma(
+        cls, mu: NUMERIC, delta_inverse: NUMERIC, inverse_gamma: InverseGamma
+    ) -> "NormalInverseGamma":
+        return cls(
+            mu=mu,
+            delta_inverse=delta_inverse,
+            alpha=inverse_gamma.alpha,
+            beta=inverse_gamma.beta,
+        )
+
+    @property
+    def inverse_gamma(self) -> InverseGamma:
+        return InverseGamma(alpha=self.alpha, beta=self.beta)
+
+    def sample_variance(self, size: int, random_state=None) -> NUMERIC:
+        """Sample variance from the inverse gamma distribution.
 
         Args:
             size: number of samples
+            random_state: random state
 
         Returns:
-            sigma: samples from the inverse gamma distribution
+            samples from the inverse gamma distribution
 
         """
-        return 1 / stats.gamma(a=self.alpha, scale=1 / self.beta).rvs(size=size)
+        return self.inverse_gamma.dist.rvs(size=size, random_state=random_state)
 
     def sample_beta(
-        self, size: int, return_sigma: bool = False
+        self, size: int, return_variance: bool = False, random_state=None
     ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
         """Sample beta from the normal distribution.
 
         Args:
             size: number of samples
-            return_sigma: whether to return sigma as well
+            return_variance: whether to return variance as well
+            random_state: random state
 
         Returns:
-            samples from the normal distribution and optionally sigma
+            samples from the normal distribution and optionally variance
 
         """
-        sigma = self.sample_sigma(size=size)
+        variance = self.sample_variance(size=size, random_state=random_state)
 
         beta = np.stack(
             [
-                stats.multivariate_normal(self.mu, s * self.delta_inverse).rvs(size=1)
-                for s in sigma
+                stats.multivariate_normal(self.mu, v * self.delta_inverse).rvs(
+                    size=1, random_state=random_state
+                )
+                for v in variance
             ]
         )
 
-        if return_sigma:
-            return beta, sigma
+        if return_variance:
+            return beta, variance
 
         return beta
