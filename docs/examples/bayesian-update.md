@@ -20,7 +20,6 @@ mu = 5.0
 sigma = 2.5
 rng = np.random.default_rng(0)
 sample = create_sampler(mu=mu, sigma=sigma, rng=rng)
-data = sample(n=10)
 
 
 prior = NormalInverseGamma(
