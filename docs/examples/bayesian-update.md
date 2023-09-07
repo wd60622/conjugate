@@ -2,8 +2,10 @@
 Easy to use Bayesian inference incrementally by making the posterior the prior for the next update.
 
 ```python
-from conjugate.models import linear_regression
+import numpy as np
 import matplotlib.pyplot as plt
+
+from conjugate.models import linear_regression
 
 def create_sampler(mu, sigma, rng): 
     """Generate a sampler from a normal distribution with mean `mu` and standard deviation `sigma`."""
