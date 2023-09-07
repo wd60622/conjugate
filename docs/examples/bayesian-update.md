@@ -5,6 +5,7 @@ Easy to use Bayesian inference incrementally by making the posterior the prior f
 import numpy as np
 import matplotlib.pyplot as plt
 
+from conjugate.distributions import NormalInverseGamma
 from conjugate.models import linear_regression
 
 def create_sampler(mu, sigma, rng): 
