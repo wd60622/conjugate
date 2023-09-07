@@ -52,6 +52,7 @@ nav:
     - Generalized Numerical Inputs: examples/generalized-inputs.md
     - Unsupported Distributions: examples/pymc-sampling.md
     - Bayesian Update: examples/bayesian-update.md
+    - Linear Regression: examples/linear-regression.md
 
 plugins:
 - search
