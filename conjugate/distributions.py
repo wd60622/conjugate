@@ -279,7 +279,6 @@ class BetaNegativeBinomial(SliceMixin):
         n: number of successes
         alpha: shape parameter
 
-
     """
 
     n: NUMERIC
@@ -369,7 +368,15 @@ class InverseGamma(ContinuousPlotDistMixin, SliceMixin):
 
 @dataclass
 class NormalInverseGamma:
-    """Normal inverse gamma distribution."""
+    """Normal inverse gamma distribution.
+
+    Args:
+        mu: mean
+        delta_inverse: covariance matrix
+        alpha: shape
+        beta: scale
+
+    """
 
     mu: NUMERIC
     delta_inverse: NUMERIC
@@ -433,3 +440,23 @@ class NormalInverseGamma:
             return beta, variance
 
         return beta
+
+
+@dataclass
+class StudentT(ContinuousPlotDistMixin, SliceMixin):
+    """StudentT distribution.
+
+    Args:
+        mu: mean
+        sigma: standard deviation
+        nu: degrees of freedom
+
+    """
+
+    mu: NUMERIC
+    sigma: NUMERIC
+    nu: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.t(self.nu, self.mu, self.sigma)
