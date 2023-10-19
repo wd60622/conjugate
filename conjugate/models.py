@@ -202,14 +202,14 @@ def normal_known_mean(
     mu: NUMERIC,
     inverse_gamma_prior: InverseGamma,
 ) -> InverseGamma:
-    """Posterior distribution for a normal likelihood with a known mean and a gamma prior.
+    """Posterior distribution for a normal likelihood with a known mean and a variance prior.
 
     Args:
         x_total: sum of all outcomes
         x2_total: sum of all outcomes squared
         n: total number of samples in x_total
         mu: known mean
-        inverse_gamma_prior: InverseGamma prior
+        inverse_gamma_prior: InverseGamma prior for variance
 
     Returns:
         InverseGamma posterior distribution for the variance
