@@ -433,3 +433,14 @@ class NormalInverseGamma:
             return beta, variance
 
         return beta
+
+
+@dataclass
+class StudentT(ContinuousPlotDistMixin, SliceMixin):
+    mu: NUMERIC
+    sigma: NUMERIC
+    nu: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.t(self.nu, self.mu, self.sigma)

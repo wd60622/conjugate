@@ -14,7 +14,9 @@ from conjugate.distributions import (
     NegativeBinomial,
     BetaNegativeBinomial,
     BetaBinomial,
+    InverseGamma,
     NormalInverseGamma,
+    StudentT,
 )
 from conjugate._typing import NUMERIC
 
@@ -191,6 +193,54 @@ def exponetial_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
     )
 
     return Gamma(alpha=alpha_post, beta=beta_post)
+
+
+def normal_known_mean(
+    x_total: NUMERIC,
+    x2_total: NUMERIC,
+    n: NUMERIC,
+    mu: NUMERIC,
+    inverse_gamma_prior: InverseGamma,
+) -> InverseGamma:
+    """Posterior distribution for a normal likelihood with a known mean and a gamma prior.
+
+    Args:
+        x_total: sum of all outcomes
+        x2_total: sum of all outcomes squared
+        n: total number of samples in x_total
+        mu: known mean
+        inverse_gamma_prior: InverseGamma prior
+
+    Returns:
+        InverseGamma posterior distribution for the variance
+
+    """
+    alpha_post = inverse_gamma_prior.alpha + (n / 2)
+    beta_post = inverse_gamma_prior.beta + (
+        0.5 * (x2_total - (2 * mu * x_total) + (n * (mu**2)))
+    )
+
+    return InverseGamma(alpha=alpha_post, beta=beta_post)
+
+
+def normal_known_mean_posterior_predictive(
+    mu: NUMERIC, inverse_gamma: InverseGamma
+) -> StudentT:
+    """Posterior predictive distribution for a normal likelihood with a known mean and a variance prior.
+
+    Args:
+        mu: known mean
+        inverse_gamma: InverseGamma prior
+
+    Returns:
+        StudentT posterior predictive distribution
+
+    """
+    return StudentT(
+        n=2 * inverse_gamma.alpha,
+        mu=mu,
+        sigma=(inverse_gamma.beta / inverse_gamma.alpha) ** 0.5,
+    )
 
 
 def linear_regression(
