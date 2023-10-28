@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 # Generalized Numerical Inputs
 
 Though the plotting is meant for numpy and python numbers, the conjugate models work with anything that works like numbers. 

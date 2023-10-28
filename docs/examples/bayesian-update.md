@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 
 Easy to use Bayesian inference incrementally by making the posterior the prior for the next update.
 

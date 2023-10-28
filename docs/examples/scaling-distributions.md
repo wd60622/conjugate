@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 # Scaling Distributions 
 
 Some of the distributions can be scaled by a constant factor or added together. For instance, operations with Poisson distribution represent the number of events in a given time interval. 

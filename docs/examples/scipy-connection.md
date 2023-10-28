@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 # Connection to SciPy Distributions
 
 Many distributions have the `dist` attribute which is a <a href=https://docs.scipy.org/doc/scipy/reference/stats.html>scipy.stats distribution</a> object. From there, the methods from scipy.stats to get the pdf, cdf, etc can be leveraged.

@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 # Indexing Parameters
 
 The distributions can be indexed for subsets. 
