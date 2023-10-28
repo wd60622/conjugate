@@ -2,6 +2,7 @@ site_name: Conjugate Models
 
 theme:
   name: "material"
+  custom_dir: docs/overrides
   features:
     - navigation.indexes
     - navigation.sections

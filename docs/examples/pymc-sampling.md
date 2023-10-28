@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 # Unsupported Posterior Predictive Distributions with PyMC Sampling
 
 The geometric beta model posterior predictive doesn't have a common dist, but what doesn't mean the posterior predictive can be used. For instance, PyMC can be used to fill in this gap.

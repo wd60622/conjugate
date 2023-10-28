@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 # Vectorized Inputs
 
 All data and priors will allow for vectorized assuming the shapes work for broadcasting. 

@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 
 ```python
 import numpy as np
