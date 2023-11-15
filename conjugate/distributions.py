@@ -327,6 +327,16 @@ class Normal(ContinuousPlotDistMixin, SliceMixin):
 
 
 @dataclass
+class MultivariateNormal:
+    mu: NUMERIC
+    sigma: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.multivariate_normal(mean=self.mu, cov=self.sigma)
+
+
+@dataclass
 class Uniform(ContinuousPlotDistMixin, SliceMixin):
     """Uniform distribution.
 
@@ -460,3 +470,14 @@ class StudentT(ContinuousPlotDistMixin, SliceMixin):
     @property
     def dist(self):
         return stats.t(self.nu, self.mu, self.sigma)
+
+
+@dataclass
+class MultivariateStudentT:
+    mu: NUMERIC
+    sigma: NUMERIC
+    nu: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.multivariate_t(loc=self.mu, shape=self.sigma, df=self.nu)
