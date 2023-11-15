@@ -17,6 +17,7 @@ from conjugate.distributions import (
     InverseGamma,
     NormalInverseGamma,
     StudentT,
+    MultivariateStudentT,
 )
 from conjugate._typing import NUMERIC
 
@@ -292,4 +293,21 @@ def linear_regression(
 
     return NormalInverseGamma(
         mu=mu_post, delta_inverse=delta_post_inverse, alpha=alpha_post, beta=beta_post
+    )
+
+
+def linear_regression_posterior_predictive(
+    normal_inverse_gamma: NormalInverseGamma, X: NUMERIC, eye=np.eye
+) -> MultivariateStudentT:
+    """Posterior predictive distribution for a linear regression model with a normal inverse gamma prior."""
+    mu = X @ normal_inverse_gamma.mu
+    sigma = (normal_inverse_gamma.beta / normal_inverse_gamma.alpha) * (
+        eye(X.shape[0]) + (X @ normal_inverse_gamma.delta_inverse @ X.T)
+    )
+    nu = 2 * normal_inverse_gamma.alpha
+
+    return MultivariateStudentT(
+        mu=mu,
+        sigma=sigma,
+        nu=nu,
     )
