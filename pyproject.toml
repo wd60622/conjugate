@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "conjugate-models"
-version = "0.2.0"
+version = "0.3.0"
 description = "Bayesian Conjugate Models in Python"
 authors = ["Will Dean <wd60622@gmail.com>"]
 license = "MIT"
@@ -26,10 +26,10 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
-matplotlib = "^3.6.2"
-numpy = "^1.24.3"
+matplotlib = "*"
+numpy = "*"
 pandas = "*"
-scipy = "<1.10.0"
+scipy = "*"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -39,12 +39,36 @@ pypika = "^0.48.9"
 pymc = "^5.5.0"
 black = "^23.3.0"
 ipython = "8.8.0"
+scikit-learn = "^1.3.2"
+tox = "^4.11.4"
 
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.4.3"
 mkdocs-material = "^9.1.17"
 mkdocstrings = {extras = ["python"], version = "^0.22.0"}
+
+[tool.tox]
+legacy_tox_ini = """
+    [tox]
+    min_version = 4.0
+    env_list =
+        py312
+        py311
+        py310
+        py39
+        type
+
+    [testenv]
+    deps = 
+        pytest 
+        pypika
+    commands = pytest tests
+
+    [testenv:type]
+    deps = mypy
+    commands = mypy src
+"""
 
 [build-system]
 requires = ["poetry-core"]
