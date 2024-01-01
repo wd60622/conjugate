@@ -1,5 +1,5 @@
 # conjugate priors
-![Tests](https://github.com/wd60622/conjugate/actions/workflows/tests.yml/badge.svg) [![PyPI version](https://badge.fury.io/py/conjugate-models.svg)](https://badge.fury.io/py/conjugate-models) [![Docs](https://github.com/wd60622/conjugate/actions/workflows/docs.yml/badge.svg)](https://github.com/wd60622/conjugate/actions/workflows/docs.yml)
+![Tests](https://github.com/wd60622/conjugate/actions/workflows/tests.yml/badge.svg) [![PyPI version](https://badge.fury.io/py/conjugate-models.svg)](https://badge.fury.io/py/conjugate-models) [![docs](https://github.com/wd60622/conjugate/actions/workflows/docs.yml/badge.svg)](https://github.com/wd60622/conjugate/actions/workflows/docs.yml)
 
 Bayesian conjugate models in Python
 
