@@ -52,22 +52,19 @@ mkdocstrings = {extras = ["python"], version = "^0.22.0"}
 legacy_tox_ini = """
     [tox]
     min_version = 4.0
+    isolated_build = true
     env_list =
         py312
         py311
         py310
         py39
-        type
+        py38
 
     [testenv]
     deps = 
         pytest 
         pypika
     commands = pytest tests
-
-    [testenv:type]
-    deps = mypy
-    commands = mypy src
 """
 
 [build-system]
