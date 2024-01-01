@@ -15,6 +15,7 @@ from conjugate.distributions import (
     NegativeBinomial,
     Poisson,
     NormalInverseGamma,
+    MultivariateStudentT,
 )
 from conjugate.models import (
     get_binomial_beta_posterior_params,
@@ -26,6 +27,7 @@ from conjugate.models import (
     poisson_gamma_posterior_predictive,
     get_exponential_gamma_posterior_params,
     linear_regression,
+    linear_regression_posterior_predictive,
 )
 
 
@@ -237,3 +239,8 @@ def test_linear_regression(intercept, slope, sigma) -> None:
     assert between(intercept, *np.quantile(beta_samples[:, 0], q=q))
     assert between(slope, *np.quantile(beta_samples[:, 1], q=q))
     assert between(sigma, *np.quantile(sigma_samples, q=q))
+
+    posterior_predictive = linear_regression_posterior_predictive(
+        normal_inverse_gamma=posterior, X=X
+    )
+    assert isinstance(posterior_predictive, MultivariateStudentT)
