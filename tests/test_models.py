@@ -13,7 +13,6 @@ from conjugate.distributions import (
     Dirichlet,
     Gamma,
     NegativeBinomial,
-    Poisson,
     NormalInverseGamma,
     MultivariateStudentT,
 )
@@ -22,10 +21,8 @@ from conjugate.models import (
     binomial_beta,
     multinomial_dirichlet,
     geometric_beta,
-    get_poisson_gamma_posterior_params,
     poisson_gamma,
     poisson_gamma_posterior_predictive,
-    get_exponential_gamma_posterior_params,
     linear_regression,
     linear_regression_posterior_predictive,
 )
