@@ -43,7 +43,7 @@ def test_beta(alpha, beta) -> None:
         (np.array([1, 10, 100]), np.array([1, 10, 100]), 1, 1),
     ],
 )
-def test_slicing(alpha, beta, result_alpha, result_beta):
+def test_slicing_single(alpha, beta, result_alpha, result_beta):
     beta = Beta(alpha=alpha, beta=beta)
     beta_slice = beta[0]
     assert isinstance(beta_slice, Beta)
@@ -67,7 +67,7 @@ def test_slicing(alpha, beta, result_alpha, result_beta):
         ),
     ],
 )
-def test_slicing(alpha, beta, result_alpha, result_beta):
+def test_slicing_array(alpha, beta, result_alpha, result_beta):
     beta = Beta(alpha=alpha, beta=beta)
     beta_slice = beta[:2]
     assert isinstance(beta_slice, Beta)
