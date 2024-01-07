@@ -3,7 +3,7 @@ hide:
     - navigation 
 ---
 # Conjugate Models
-![Tests](https://github.com/wd60622/conjugate/actions/workflows/tests.yml/badge.svg) [![PyPI version](https://badge.fury.io/py/conjugate-models.svg)](https://badge.fury.io/py/conjugate-models) [![docs](https://github.com/wd60622/conjugate/actions/workflows/docs.yml/badge.svg)](https://github.com/wd60622/conjugate/actions/workflows/docs.yml)
+[![Tests](https://github.com/wd60622/conjugate/actions/workflows/tests.yml/badge.svg)](https://github.com/wd60622/conjugate/actions/workflows/tests.yml) [![PyPI version](https://badge.fury.io/py/conjugate-models.svg)](https://badge.fury.io/py/conjugate-models) [![docs](https://github.com/wd60622/conjugate/actions/workflows/docs.yml/badge.svg)](https://wd60622.github.io/conjugate/)
 
 Bayesian conjugate models in Python
 
