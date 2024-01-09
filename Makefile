@@ -7,7 +7,7 @@ cov:
 	poetry run pytest --cov-report html --cov=conjugate tests && open htmlcov/index.html
 
 format: 
-	poetry run black conjugate tests
+	poetry run pre-commit run --all-files
 
 html: 
 	open http://localhost:8000/
