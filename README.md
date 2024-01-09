@@ -14,7 +14,30 @@ Bayesian conjugate models in Python
 pip install conjugate-models
 ```
 
+## Features 
+
+- [Connection to Scipy Distributions](./docs/examples/scipy-connection.md) with `dist` attribute
+- [Built in Plotting](./docs/examples/plotting.md) with `plot_pdf` and `plot_pmf` methods
+- [Vectorized Operations](./docs/examples/vectorized-inputs.md) for parameters and data
+- [Indexing Parameters](./docs/examples/indexing.md) for subsetting and slicing
+- [Generalized Numerical Inputs](./docs/examples/generalized-inputs.md) for inputs other than builtins and numpy arrays
+- [Unsupported Distributions](./docs/examples/pymc-sampling.md) for sampling from unsupported distributions
+
+## Supported Models 
+
+Many likelihoods are supported including
+
+- `Bernoulli` / `Binomial`
+- `Categorical` / `Multinomial`
+- `Poisson`
+- `Normal` (including linear regression)
+- and [many more](./docs/models.md)
+
 ## Basic Usage
+
+1. Define prior distribution from `distributions` module
+1. Pass data and prior into model from `models` modules
+1. Analytics with posterior and posterior predictive distributions
 
 ```python 
 from conjugate.distributions import Beta, BetaBinomial
