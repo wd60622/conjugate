@@ -77,6 +77,7 @@ def bernoulli_beta(x: NUMERIC, beta_prior: Beta) -> Beta:
     """
     return binomial_beta(n=1, x=x, beta_prior=beta_prior)
 
+
 def bernoulli_beta_posterior_predictive(beta: Beta) -> BetaBinomial:
     """Posterior predictive distribution for a bernoulli likelihood with a beta prior.
 
@@ -197,7 +198,7 @@ def get_poisson_gamma_posterior_params(
 
 
 def poisson_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
-    """Posterior distribution for a poisson likelihood with a gamma prior. 
+    """Posterior distribution for a poisson likelihood with a gamma prior.
 
     Args:
         x_total: sum of all outcomes
@@ -241,7 +242,7 @@ get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
 
 def exponetial_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
     """Posterior distribution for an exponential likelihood with a gamma prior.
-    
+
     Args:
         x_total: sum of all outcomes
         n: total number of samples in x_total
