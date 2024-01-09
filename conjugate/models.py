@@ -64,10 +64,43 @@ def binomial_beta_posterior_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
     return BetaBinomial(n=n, alpha=beta.alpha, beta=beta.beta)
 
 
+def bernoulli_beta(x: NUMERIC, beta_prior: Beta) -> Beta:
+    """Posterior distribution for a bernoulli likelihood with a beta prior.
+
+    Args:
+        x: sucesses from that trials
+        beta_prior: Beta distribution prior
+
+    Returns:
+        Beta distribution posterior
+
+    """
+    return binomial_beta(n=1, x=x, beta_prior=beta_prior)
+
+def bernoulli_beta_posterior_predictive(beta: Beta) -> BetaBinomial:
+    """Posterior predictive distribution for a bernoulli likelihood with a beta prior.
+
+    Args:
+        beta: Beta distribution
+
+    Returns:
+        BetaBinomial posterior predictive distribution
+
+    """
+    return binomial_beta_posterior_predictive(n=1, beta=beta)
+
+
 def negative_binomial_beta(r, n, x, beta_prior: Beta) -> Beta:
     """Posterior distribution for a negative binomial likelihood with a beta prior.
 
     Args:
+        r: number of failures
+        n: number of trials
+        x: number of successes
+        beta_prior: Beta distribution prior
+
+    Returns:
+        Beta distribution posterior
 
     """
     alpha_post = beta_prior.alpha + (r * n)
@@ -117,7 +150,16 @@ def get_categorical_dirichlet_posterior_params(
 
 
 def categorical_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
-    """Posterior distribution of Categorical model with Dirichlet prior."""
+    """Posterior distribution of Categorical model with Dirichlet prior.
+
+    Args:
+        x: counts
+        dirichlet_prior: Dirichlet prior on the counts
+
+    Returns:
+        Dirichlet posterior distribution
+
+    """
     alpha_post = get_dirichlet_posterior_params(dirichlet_prior.alpha, x)
 
     return Dirichlet(alpha=alpha_post)
@@ -155,7 +197,17 @@ def get_poisson_gamma_posterior_params(
 
 
 def poisson_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
-    """Posterior distribution for a poisson likelihood with a gamma prior"""
+    """Posterior distribution for a poisson likelihood with a gamma prior. 
+
+    Args:
+        x_total: sum of all outcomes
+        n: total number of samples in x_total
+        gamma_prior: Gamma prior
+
+    Returns:
+        Gamma posterior distribution
+
+    """
     alpha_post, beta_post = get_poisson_gamma_posterior_params(
         alpha=gamma_prior.alpha, beta=gamma_prior.beta, x_total=x_total, n=n
     )
@@ -188,7 +240,17 @@ get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
 
 
 def exponetial_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
-    """Posterior distribution for an exponential likelihood with a gamma prior"""
+    """Posterior distribution for an exponential likelihood with a gamma prior.
+    
+    Args:
+        x_total: sum of all outcomes
+        n: total number of samples in x_total
+        gamma_prior: Gamma prior
+
+    Returns:
+        Gamma posterior distribution
+
+    """
     alpha_post, beta_post = get_exponential_gamma_posterior_params(
         alpha=gamma_prior.alpha, beta=gamma_prior.beta, x_total=x_total, n=n
     )
@@ -299,7 +361,17 @@ def linear_regression(
 def linear_regression_posterior_predictive(
     normal_inverse_gamma: NormalInverseGamma, X: NUMERIC, eye=np.eye
 ) -> MultivariateStudentT:
-    """Posterior predictive distribution for a linear regression model with a normal inverse gamma prior."""
+    """Posterior predictive distribution for a linear regression model with a normal inverse gamma prior.
+
+    Args:
+        normal_inverse_gamma: NormalInverseGamma posterior
+        X: design matrix
+        eye: function to get identity matrix, defaults to np.eye
+
+    Returns:
+        MultivariateStudentT posterior predictive distribution
+
+    """
     mu = X @ normal_inverse_gamma.mu
     sigma = (normal_inverse_gamma.beta / normal_inverse_gamma.alpha) * (
         eye(X.shape[0]) + (X @ normal_inverse_gamma.delta_inverse @ X.T)
