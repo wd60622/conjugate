@@ -240,7 +240,7 @@ def poisson_gamma_posterior_predictive(
 get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
 
 
-def exponetial_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
+def exponential_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
     """Posterior distribution for an exponential likelihood with a gamma prior.
 
     Args:
