@@ -378,18 +378,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Usage
+      Features
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#supported-models" class="md-nav__link">
     <span class="md-ellipsis">
-      Features
+      Supported Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Usage
     </span>
   </a>
   
@@ -860,18 +869,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Usage
+      Features
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#supported-models" class="md-nav__link">
     <span class="md-ellipsis">
-      Features
+      Supported Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Usage
     </span>
   </a>
   
@@ -922,7 +940,30 @@
 <h2 id="installation">Installation</h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>conjugate-models
 </span></code></pre></div>
+<h2 id="features">Features</h2>
+<ul>
+<li><a href="examples/scipy-connection/">Connection to Scipy Distributions</a> with <code>dist</code> attribute</li>
+<li><a href="examples/plotting/">Built in Plotting</a> with <code>plot_pdf</code> and <code>plot_pmf</code> methods</li>
+<li><a href="examples/vectorized-inputs/">Vectorized Operations</a> for parameters and data</li>
+<li><a href="examples/indexing/">Indexing Parameters</a> for subsetting and slicing</li>
+<li><a href="examples/generalized-inputs/">Generalized Numerical Inputs</a> for inputs other than builtins and numpy arrays</li>
+<li><a href="examples/pymc-sampling/">Unsupported Distributions</a> for sampling from unsupported distributions</li>
+</ul>
+<h2 id="supported-models">Supported Models</h2>
+<p>Many likelihoods are supported including</p>
+<ul>
+<li><code>Bernoulli</code> / <code>Binomial</code></li>
+<li><code>Categorical</code> / <code>Multinomial</code></li>
+<li><code>Poisson</code></li>
+<li><code>Normal</code> (including linear regression)</li>
+<li>and <a href="models/">many more</a></li>
+</ul>
 <h2 id="basic-usage">Basic Usage</h2>
+<ol>
+<li>Define prior distribution from <code>distributions</code> module</li>
+<li>Pass data and prior into model from <code>models</code> modules</li>
+<li>Analytics with posterior and posterior predictive distributions</li>
+</ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">conjugate.distributions</span> <span class="kn">import</span> <span class="n">Beta</span><span class="p">,</span> <span class="n">BetaBinomial</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span> <span class="nn">conjugate.models</span> <span class="kn">import</span> <span class="n">binomial_beta</span><span class="p">,</span> <span class="n">binomial_beta_posterior_predictive</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
@@ -958,15 +999,6 @@
 </span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </span></code></pre></div>
 <p><img height=400 src="images/binomial-beta.png" title="Binomial Beta Comparison"></p>
-<h2 id="features">Features</h2>
-<ul>
-<li><a href="examples/scipy-connection/">Connection to Scipy Distributions</a> with <code>dist</code> attribute</li>
-<li><a href="examples/plotting/">Built in Plotting</a> with <code>plot_pdf</code> and <code>plot_pmf</code> methods</li>
-<li><a href="examples/vectorized-inputs/">Vectorized Operations</a> for parameters and data</li>
-<li><a href="examples/indexing/">Indexing Parameters</a> for subsetting and slicing</li>
-<li><a href="examples/generalized-inputs/">Generalized Numerical Inputs</a> for inputs other than builtins and numpy arrays</li>
-<li><a href="examples/pymc-sampling/">Unsupported Distributions</a> for sampling from unsupported distributions</li>
-</ul>
 <h2 id="too-simple">Too Simple?</h2>
 <p>Simple model, sure. Useful model, potentially.</p>
 <p>Constant probability of success, <code>p</code>, for <code>n</code> trials.</p>
