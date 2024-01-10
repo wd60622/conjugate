@@ -55,7 +55,7 @@ def get_beta_param_from_mean_and_alpha(
 ) -> Tuple[NUMERIC, NUMERIC]:
     beta = alpha * ((1 / mean) - 1)
 
-    return alpha, beta
+    return beta
 
 
 @dataclass
