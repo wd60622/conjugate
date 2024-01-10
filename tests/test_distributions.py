@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from conjugate.distributions import (
+    get_beta_param_from_mean_and_alpha,
     Beta,
     Dirichlet,
     Gamma,
@@ -30,6 +31,16 @@ def test_beta(alpha, beta) -> None:
 
     ax = beta.plot_pdf()
     assert isinstance(ax, plt.Axes)
+
+
+@pytest.mark.parametrize("mean", [0.025, 0.5, 0.75])
+@pytest.mark.parametrize("alpha", [1, 10, 100])
+def test_beta_mean_constructor(mean: float, alpha: float) -> None:
+    beta = get_beta_param_from_mean_and_alpha(mean, alpha)
+    dist = Beta.from_mean(mean=mean, alpha=alpha)
+
+    assert beta > 0
+    assert dist.beta == beta
 
 
 @pytest.mark.parametrize(
