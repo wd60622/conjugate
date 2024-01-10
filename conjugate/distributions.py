@@ -50,9 +50,7 @@ from conjugate.plot import (
 from conjugate.slice import SliceMixin
 
 
-def get_beta_param_from_mean_and_alpha(
-    mean: NUMERIC, alpha: NUMERIC
-) -> Tuple[NUMERIC, NUMERIC]:
+def get_beta_param_from_mean_and_alpha(mean: NUMERIC, alpha: NUMERIC) -> NUMERIC:
     beta = alpha * ((1 / mean) - 1)
 
     return beta
@@ -75,13 +73,15 @@ class Beta(ContinuousPlotDistMixin, SliceMixin):
         self.max_value = 1.0
 
     @classmethod
-    def from_mean(cls, mean: float, alpha: float) -> "Beta":
+    def from_mean(cls, mean: NUMERIC, alpha: NUMERIC) -> "Beta":
         """Alternative constructor from mean and alpha."""
         beta = get_beta_param_from_mean_and_alpha(mean=mean, alpha=alpha)
         return cls(alpha=alpha, beta=beta)
 
     @classmethod
-    def from_successes_and_failures(cls, successes: int, failures: int) -> "Beta":
+    def from_successes_and_failures(
+        cls, successes: NUMERIC, failures: NUMERIC
+    ) -> "Beta":
         """Alternative constructor based on hyperparameter interpretation."""
         alpha = successes + 1
         beta = failures + 1
