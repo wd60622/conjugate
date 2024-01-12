@@ -37,7 +37,7 @@ pytest-cov = "^4.1.0"
 pandas = "*"
 pypika = "^0.48.9"
 pymc = "^5.5.0"
-ipython = "8.8.0"
+ipython = "8.10.0"
 scikit-learn = "^1.3.2"
 tox = "^4.11.4"
 
