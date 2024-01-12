@@ -28,13 +28,13 @@ classifiers = [
 python = ">=3.8,<4.0"
 matplotlib = "*"
 numpy = "*"
-pandas = "*"
 scipy = "*"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"
 pytest-cov = "^4.1.0"
+pandas = "*"
 pypika = "^0.48.9"
 pymc = "^5.5.0"
 ipython = "8.8.0"
