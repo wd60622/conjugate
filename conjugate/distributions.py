@@ -234,7 +234,7 @@ class Hypergeometric(DiscretePlotMixin, SliceMixin):
     k: NUMERIC
     n: NUMERIC
 
-    def __post_init__(self) -> None: 
+    def __post_init__(self) -> None:
         if isinstance(self.N, np.ndarray):
             self.max_value = self.N.max()
         else:
@@ -311,7 +311,7 @@ class BetaNegativeBinomial(SliceMixin):
     alpha: NUMERIC
     beta: NUMERIC
 
-    @property 
+    @property
     def dist(self):
         return stats.betanbinom(self.n, self.alpha, self.beta)
 
@@ -512,6 +512,7 @@ class MultivariateStudentT:
         nu: degrees of freedom
 
     """
+
     mu: NUMERIC
     sigma: NUMERIC
     nu: NUMERIC

@@ -12,7 +12,6 @@ from conjugate.distributions import (
     Dirichlet,
     Gamma,
     NegativeBinomial,
-    Hypergeometric,
     BetaNegativeBinomial,
     BetaBinomial,
     InverseGamma,
@@ -121,7 +120,7 @@ def hypergeometric_beta_binomial(
 ) -> BetaBinomial:
     """Hypergeometric likelihood with a BetaBinomial prior.
 
-    The total population size is N and is known. Encode it in the BetaBinomial 
+    The total population size is N and is known. Encode it in the BetaBinomial
         prior as n=N
 
     Args:
