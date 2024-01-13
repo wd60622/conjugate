@@ -10,6 +10,7 @@ import numpy as np
 from conjugate.distributions import (
     Beta,
     Dirichlet,
+    DirichletMultinomial,
     Gamma,
     NegativeBinomial,
     BetaNegativeBinomial,
@@ -208,6 +209,20 @@ def categorical_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
     return Dirichlet(alpha=alpha_post)
 
 
+def categorical_dirichlet_posterior_predictive(
+    dirichlet: Dirichlet, n: NUMERIC = 1
+) -> DirichletMultinomial:
+    """Posterior predictive distribution of Categorical model with Dirichlet prior.
+
+    Args:
+        dirichlet: Dirichlet distribution
+        n: Number of trials for each sample, defaults to 1.
+
+    """
+
+    return DirichletMultinomial(n=n, alpha=dirichlet.alpha)
+
+
 def get_multi_categorical_dirichlet_posterior_params(
     alpha_prior: NUMERIC, x: NUMERIC
 ) -> NUMERIC:
@@ -228,6 +243,20 @@ def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
     alpha_post = get_dirichlet_posterior_params(dirichlet_prior.alpha, x)
 
     return Dirichlet(alpha=alpha_post)
+
+
+def multinomial_dirichlet_posterior_predictive(
+    dirichlet: Dirichlet, n: NUMERIC = 1
+) -> DirichletMultinomial:
+    """Posterior predictive distribution of Multinomial model with Dirichlet prior.
+
+    Args:
+        dirichlet: Dirichlet distribution
+        n: Number of trials for each sample, defaults to 1.
+
+    """
+
+    return DirichletMultinomial(n=n, alpha=dirichlet.alpha)
 
 
 def get_poisson_gamma_posterior_params(

@@ -151,6 +151,42 @@ class Dirichlet(DirichletPlotDistMixin):
 
 
 @dataclass
+class Multinomial(SliceMixin):
+    """Multinomial distribution.
+
+    Args:
+        n: number of trials
+        p: probability of success
+
+    """
+
+    n: NUMERIC
+    p: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.multinomial(n=self.n, p=self.p)
+
+
+@dataclass
+class DirichletMultinomial(SliceMixin):
+    """Dirichlet multinomial distribution.
+
+    Args:
+        alpha: shape parameter
+        n: number of trials
+
+    """
+
+    alpha: NUMERIC
+    n: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.dirichlet_multinomial(self.alpha, self.n)
+
+
+@dataclass
 class Exponential(ContinuousPlotDistMixin, SliceMixin):
     """Exponential distribution.
 
