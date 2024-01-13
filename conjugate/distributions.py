@@ -220,6 +220,32 @@ class NegativeBinomial(DiscretePlotMixin, SliceMixin):
 
 
 @dataclass
+class Hypergeometric(DiscretePlotMixin, SliceMixin):
+    """Hypergeometric distribution.
+
+    Args:
+        N: population size
+        k: number of successes in the population
+        n: number of draws
+
+    """
+
+    N: NUMERIC
+    k: NUMERIC
+    n: NUMERIC
+
+    def __post_init__(self) -> None:
+        if isinstance(self.N, np.ndarray):
+            self.max_value = self.N.max()
+        else:
+            self.max_value = self.N
+
+    @property
+    def dist(self):
+        return stats.hypergeom(self.N, self.k, self.n)
+
+
+@dataclass
 class Poisson(DiscretePlotMixin, SliceMixin):
     """Poisson distribution.
 
@@ -284,6 +310,10 @@ class BetaNegativeBinomial(SliceMixin):
     n: NUMERIC
     alpha: NUMERIC
     beta: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.betanbinom(self.n, self.alpha, self.beta)
 
 
 @dataclass
@@ -474,6 +504,15 @@ class StudentT(ContinuousPlotDistMixin, SliceMixin):
 
 @dataclass
 class MultivariateStudentT:
+    """MultivariateStudentT distribution.
+
+    Args:
+        mu: mean
+        sigma: covariance matrix
+        nu: degrees of freedom
+
+    """
+
     mu: NUMERIC
     sigma: NUMERIC
     nu: NUMERIC

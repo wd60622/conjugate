@@ -115,6 +115,31 @@ def negative_binomial_beta_posterior_predictive(r, beta: Beta) -> BetaNegativeBi
     return BetaNegativeBinomial(r=r, alpha=beta.alpha, beta=beta.beta)
 
 
+def hypergeometric_beta_binomial(
+    x_total: NUMERIC, n: NUMERIC, beta_binomial_prior: BetaBinomial
+) -> BetaBinomial:
+    """Hypergeometric likelihood with a BetaBinomial prior.
+
+    The total population size is N and is known. Encode it in the BetaBinomial
+        prior as n=N
+
+    Args:
+        x_total: sum of all trials outcomes
+        n: total number of trials
+        beta_binomial_prior: BetaBinomial prior
+            n is the known N / total population size
+
+    Returns:
+        BetaBinomial posterior distribution
+
+    """
+    n = beta_binomial_prior.n
+    alpha_post = beta_binomial_prior.alpha + x_total
+    beta_post = beta_binomial_prior.beta + (n - x_total)
+
+    return BetaBinomial(n=n, alpha=alpha_post, beta=beta_post)
+
+
 def geometric_beta(x_total, n, beta_prior: Beta, one_start: bool = True) -> Beta:
     """Posterior distribution for a geometric likelihood with a beta prior.
 
