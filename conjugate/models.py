@@ -91,8 +91,12 @@ def bernoulli_beta_posterior_predictive(beta: Beta) -> BetaBinomial:
     return binomial_beta_posterior_predictive(n=1, beta=beta)
 
 
-def negative_binomial_beta(r, n, x, beta_prior: Beta) -> Beta:
+def negative_binomial_beta(
+    r: NUMERIC, n: NUMERIC, x: NUMERIC, beta_prior: Beta
+) -> Beta:
     """Posterior distribution for a negative binomial likelihood with a beta prior.
+
+    Assumed known number of failures r
 
     Args:
         r: number of failures
@@ -110,8 +114,21 @@ def negative_binomial_beta(r, n, x, beta_prior: Beta) -> Beta:
     return Beta(alpha=alpha_post, beta=beta_post)
 
 
-def negative_binomial_beta_posterior_predictive(r, beta: Beta) -> BetaNegativeBinomial:
-    """Posterior predictive distribution for a negative binomial likelihood with a beta prior"""
+def negative_binomial_beta_posterior_predictive(
+    r: NUMERIC, beta: Beta
+) -> BetaNegativeBinomial:
+    """Posterior predictive distribution for a negative binomial likelihood with a beta prior
+
+    Assumed known number of failures r
+
+    Args:
+        r: number of failures
+        beta: Beta distribution
+
+    Returns:
+        BetaNegativeBinomial posterior predictive distribution
+
+    """
     return BetaNegativeBinomial(r=r, alpha=beta.alpha, beta=beta.beta)
 
 
