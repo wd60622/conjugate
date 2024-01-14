@@ -37,9 +37,11 @@ Below are the currently supported distributions
 from dataclasses import dataclass
 from typing import Any, Tuple, Union
 
+from packaging import version
+
 import numpy as np
 
-from scipy import stats
+from scipy import stats, __version__ as scipy_version
 
 from conjugate._typing import NUMERIC
 from conjugate.plot import (
@@ -334,12 +336,13 @@ class BetaBinomial(DiscretePlotMixin, SliceMixin):
 
 
 @dataclass
-class BetaNegativeBinomial(SliceMixin):
+class BetaNegativeBinomial(DiscretePlotMixin, SliceMixin):
     """Beta negative binomial distribution.
 
     Args:
         n: number of successes
         alpha: shape parameter
+        beta: shape parameter
 
     """
 
@@ -347,8 +350,18 @@ class BetaNegativeBinomial(SliceMixin):
     alpha: NUMERIC
     beta: NUMERIC
 
+    def __post_init__(self):
+        if isinstance(self.n, np.ndarray):
+            self.max_value = self.n.max()
+        else:
+            self.max_value = self.n
+
     @property
     def dist(self):
+        if version.parse(scipy_version).release < version.parse("1.12.0").release:
+            msg = "BetaNegativeBinomial.dist requires scipy >= 1.12.0"
+            raise NotImplementedError(msg)
+
         return stats.betanbinom(self.n, self.alpha, self.beta)
 
 

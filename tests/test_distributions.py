@@ -1,12 +1,17 @@
 import pytest
 
+from packaging import version
+
 import numpy as np
 
 import matplotlib.pyplot as plt
 
+from scipy import __version__ as scipy_version
+
 from conjugate.distributions import (
     get_beta_param_from_mean_and_alpha,
     Beta,
+    BetaNegativeBinomial,
     Dirichlet,
     Gamma,
     Exponential,
@@ -41,6 +46,34 @@ def test_beta_mean_constructor(mean: float, alpha: float) -> None:
 
     assert beta > 0
     assert dist.beta == beta
+    assert round(dist.dist.mean(), 3) == mean
+
+
+beta_negative_binomial_dist_supported = (
+    version.parse(scipy_version).release >= version.parse("1.12.0").release
+)
+
+
+@pytest.mark.skipif(
+    beta_negative_binomial_dist_supported,
+    reason="scipy version must be < 1.12.0",
+)
+def test_beta_negative_binomial_scipy_not_supported() -> None:
+    beta = BetaNegativeBinomial(n=10, alpha=1, beta=1)
+    # Requires the scipy version to be < 1.12.0
+    with pytest.raises(NotImplementedError, match="scipy >= 1.12.0"):
+        beta.plot_pmf()
+
+
+@pytest.mark.skipif(
+    not beta_negative_binomial_dist_supported,
+    reason="scipy version must be >= 1.12.0",
+)
+def test_beta_negative_binomial_scipy_supported() -> None:
+    beta = BetaNegativeBinomial(n=10, alpha=1, beta=1)
+    # Requires the scipy version to be >= 1.12.0
+    ax = beta.plot_pmf()
+    assert isinstance(ax, plt.Axes)
 
 
 @pytest.mark.parametrize(
