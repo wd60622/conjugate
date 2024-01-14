@@ -13,6 +13,7 @@ from conjugate.distributions import (
     Dirichlet,
     Pareto,
     Gamma,
+    Lomax,
     NegativeBinomial,
     NormalInverseGamma,
     MultivariateStudentT,
@@ -28,6 +29,8 @@ from conjugate.models import (
     linear_regression_posterior_predictive,
     uniform_pareto,
     pareto_gamma,
+    exponential_gamma,
+    exponential_gamma_posterior_predictive,
 )
 
 
@@ -286,3 +289,19 @@ def test_pareto_gamma() -> None:
     assert isinstance(posterior, Gamma)
     assert posterior.alpha == 6
     assert posterior.beta == 5.787491742782046
+
+
+def test_exponential_gamma() -> None:
+    data = [1, 2, 3, 4, 5]
+
+    n = len(data)
+    x_total = sum(data)
+
+    prior = Gamma(alpha=1, beta=1)
+    posterior = exponential_gamma(x_total=x_total, n=n, gamma_prior=prior)
+
+    assert isinstance(posterior, Gamma)
+
+    posterior_predictive = exponential_gamma_posterior_predictive(gamma=posterior)
+
+    assert isinstance(posterior_predictive, Lomax)

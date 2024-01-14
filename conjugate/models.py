@@ -20,6 +20,7 @@ from conjugate.distributions import (
     NormalInverseGamma,
     StudentT,
     MultivariateStudentT,
+    Lomax,
 )
 from conjugate._typing import NUMERIC
 
@@ -329,6 +330,53 @@ def exponential_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma
     )
 
     return Gamma(alpha=alpha_post, beta=beta_post)
+
+
+def exponential_gamma_posterior_predictive(gamma: Gamma) -> Lomax:
+    """Posterior predictive distribution for an exponential likelihood with a gamma prior
+
+    Args:
+        gamma: Gamma distribution
+
+    Returns:
+        Lomax distribution related to posterior predictive
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Exponential, Gamma
+        from conjugate.models import exponential_gamma, expotential_gamma_posterior_predictive
+
+        true = Exponential(1)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = Gamma(1, 1)
+
+        posterior = exponential_gamma(
+            n=n_samples,
+            x_total=data.sum(),
+            gamma_prior=prior
+        )
+
+        prior_predictive = expotential_gamma_posterior_predictive(prior)
+        posterior_predictive = expotential_gamma_posterior_predictive(posterior)
+
+        ax = plt.subplot(111)
+        prior_predictive.set_bounds(0, 2.5).plot_pdf(ax=ax, label="prior predictive")
+        true.set_bounds(0, 2.5).plot_pdf(ax=ax, label="true distribution")
+        posterior_predictive.set_bounds(0, 2.5).plot_pdf(ax=ax, label="posterior predictive")
+        ax.legend()
+        plt.show()
+        ```
+    """
+    return Lomax(alpha=gamma.beta, lam=gamma.alpha)
 
 
 def normal_known_mean(
