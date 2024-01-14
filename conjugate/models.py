@@ -605,3 +605,59 @@ def pareto_gamma(
     beta_post = gamma_prior.beta + ln_x_total - n * ln(x_m)
 
     return Gamma(alpha=alpha_post, beta=beta_post)
+
+
+def weibull_known_shape(
+    x_to_b_power_total: NUMERIC, n: NUMERIC, inverse_gamma_prior: Gamma
+) -> InverseGamma:
+    """Posterior distribution for a weibull likelihood with a known shape and a scale prior.
+
+    Args:
+        x_to_b_power_total: sum of all outcomes to the known shape b power
+        n: total number of samples in x_total
+        inverse_gamma_prior: Gamma prior for scale
+
+    Returns:
+        InverseGamma posterior distribution for the scale
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Weibull, InverseGamma
+        from conjugate.models import weibull_known_shape
+
+        unknown_scale = 1.5
+
+        known_shape = 2.5
+        true = Weibull(known_shape, unknown_scale)
+
+        n_samples = 50
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = InverseGamma(1, 1)
+
+        posterior = weibull_known_shape(
+            n=n_samples,
+            x_to_b_power_total=(data ** known_shape).sum(),
+            inverse_gamma_prior=prior
+        )
+
+        ax = plt.subplot(111)
+        bound = 5
+        posterior.set_bounds(0, bound).plot_pdf(ax=ax, label="posterior")
+        prior.set_bounds(0, bound).plot_pdf(ax=ax, label="prior")
+        ax.axvline(unknown_scale, color="black", linestyle="--", label="true scale")
+        ax.legend()
+        plt.show()
+        ```
+
+    """
+    alpha_post = inverse_gamma_prior.alpha + n
+    beta_post = inverse_gamma_prior.beta + x_to_b_power_total
+
+    return InverseGamma(alpha=alpha_post, beta=beta_post)

@@ -474,6 +474,24 @@ class InverseGamma(ContinuousPlotDistMixin, SliceMixin):
 
 
 @dataclass
+class Weibull(ContinuousPlotDistMixin, SliceMixin):
+    """Weibull distribution.
+
+    Args:
+        alpha: shape
+        beta: scale
+
+    """
+
+    alpha: NUMERIC
+    beta: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.weibull_min(c=self.alpha, scale=self.beta)
+
+
+@dataclass
 class NormalInverseGamma:
     """Normal inverse gamma distribution.
 
