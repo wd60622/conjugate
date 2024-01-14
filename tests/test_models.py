@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from conjugate.distributions import (
     Beta,
     Dirichlet,
+    Pareto,
     Gamma,
     NegativeBinomial,
     NormalInverseGamma,
@@ -25,6 +26,8 @@ from conjugate.models import (
     poisson_gamma_posterior_predictive,
     linear_regression,
     linear_regression_posterior_predictive,
+    uniform_pareto,
+    pareto_gamma,
 )
 
 
@@ -241,3 +244,45 @@ def test_linear_regression(intercept, slope, sigma) -> None:
         normal_inverse_gamma=posterior, X=X
     )
     assert isinstance(posterior_predictive, MultivariateStudentT)
+
+
+def test_uniform_pareto_python_objects() -> None:
+    samples = [1, 2, 3, 4, 5]
+    n_samples = len(samples)
+
+    prior = Pareto(x_m=1, alpha=1)
+    posterior = uniform_pareto(x_max=max(samples), n=n_samples, pareto_prior=prior)
+
+    assert isinstance(posterior, Pareto)
+    assert posterior.x_m == 5
+    assert posterior.alpha == 6
+
+
+def test_uniform_pareto_numpy_objects() -> None:
+    samples = np.array([1, 2, 3, 4, 5])
+    n_samples = len(samples)
+
+    prior = Pareto(x_m=1, alpha=1)
+    posterior = uniform_pareto(x_max=samples.max(), n=n_samples, pareto_prior=prior)
+
+    assert isinstance(posterior, Pareto)
+    assert posterior.x_m == 5
+    assert posterior.alpha == 6
+
+
+def test_pareto_gamma() -> None:
+    samples = np.array([1, 2, 3, 4, 5])
+    n_samples = len(samples)
+
+    prior = Gamma(alpha=1, beta=1)
+
+    posterior = pareto_gamma(
+        n=n_samples,
+        ln_x_total=np.log(samples).sum(),
+        x_m=samples.min(),
+        gamma_prior=prior,
+    )
+
+    assert isinstance(posterior, Gamma)
+    assert posterior.alpha == 6
+    assert posterior.beta == 5.787491742782046

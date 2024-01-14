@@ -438,6 +438,24 @@ class Uniform(ContinuousPlotDistMixin, SliceMixin):
 
 
 @dataclass
+class Pareto(ContinuousPlotDistMixin, SliceMixin):
+    """Pareto distribution.
+
+    Args:
+        x_m: minimum value
+        alpha: scale parameter
+
+    """
+
+    x_m: NUMERIC
+    alpha: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.pareto(self.alpha, scale=self.x_m)
+
+
+@dataclass
 class InverseGamma(ContinuousPlotDistMixin, SliceMixin):
     """InverseGamma distribution.
 

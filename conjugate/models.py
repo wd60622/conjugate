@@ -15,6 +15,7 @@ from conjugate.distributions import (
     NegativeBinomial,
     BetaNegativeBinomial,
     BetaBinomial,
+    Pareto,
     InverseGamma,
     NormalInverseGamma,
     StudentT,
@@ -455,3 +456,104 @@ def linear_regression_posterior_predictive(
         sigma=sigma,
         nu=nu,
     )
+
+
+def uniform_pareto(
+    x_max: NUMERIC, n: NUMERIC, pareto_prior: Pareto, max_fn=np.maximum
+) -> Pareto:
+    """Posterior distribution for a uniform likelihood with a pareto prior.
+
+    Args:
+        x_max: maximum value
+        n: number of samples
+        pareto_prior: Pareto prior
+        max_fn: elementwise max function, defaults to np.maximum
+
+    Returns:
+        Pareto posterior distribution
+
+    Examples:
+        Get the posterior for this model with simulated data:
+
+        ```python
+        from conjugate.distributions import Uniform, Pareto
+        from conjugate.models import uniform_pareto
+
+        true_max = 5
+        true = Uniform(0, true_max)
+
+        n_samples = 10
+        data = true.dist.rvs(size=n_samples)
+
+        prior = Pareto(1, 1)
+
+        posterior = uniform_pareto(
+            x_max=data.max(),
+            n=n_samples,
+            pareto_prior=prior
+        )
+        ```
+
+    """
+    alpha_post = pareto_prior.alpha + n
+    x_m_post = max_fn(pareto_prior.x_m, x_max)
+
+    return Pareto(x_m=x_m_post, alpha=alpha_post)
+
+
+def pareto_gamma(
+    n: NUMERIC, ln_x_total: NUMERIC, x_m: NUMERIC, gamma_prior: Gamma, ln=np.log
+) -> Gamma:
+    """Posterior distribution for a pareto likelihood with a gamma prior.
+
+    The parameter x_m is assumed to be known.
+
+    Args:
+        n: number of samples
+        ln_x_total: sum of the log of all outcomes
+        x_m: The known minimum value
+        gamma_prior: Gamma prior
+        ln: function to take the natural log, defaults to np.log
+
+    Returns:
+        Gamma posterior distribution
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Pareto, Gamma
+        from conjugate.models import pareto_gamma
+
+        x_m_known = 1
+        true = Pareto(x_m_known, 1)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = Gamma(1, 1)
+
+        posterior = pareto_gamma(
+            n=n_samples,
+            ln_x_total=np.log(data).sum(),
+            x_m=x_m_known,
+            gamma_prior=prior
+        )
+
+        ax = plt.subplot(111)
+        posterior.set_bounds(0, 2.5).plot_pdf(ax=ax, label="posterior")
+        prior.set_bounds(0, 2.5).plot_pdf(ax=ax, label="prior")
+        ax.axvline(x_m_known, color="black", linestyle="--", label="true x_m")
+        ax.legend()
+        plt.show()
+        ```
+
+    """
+    alpha_post = gamma_prior.alpha + n
+    beta_post = gamma_prior.beta + ln_x_total - n * ln(x_m)
+
+    return Gamma(alpha=alpha_post, beta=beta_post)
