@@ -37,6 +37,8 @@ Below are the currently supported distributions
 from dataclasses import dataclass
 from typing import Any, Tuple, Union
 
+from packaging import version
+
 import numpy as np
 
 from scipy import stats, __version__ as scipy_version
@@ -348,9 +350,15 @@ class BetaNegativeBinomial(DiscretePlotMixin, SliceMixin):
     alpha: NUMERIC
     beta: NUMERIC
 
+    def __post_init__(self):
+        if isinstance(self.n, np.ndarray):
+            self.max_value = self.n.max()
+        else:
+            self.max_value = self.n
+
     @property
     def dist(self):
-        if scipy_version < "1.12.0":
+        if version.parse(scipy_version).release < version.parse("1.12.0").release:
             msg = "BetaNegativeBinomial.dist requires scipy >= 1.12.0"
             raise NotImplementedError(msg)
 
