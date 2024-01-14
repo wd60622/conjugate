@@ -587,3 +587,21 @@ class MultivariateStudentT:
     @property
     def dist(self):
         return stats.multivariate_t(loc=self.mu, shape=self.sigma, df=self.nu)
+
+
+@dataclass
+class Lomax(ContinuousPlotDistMixin, SliceMixin):
+    """Lomax distribution.
+
+    Args:
+        alpha: shape
+        lam: scale
+
+    """
+
+    alpha: NUMERIC
+    lam: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.lomax(c=self.alpha, scale=self.lam)
