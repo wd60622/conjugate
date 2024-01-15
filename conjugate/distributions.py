@@ -398,6 +398,16 @@ class Normal(ContinuousPlotDistMixin, SliceMixin):
     def dist(self):
         return stats.norm(self.mu, self.sigma)
 
+    @classmethod
+    def from_mean_and_variance(cls, mean: NUMERIC, variance: NUMERIC) -> "Normal":
+        """Alternative constructor from mean and variance."""
+        return cls(mu=mean, sigma=variance**0.5)
+
+    @classmethod
+    def from_mean_and_precision(cls, mean: NUMERIC, precision: NUMERIC) -> "Normal":
+        """Alternative constructor from mean and precision."""
+        return cls(mu=mean, sigma=precision**-0.5)
+
     def __mul__(self, other):
         sigma = ((self.sigma**2) * other) ** 0.5
         return Normal(mu=self.mu * other, sigma=sigma)

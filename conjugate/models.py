@@ -17,6 +17,7 @@ from conjugate.distributions import (
     BetaBinomial,
     Pareto,
     InverseGamma,
+    Normal,
     NormalInverseGamma,
     StudentT,
     MultivariateStudentT,
@@ -379,6 +380,255 @@ def exponential_gamma_posterior_predictive(gamma: Gamma) -> Lomax:
     return Lomax(alpha=gamma.beta, lam=gamma.alpha)
 
 
+def normal_known_variance(
+    x_total: NUMERIC,
+    n: NUMERIC,
+    var: NUMERIC,
+    normal_prior: Normal,
+) -> Normal:
+    """Posterior distribution for a normal likelihood with known variance and a normal prior on mean.
+
+    Args:
+        x_total: sum of all outcomes
+        n: total number of samples in x_total
+        var: known variance
+        normal_prior: Normal prior for mean
+
+    Returns:
+        Normal posterior distribution for the mean
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Normal
+        from conjugate.models import normal_known_variance
+
+        unknown_mu = 0
+        known_var = 2.5
+        true = Normal(unknown_mu, known_var**0.5)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = Normal(0, 10)
+
+        posterior = normal_known_variance(
+            n=n_samples,
+            x_total=data.sum(),
+            var=known_var,
+            normal_prior=prior
+        )
+
+        bound = 5
+        ax = plt.subplot(111)
+        posterior.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior")
+        prior.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior")
+        ax.axvline(unknown_mu, color="black", linestyle="--", label="true mu")
+        ax.legend()
+        plt.show()
+        ```
+
+    """
+    mu_post = ((normal_prior.mu / normal_prior.sigma**2) + (x_total / var)) / (
+        (1 / normal_prior.sigma**2) + (n / var)
+    )
+
+    var_post = 1 / ((1 / normal_prior.sigma**2) + (n / var))
+
+    return Normal(mu=mu_post, sigma=var_post**0.5)
+
+
+def normal_known_variance_posterior_predictive(var: NUMERIC, normal: Normal) -> Normal:
+    """Posterior predictive distribution for a normal likelihood with known variance and a normal prior on mean.
+
+    Args:
+        var: known variance
+        normal: Normal posterior distribution for the mean
+
+    Returns:
+        Normal posterior predictive distribution
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Normal
+        from conjugate.models import normal_known_variance, normal_known_variance_posterior_predictive
+
+        unknown_mu = 0
+        known_var = 2.5
+        true = Normal(unknown_mu, known_var**0.5)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = Normal(0, 10)
+
+        posterior = normal_known_variance(
+            n=n_samples,
+            x_total=data.sum(),
+            var=known_var,
+            normal_prior=prior
+        )
+
+        prior_predictive = normal_known_variance_posterior_predictive(
+            var=known_var,
+            normal=prior
+        )
+        posterior_predictive = normal_known_variance_posterior_predictive(
+            var=known_var,
+            normal=posterior
+        )
+
+        bound = 5
+        ax = plt.subplot(111)
+        true.set_bounds(-bound, bound).plot_pdf(ax=ax, label="true distribution")
+        posterior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior predictive")
+        prior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior predictive")
+        ax.legend()
+        plt.show()
+        ```
+
+    """
+    var_posterior_predictive = var + normal.sigma**2
+    return Normal(mu=normal.mu, sigma=var_posterior_predictive**0.5)
+
+
+def normal_known_precision(
+    x_total: NUMERIC,
+    n: NUMERIC,
+    precision: NUMERIC,
+    normal_prior: Normal,
+) -> Normal:
+    """Posterior distribution for a normal likelihood with known precision and a normal prior on mean.
+
+    Args:
+        x_total: sum of all outcomes
+        n: total number of samples in x_total
+        precision: known precision
+        normal_prior: Normal prior for mean
+
+    Returns:
+        Normal posterior distribution for the mean
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Normal
+        from conjugate.models import normal_known_precision
+
+        unknown_mu = 0
+        known_precision = 0.5
+        true = Normal.from_mean_and_precision(unknown_mu, known_precision**0.5)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = Normal(0, 10)
+
+        posterior = normal_known_precision(
+            n=n_samples,
+            x_total=data.sum(),
+            precision=known_precision,
+            normal_prior=prior
+        )
+
+        bound = 5
+        ax = plt.subplot(111)
+        posterior.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior")
+        prior.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior")
+        ax.axvline(unknown_mu, color="black", linestyle="--", label="true mu")
+        ax.legend()
+        plt.show()
+        ```
+
+    """
+    return normal_known_variance(
+        x_total=x_total,
+        n=n,
+        var=1 / precision,
+        normal_prior=normal_prior,
+    )
+
+
+def normal_known_precision_posterior_predictive(
+    precision: NUMERIC, normal: Normal
+) -> Normal:
+    """Posterior predictive distribution for a normal likelihood with known precision and a normal prior on mean.
+
+    Args:
+        precision: known precision
+        normal: Normal posterior distribution for the mean
+
+    Returns:
+        Normal posterior predictive distribution
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Normal
+        from conjugate.models import normal_known_precision, normal_known_precision_posterior_predictive
+
+        unknown_mu = 0
+        known_precision = 0.5
+        true = Normal.from_mean_and_precision(unknown_mu, known_precision)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = Normal(0, 10)
+
+        posterior = normal_known_precision(
+            n=n_samples,
+            x_total=data.sum(),
+            precision=known_precision,
+            normal_prior=prior
+        )
+
+        prior_predictive = normal_known_precision_posterior_predictive(
+            precision=known_precision,
+            normal=prior
+        )
+        posterior_predictive = normal_known_precision_posterior_predictive(
+            precision=known_precision,
+            normal=posterior
+        )
+
+        bound = 5
+        ax = plt.subplot(111)
+        true.set_bounds(-bound, bound).plot_pdf(ax=ax, label="true distribution")
+        posterior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior predictive")
+        prior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior predictive")
+        ax.legend()
+        plt.show()
+        ```
+
+    """
+    return normal_known_variance_posterior_predictive(
+        var=1 / precision,
+        normal=normal,
+    )
+
+
 def normal_known_mean(
     x_total: NUMERIC,
     x2_total: NUMERIC,
@@ -419,11 +669,56 @@ def normal_known_mean_posterior_predictive(
     Returns:
         StudentT posterior predictive distribution
 
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Normal, InverseGamma
+        from conjugate.models import normal_known_mean, normal_known_mean_posterior_predictive
+
+        unknown_var = 2.5
+        known_mu = 0
+        true = Normal(known_mu, unknown_var**0.5)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = InverseGamma(1, 1)
+
+        posterior = normal_known_mean(
+            n=n_samples,
+            x_total=data.sum(),
+            x2_total=(data**2).sum(),
+            mu=known_mu,
+            inverse_gamma_prior=prior
+        )
+
+        bound = 5
+        ax = plt.subplot(111)
+        prior_predictive = normal_known_mean_posterior_predictive(
+            mu=known_mu,
+            inverse_gamma=prior
+        )
+        prior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior predictive")
+        true.set_bounds(-bound, bound).plot_pdf(ax=ax, label="true distribution")
+        posterior_predictive = normal_known_mean_posterior_predictive(
+            mu=known_mu,
+            inverse_gamma=posterior
+        )
+        posterior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior predictive")
+        ax.legend()
+        plt.show()
+        ```
+
     """
     return StudentT(
-        n=2 * inverse_gamma.alpha,
         mu=mu,
         sigma=(inverse_gamma.beta / inverse_gamma.alpha) ** 0.5,
+        nu=2 * inverse_gamma.alpha,
     )
 
 
