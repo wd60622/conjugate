@@ -16,6 +16,9 @@ from conjugate.distributions import (
     Lomax,
     NegativeBinomial,
     NormalInverseGamma,
+    InverseGamma,
+    Normal,
+    StudentT,
     MultivariateStudentT,
 )
 from conjugate.models import (
@@ -31,6 +34,10 @@ from conjugate.models import (
     pareto_gamma,
     exponential_gamma,
     exponential_gamma_posterior_predictive,
+    normal_known_variance,
+    normal_known_variance_posterior_predictive,
+    normal_known_mean,
+    normal_known_mean_posterior_predictive,
 )
 
 
@@ -305,3 +312,43 @@ def test_exponential_gamma() -> None:
     posterior_predictive = exponential_gamma_posterior_predictive(gamma=posterior)
 
     assert isinstance(posterior_predictive, Lomax)
+
+
+def test_normal_known_variance() -> None:
+    known_var = 2.5
+
+    data = np.array([1, 2, 3, 4, 5])
+
+    prior = Normal(0, 1)
+    posterior = normal_known_variance(
+        x_total=data.sum(), n=len(data), var=known_var, normal_prior=prior
+    )
+
+    assert isinstance(posterior, Normal)
+
+    posterior_predictive = normal_known_variance_posterior_predictive(
+        var=known_var, normal=posterior
+    )
+    assert isinstance(posterior_predictive, Normal)
+
+
+def test_normal_known_mean() -> None:
+    known_mu = 0
+
+    data = np.array([1, 2, 3, 4, 5])
+
+    prior = InverseGamma(1, 1)
+    posterior = normal_known_mean(
+        x_total=data.sum(),
+        x2_total=(data**2).sum(),
+        n=len(data),
+        mu=known_mu,
+        inverse_gamma_prior=prior,
+    )
+
+    assert isinstance(posterior, InverseGamma)
+
+    posterior_predictive = normal_known_mean_posterior_predictive(
+        mu=known_mu, inverse_gamma=posterior
+    )
+    assert isinstance(posterior_predictive, StudentT)
