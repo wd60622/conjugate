@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from itertools import zip_longest
 from typing import Callable, Iterable, Optional, Protocol, Union
 
 import matplotlib.pyplot as plt
@@ -22,6 +23,9 @@ LABEL_INPUT = Union[str, Iterable[str], Callable[[int], str]]
 
 
 def label_to_iterable(label: LABEL_INPUT, ncols: int) -> Iterable[str]:
+    if label is None:
+        return [None] * ncols
+
     if isinstance(label, str):
         return [f"{label} {i}" for i in range(1, ncols + 1)]
 
@@ -31,7 +35,7 @@ def label_to_iterable(label: LABEL_INPUT, ncols: int) -> Iterable[str]:
     if isinstance(label, Iterable):
         return label
 
-    raise ValueError("Label must be a string, iterable, or callable.")
+    raise ValueError("Label must be None, a string, iterable, or callable.")
 
 
 def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
@@ -163,7 +167,7 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
             kwargs.pop("label", None), distribution_samples.shape[1]
         )
 
-        for x, label in zip(distribution_samples.T, labels):
+        for x, label in zip_longest(distribution_samples.T, labels):
             kde = gaussian_kde(x)
 
             yy = kde(xx)
