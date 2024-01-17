@@ -889,6 +889,15 @@ def normal_normal_inverse_gamma(
 def normal_normal_inverse_gamma_posterior_predictive(
     normal_inverse_gamma: NormalInverseGamma,
 ) -> StudentT:
+    """Posterior predictive distribution for a normal likelihood with a normal inverse gamma prior.
+
+    Args:
+        normal_inverse_gamma: NormalInverseGamma posterior
+
+    Returns:
+        StudentT posterior predictive distribution
+
+    """
     var = (
         normal_inverse_gamma.beta
         * (normal_inverse_gamma.nu + 1)
