@@ -844,6 +844,63 @@ def normal_known_mean_posterior_predictive(
     )
 
 
+def normal_normal_inverse_gamma(
+    x_total: NUMERIC,
+    x2_total: NUMERIC,
+    n: NUMERIC,
+    normal_inverse_gamma_prior: NormalInverseGamma,
+) -> NormalInverseGamma:
+    """Posterior distribution for a normal likelihood with a normal inverse gamma prior.
+
+    Derivation from paper [here](https://www.cs.ubc.ca/~murphyk/Papers/bayesGauss.pdf).
+
+    Args:
+        x_total: sum of all outcomes
+        x2_total: sum of all outcomes squared
+        n: total number of samples in x_total and x2_total
+        normal_inverse_gamma_prior: NormalInverseGamma prior
+
+    Returns:
+        NormalInverseGamma posterior distribution
+
+    """
+    x_mean = x_total / n
+
+    nu_0_inv = normal_inverse_gamma_prior.nu
+
+    nu_post_inv = nu_0_inv + n
+    mu_post = ((nu_0_inv * normal_inverse_gamma_prior.mu) + (n * x_mean)) / nu_post_inv
+
+    alpha_post = normal_inverse_gamma_prior.alpha + (n / 2)
+    beta_post = normal_inverse_gamma_prior.beta + 0.5 * (
+        (normal_inverse_gamma_prior.mu**2) * nu_0_inv
+        + x2_total
+        - (mu_post**2) * nu_post_inv
+    )
+
+    return NormalInverseGamma(
+        mu=mu_post,
+        nu=nu_post_inv,
+        alpha=alpha_post,
+        beta=beta_post,
+    )
+
+
+def normal_normal_inverse_gamma_posterior_predictive(
+    normal_inverse_gamma: NormalInverseGamma,
+) -> StudentT:
+    var = (
+        normal_inverse_gamma.beta
+        * (normal_inverse_gamma.nu + 1)
+        / (normal_inverse_gamma.nu * normal_inverse_gamma.alpha)
+    )
+    return StudentT(
+        mu=normal_inverse_gamma.mu,
+        sigma=var**0.5,
+        nu=2 * normal_inverse_gamma.alpha,
+    )
+
+
 def linear_regression(
     X: NUMERIC,
     y: NUMERIC,

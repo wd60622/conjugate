@@ -54,6 +54,7 @@ nav:
     - Unsupported Distributions: examples/pymc-sampling.md
     - Bayesian Update: examples/bayesian-update.md
     - Linear Regression: examples/linear-regression.md
+    - Inference in SQL: examples/sql.md
 
 plugins:
 - search

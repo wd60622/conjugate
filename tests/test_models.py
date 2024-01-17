@@ -38,7 +38,11 @@ from conjugate.models import (
     normal_known_variance_posterior_predictive,
     normal_known_mean,
     normal_known_mean_posterior_predictive,
+    normal_normal_inverse_gamma,
+    normal_normal_inverse_gamma_posterior_predictive,
 )
+
+rng = np.random.default_rng(42)
 
 
 class MockOperation:
@@ -210,7 +214,6 @@ def test_multinomial_dirichlet_analysis(alpha) -> None:
 )
 def test_linear_regression(intercept, slope, sigma) -> None:
     n_points = 100
-    rng = np.random.default_rng(42)
 
     x = np.linspace(-5, 5, n_points)
 
@@ -352,3 +355,36 @@ def test_normal_known_mean() -> None:
         mu=known_mu, inverse_gamma=posterior
     )
     assert isinstance(posterior_predictive, StudentT)
+
+
+def test_normal_normal_inverse_gamma() -> None:
+    true_mu, true_sigma = 25, 7.5
+
+    true = Normal(true_mu, true_sigma)
+
+    n = 25
+    data = true.dist.rvs(size=n, random_state=rng)
+
+    prior = NormalInverseGamma(0.0, alpha=1 / 5, beta=10, nu=1 / 25)
+    posterior = normal_normal_inverse_gamma(
+        x_total=data.sum(),
+        x2_total=(data**2).sum(),
+        n=n,
+        normal_inverse_gamma_prior=prior,
+    )
+
+    assert isinstance(posterior, NormalInverseGamma)
+
+    posterior_predictive = normal_normal_inverse_gamma_posterior_predictive(
+        normal_inverse_gamma=posterior,
+    )
+    assert isinstance(posterior_predictive, StudentT)
+
+    prior_predictive = normal_normal_inverse_gamma_posterior_predictive(
+        normal_inverse_gamma=prior,
+    )
+
+    assert (
+        prior_predictive.dist.logpdf(data).sum()
+        < posterior_predictive.dist.logpdf(data).sum()
+    )

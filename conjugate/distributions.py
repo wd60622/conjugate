@@ -487,28 +487,44 @@ class InverseGamma(ContinuousPlotDistMixin, SliceMixin):
 class NormalInverseGamma:
     """Normal inverse gamma distribution.
 
+    Supports both 1 dimensional and multivariate cases.
+
     Args:
         mu: mean
-        delta_inverse: covariance matrix
         alpha: shape
         beta: scale
+        delta_inverse: covariance matrix, 2d array for multivariate case
+        nu: alternative precision parameter for 1 dimensional case
 
     """
 
     mu: NUMERIC
-    delta_inverse: NUMERIC
     alpha: NUMERIC
     beta: NUMERIC
+    delta_inverse: NUMERIC = None
+    nu: NUMERIC = None
+
+    def __post_init__(self) -> None:
+        if self.delta_inverse is None and self.nu is None:
+            raise ValueError("Either delta_inverse or nu must be provided.")
+
+        if self.delta_inverse is not None and self.nu is not None:
+            raise ValueError("Only one of delta_inverse or nu must be provided.")
 
     @classmethod
     def from_inverse_gamma(
-        cls, mu: NUMERIC, delta_inverse: NUMERIC, inverse_gamma: InverseGamma
+        cls,
+        mu: NUMERIC,
+        inverse_gamma: InverseGamma,
+        delta_inverse: NUMERIC = None,
+        nu: NUMERIC = None,
     ) -> "NormalInverseGamma":
         return cls(
             mu=mu,
-            delta_inverse=delta_inverse,
             alpha=inverse_gamma.alpha,
             beta=inverse_gamma.beta,
+            delta_inverse=delta_inverse,
+            nu=nu,
         )
 
     @property
@@ -528,6 +544,20 @@ class NormalInverseGamma:
         """
         return self.inverse_gamma.dist.rvs(size=size, random_state=random_state)
 
+    def _sample_beta_1d(self, variance, size: int, random_state=None) -> NUMERIC:
+        sigma = (variance / self.nu) ** 0.5
+        return stats.norm(self.mu, sigma).rvs(size=size, random_state=random_state)
+
+    def _sample_beta_nd(self, variance, size: int, random_state=None) -> NUMERIC:
+        return np.stack(
+            [
+                stats.multivariate_normal(self.mu, v * self.delta_inverse).rvs(
+                    size=1, random_state=random_state
+                )
+                for v in variance
+            ]
+        )
+
     def sample_beta(
         self, size: int, return_variance: bool = False, random_state=None
     ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
@@ -544,14 +574,10 @@ class NormalInverseGamma:
         """
         variance = self.sample_variance(size=size, random_state=random_state)
 
-        beta = np.stack(
-            [
-                stats.multivariate_normal(self.mu, v * self.delta_inverse).rvs(
-                    size=1, random_state=random_state
-                )
-                for v in variance
-            ]
+        sample_beta = (
+            self._sample_beta_1d if self.delta_inverse is None else self._sample_beta_nd
         )
+        beta = sample_beta(variance=variance, size=size, random_state=random_state)
 
         if return_variance:
             return beta, variance
