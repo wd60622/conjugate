@@ -46,6 +46,35 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
     Returns:
         Beta distribution posterior
 
+    Examples:
+        A / B test example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Beta
+        from conjugate.models import binomial_beta
+
+        impressions = np.array([100, 250])
+        clicks = np.array([10, 35])
+
+        prior = Beta(1, 1)
+
+        posterior = binomial_beta(
+            n=impressions,
+            x=clicks,
+            beta_prior=prior
+        )
+
+        ax = plt.subplot(111)
+        posterior.set_bounds(0, 0.5).plot_pdf(ax=ax, label=["A", "B"])
+        prior.set_bounds(0, 0.5).plot_pdf(ax=ax, label="prior")
+        ax.legend()
+        plt.show()
+        ```
+
     """
     alpha_post, beta_post = get_binomial_beta_posterior_params(
         beta_prior.alpha, beta_prior.beta, n, x
@@ -64,6 +93,40 @@ def binomial_beta_posterior_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
     Returns:
         BetaBinomial posterior predictive distribution
 
+    Examples:
+        A / B test example with 100 new impressions
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Beta
+        from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
+
+        impressions = np.array([100, 250])
+        clicks = np.array([10, 35])
+
+        prior = Beta(1, 1)
+        posterior = binomial_beta(
+            n=impressions,
+            x=clicks,
+            beta_prior=prior
+        )
+        posterior_predictive = binomial_beta_posterior_predictive(
+            n=100,
+            beta=posterior
+        )
+
+
+        ax = plt.subplot(111)
+        ax.set_title("Posterior Predictive Distribution with 100 new impressions")
+        posterior_predictive.set_bounds(0, 50).plot_pmf(
+            ax=ax,
+            label=["A", "B"],
+        )
+        plt.show()
+        ```
     """
     return BetaBinomial(n=n, alpha=beta.alpha, beta=beta.beta)
 
@@ -173,6 +236,34 @@ def geometric_beta(x_total, n, beta_prior: Beta, one_start: bool = True) -> Beta
     Returns:
         Beta distribution posterior
 
+    Examples:
+        Number of usages until user has good experience
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Beta
+        from conjugate.models import geometric_beta
+
+        data = np.array([3, 1, 1, 3, 2, 1])
+
+        prior = Beta(1, 1)
+        posterior = geometric_beta(
+            x_total=data.sum(),
+            n=data.size,
+            beta_prior=prior
+        )
+
+        ax = plt.subplot(111)
+        posterior.set_bounds(0, 1).plot_pdf(ax=ax, label="posterior")
+        prior.set_bounds(0, 1).plot_pdf(ax=ax, label="prior")
+        ax.legend()
+        ax.set(xlabel="chance of good experience")
+        plt.show()
+        ```
+
     """
     alpha_post = beta_prior.alpha + n
     beta_post = beta_prior.beta + x_total
@@ -241,6 +332,37 @@ def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
 
     Returns:
         Dirichlet posterior distribution
+
+    Examples:
+        Personal preference for ice cream flavors
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Dirichlet
+        from conjugate.models import multinomial_dirichlet
+
+        kinds = ["chocolate", "vanilla", "strawberry"]
+        data = np.array([
+            [5, 2, 1],
+            [3, 1, 0],
+            [3, 2, 0],
+        ])
+
+        prior = Dirichlet([1, 1, 1])
+        posterior = multinomial_dirichlet(
+            x=data.sum(axis=0),
+            dirichlet_prior=prior
+        )
+
+        ax = plt.subplot(111)
+        posterior.plot_pdf(ax=ax, label=kinds)
+        ax.legend()
+        ax.set(xlabel="Flavor Preference")
+        plt.show()
+        ```
 
     """
     alpha_post = get_dirichlet_posterior_params(dirichlet_prior.alpha, x)

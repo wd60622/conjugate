@@ -40,8 +40,8 @@ extra:
 nav:
   - Overview: index.md
   - Modules: 
-    - Distributions: distributions.md
     - Models: models.md
+    - Distributions: distributions.md
     - Mixins: mixins.md
   - Examples: 
     - Binomial Model: examples/binomial.md

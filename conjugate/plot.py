@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from itertools import zip_longest
 from typing import Callable, Iterable, Optional, Protocol, Union
 
 import matplotlib.pyplot as plt
@@ -21,6 +22,22 @@ class Distribution(Protocol):
 LABEL_INPUT = Union[str, Iterable[str], Callable[[int], str]]
 
 
+def label_to_iterable(label: LABEL_INPUT, ncols: int) -> Iterable[str]:
+    if label is None:
+        return [None] * ncols
+
+    if isinstance(label, str):
+        return [f"{label} {i}" for i in range(1, ncols + 1)]
+
+    if callable(label):
+        return [label(i) for i in range(ncols)]
+
+    if isinstance(label, Iterable):
+        return label
+
+    raise ValueError("Label must be None, a string, iterable, or callable.")
+
+
 def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
     """
 
@@ -31,16 +48,7 @@ def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
 
     ncols = yy.shape[1]
     if ncols != 1:
-        if isinstance(label, str):
-            return [f"{label} {i}" for i in range(1, ncols + 1)]
-
-        if callable(label):
-            return [label(i) for i in range(ncols)]
-
-        if isinstance(label, Iterable):
-            return label
-
-        raise ValueError("Label must be a string, iterable, or callable.")
+        return label_to_iterable(label, ncols)
 
     return label
 
@@ -155,12 +163,15 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
         ax = self._settle_axis(ax=ax)
         xx = self._create_x_values()
 
-        for x in distribution_samples.T:
+        labels = label_to_iterable(
+            kwargs.pop("label", None), distribution_samples.shape[1]
+        )
+
+        for x, label in zip_longest(distribution_samples.T, labels):
             kde = gaussian_kde(x)
 
             yy = kde(xx)
-
-            ax.plot(xx, yy, **kwargs)
+            ax.plot(xx, yy, label=label, **kwargs)
 
         self._setup_labels(ax=ax)
         return ax
