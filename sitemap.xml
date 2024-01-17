@@ -66,6 +66,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://wd60622.github.io/conjugate/examples/sql/</loc>
+         <lastmod>2024-01-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://wd60622.github.io/conjugate/examples/vectorized-inputs/</loc>
          <lastmod>2024-01-17</lastmod>
          <changefreq>daily</changefreq>
