@@ -529,6 +529,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#conjugate.distributions.CompoundGamma" class="md-nav__link">
+    <span class="md-ellipsis">
+      CompoundGamma
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#conjugate.distributions.Dirichlet" class="md-nav__link">
     <span class="md-ellipsis">
       Dirichlet
@@ -1160,6 +1169,15 @@
   <a href="#conjugate.distributions.Binomial" class="md-nav__link">
     <span class="md-ellipsis">
       Binomial
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conjugate.distributions.CompoundGamma" class="md-nav__link">
+    <span class="md-ellipsis">
+      CompoundGamma
     </span>
   </a>
   
@@ -2094,6 +2112,139 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 </span><span id="__span-0-116"><a id="__codelineno-0-116" name="__codelineno-0-116"></a>    <span class="nd">@property</span>
 </span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117"></a>    <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-0-118"><a id="__codelineno-0-118" name="__codelineno-0-118"></a>        <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="conjugate.distributions.CompoundGamma" class="doc doc-heading">
+          <code>CompoundGamma</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="conjugate.plot.ContinuousPlotDistMixin" href="../mixins/#conjugate.plot.ContinuousPlotDistMixin">ContinuousPlotDistMixin</a></code>, <code><a class="autorefs autorefs-internal" title="conjugate.slice.SliceMixin" href="../mixins/#conjugate.slice.SliceMixin">SliceMixin</a></code></p>
+
+  
+      <p>Compound gamma distribution.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>alpha</code></td>
+          <td>
+                <code><span title="conjugate._typing.NUMERIC">NUMERIC</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>shape</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>beta</code></td>
+          <td>
+                <code><span title="conjugate._typing.NUMERIC">NUMERIC</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>scale</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>lam</code></td>
+          <td>
+                <code><span title="conjugate._typing.NUMERIC">NUMERIC</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>rate</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+            <details class="quote">
+              <summary>Source code in <code>conjugate/distributions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-660">660</a></span>
+<span class="normal"><a href="#__codelineno-0-661">661</a></span>
+<span class="normal"><a href="#__codelineno-0-662">662</a></span>
+<span class="normal"><a href="#__codelineno-0-663">663</a></span>
+<span class="normal"><a href="#__codelineno-0-664">664</a></span>
+<span class="normal"><a href="#__codelineno-0-665">665</a></span>
+<span class="normal"><a href="#__codelineno-0-666">666</a></span>
+<span class="normal"><a href="#__codelineno-0-667">667</a></span>
+<span class="normal"><a href="#__codelineno-0-668">668</a></span>
+<span class="normal"><a href="#__codelineno-0-669">669</a></span>
+<span class="normal"><a href="#__codelineno-0-670">670</a></span>
+<span class="normal"><a href="#__codelineno-0-671">671</a></span>
+<span class="normal"><a href="#__codelineno-0-672">672</a></span>
+<span class="normal"><a href="#__codelineno-0-673">673</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-660"><a id="__codelineno-0-660" name="__codelineno-0-660"></a><span class="nd">@dataclass</span>
+</span><span id="__span-0-661"><a id="__codelineno-0-661" name="__codelineno-0-661"></a><span class="k">class</span> <span class="nc">CompoundGamma</span><span class="p">(</span><span class="n">ContinuousPlotDistMixin</span><span class="p">,</span> <span class="n">SliceMixin</span><span class="p">):</span>
+</span><span id="__span-0-662"><a id="__codelineno-0-662" name="__codelineno-0-662"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compound gamma distribution.</span>
+</span><span id="__span-0-663"><a id="__codelineno-0-663" name="__codelineno-0-663"></a>
+</span><span id="__span-0-664"><a id="__codelineno-0-664" name="__codelineno-0-664"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-665"><a id="__codelineno-0-665" name="__codelineno-0-665"></a><span class="sd">        alpha: shape</span>
+</span><span id="__span-0-666"><a id="__codelineno-0-666" name="__codelineno-0-666"></a><span class="sd">        beta: scale</span>
+</span><span id="__span-0-667"><a id="__codelineno-0-667" name="__codelineno-0-667"></a><span class="sd">        lam: rate</span>
+</span><span id="__span-0-668"><a id="__codelineno-0-668" name="__codelineno-0-668"></a>
+</span><span id="__span-0-669"><a id="__codelineno-0-669" name="__codelineno-0-669"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-670"><a id="__codelineno-0-670" name="__codelineno-0-670"></a>
+</span><span id="__span-0-671"><a id="__codelineno-0-671" name="__codelineno-0-671"></a>    <span class="n">alpha</span><span class="p">:</span> <span class="n">NUMERIC</span>
+</span><span id="__span-0-672"><a id="__codelineno-0-672" name="__codelineno-0-672"></a>    <span class="n">beta</span><span class="p">:</span> <span class="n">NUMERIC</span>
+</span><span id="__span-0-673"><a id="__codelineno-0-673" name="__codelineno-0-673"></a>    <span class="n">lam</span><span class="p">:</span> <span class="n">NUMERIC</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
 
