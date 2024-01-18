@@ -17,6 +17,10 @@ from conjugate.distributions import (
     Exponential,
     NegativeBinomial,
     Poisson,
+    Normal,
+    MultivariateNormal,
+    StudentT,
+    MultivariateStudentT,
 )
 
 
@@ -188,3 +192,39 @@ def test_label(label):
 def test_vectorized(alpha: np.ndarray) -> None:
     d = Dirichlet(alpha=alpha)
     assert d.dist.mean().shape == alpha.shape
+
+
+def test_slice_multivariate_normal() -> None:
+    mu = np.array([0, 1])
+    cov = np.array([[1, 0], [0, 3]])
+
+    mvn = MultivariateNormal(mu, cov)
+
+    mvn_slice = mvn[0]
+    assert isinstance(mvn_slice, Normal)
+    assert mvn_slice.dist.mean() == mu[0]
+    assert mvn_slice.dist.var() == cov[0, 0]
+
+    mvn_slice = mvn[[1, 0]]
+    assert isinstance(mvn_slice, MultivariateNormal)
+    np.testing.assert_allclose(mvn_slice.dist.mean, mu[[1, 0]])
+    np.testing.assert_allclose(mvn_slice.dist.cov, cov[[1, 0], :][:, [1, 0]])
+
+
+def test_slice_multivariate_t() -> None:
+    mu = np.array([0, 1])
+    cov = np.array([[1, 0], [0, 3]])
+    df = 2
+
+    mvn = MultivariateStudentT(mu, cov, df)
+
+    mvn_slice = mvn[0]
+    assert isinstance(mvn_slice, StudentT)
+    assert mvn_slice.dist.mean() == mu[0]
+    assert mvn_slice.sigma == cov[0, 0]
+
+    mvn_slice = mvn[[1, 0]]
+    assert isinstance(mvn_slice, MultivariateStudentT)
+    np.testing.assert_allclose(mvn_slice.dist.loc, mu[[1, 0]])
+    np.testing.assert_allclose(mvn_slice.dist.shape, cov[[1, 0], :][:, [1, 0]])
+    assert mvn_slice.dist.df == df

@@ -424,6 +424,12 @@ class MultivariateNormal:
     def dist(self):
         return stats.multivariate_normal(mean=self.mu, cov=self.sigma)
 
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return Normal(mu=self.mu[key], sigma=self.sigma[key, key])
+
+        return MultivariateNormal(mu=self.mu[key], sigma=self.sigma[key][:, key])
+
 
 @dataclass
 class Uniform(ContinuousPlotDistMixin, SliceMixin):
@@ -623,6 +629,14 @@ class MultivariateStudentT:
     @property
     def dist(self):
         return stats.multivariate_t(loc=self.mu, shape=self.sigma, df=self.nu)
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return StudentT(mu=self.mu[key], sigma=self.sigma[key, key], nu=self.nu)
+
+        return MultivariateStudentT(
+            mu=self.mu[key], sigma=self.sigma[key][:, key], nu=self.nu
+        )
 
 
 @dataclass
