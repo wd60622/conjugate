@@ -655,3 +655,19 @@ class Lomax(ContinuousPlotDistMixin, SliceMixin):
     @property
     def dist(self):
         return stats.lomax(c=self.alpha, scale=self.lam)
+
+
+@dataclass
+class CompoundGamma(ContinuousPlotDistMixin, SliceMixin):
+    """Compound gamma distribution.
+
+    Args:
+        alpha: shape
+        beta: scale
+        lam: rate
+
+    """
+
+    alpha: NUMERIC
+    beta: NUMERIC
+    lam: NUMERIC

@@ -9,6 +9,7 @@ import numpy as np
 
 from conjugate.distributions import (
     Beta,
+    CompoundGamma,
     Dirichlet,
     DirichletMultinomial,
     Gamma,
@@ -500,6 +501,81 @@ def exponential_gamma_posterior_predictive(gamma: Gamma) -> Lomax:
         ```
     """
     return Lomax(alpha=gamma.beta, lam=gamma.alpha)
+
+
+def gamma_known_shape(
+    x_total: NUMERIC, n: NUMERIC, alpha: NUMERIC, gamma_prior: Gamma
+) -> Gamma:
+    """Gamma likelihood with a gamma prior.
+
+    The shape parameter of the likelihood is assumed to be known.
+
+    Args:
+        x_total: sum of all outcomes
+        n: total number of samples in x_total
+        alpha: known shape parameter
+        gamma_prior: Gamma prior
+
+    Returns:
+        Gamma posterior distribution
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Gamma
+        from conjugate.models import gamma_known_shape
+
+        known_shape = 2
+        unknown_rate = 5
+        true = Gamma(known_shape, unknown_rate)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        prior = Gamma(1, 1)
+
+        posterior = gamma_known_shape(
+            n=n_samples,
+            x_total=data.sum(),
+            alpha=known_shape,
+            gamma_prior=prior
+        )
+
+        bound = 10
+        ax = plt.subplot(111)
+        posterior.set_bounds(0, bound).plot_pdf(ax=ax, label="posterior")
+        prior.set_bounds(0, bound).plot_pdf(ax=ax, label="prior")
+        ax.axvline(unknown_rate, color="black", linestyle="--", label="true rate")
+        ax.legend()
+        plt.show()
+        ```
+
+    """
+    alpha_post = gamma_prior.alpha + n * alpha
+    beta_post = gamma_prior.beta + x_total
+
+    return Gamma(alpha=alpha_post, beta=beta_post)
+
+
+def gamma_known_shape_posterior_predictive(
+    gamma: Gamma, alpha: NUMERIC
+) -> CompoundGamma:
+    """Posterior predictive distribution for a gamma likelihood with a gamma prior
+
+    Args:
+        gamma: Gamma distribution
+        alpha: known shape parameter
+
+    Returns:
+        CompoundGamma distribution related to posterior predictive
+
+    """
+    return CompoundGamma(alpha=alpha, beta=gamma.alpha, lam=gamma.beta)
 
 
 def normal_known_variance(
