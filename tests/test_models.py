@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 from conjugate.distributions import (
     Beta,
+    CompoundGamma,
     Dirichlet,
     Pareto,
     Gamma,
@@ -40,6 +41,8 @@ from conjugate.models import (
     normal_known_mean_posterior_predictive,
     normal_normal_inverse_gamma,
     normal_normal_inverse_gamma_posterior_predictive,
+    gamma_known_shape,
+    gamma_known_shape_posterior_predictive,
 )
 
 rng = np.random.default_rng(42)
@@ -388,3 +391,30 @@ def test_normal_normal_inverse_gamma() -> None:
         prior_predictive.dist.logpdf(data).sum()
         < posterior_predictive.dist.logpdf(data).sum()
     )
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        1,
+        np.array([1, 2, 3]),
+        np.array([[1, 2, 3], [1, 1, 1]]),
+    ],
+)
+def test_gamma_known_shape(shape) -> None:
+    data = np.array([1, 2, 3, 4, 5])
+
+    prior = Gamma(alpha=1, beta=1)
+    posterior = gamma_known_shape(
+        x_total=data.sum(),
+        n=len(data),
+        alpha=shape,
+        gamma_prior=prior,
+    )
+
+    assert isinstance(posterior, Gamma)
+
+    posterior_predictive = gamma_known_shape_posterior_predictive(
+        alpha=shape, gamma=posterior
+    )
+    assert isinstance(posterior_predictive, CompoundGamma)
