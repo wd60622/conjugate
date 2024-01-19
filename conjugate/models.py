@@ -9,10 +9,13 @@ import numpy as np
 
 from conjugate.distributions import (
     Beta,
+    BetaProportional,
     CompoundGamma,
     Dirichlet,
     DirichletMultinomial,
     Gamma,
+    GammaKnownRateProportional,
+    GammaProportional,
     NegativeBinomial,
     BetaNegativeBinomial,
     BetaBinomial,
@@ -1164,3 +1167,84 @@ def pareto_gamma(
     beta_post = gamma_prior.beta + ln_x_total - n * ln(x_m)
 
     return Gamma(alpha=alpha_post, beta=beta_post)
+
+
+def gamma(
+    x_total: NUMERIC,
+    x_prod: NUMERIC,
+    n: NUMERIC,
+    proportional_prior: GammaProportional,
+) -> GammaProportional:
+    """Posterior distribution for a gamma likelihood.
+
+    Inference on alpha and beta
+
+    Args:
+        x_total: sum of all outcomes
+        x_prod: product of all outcomes
+        n: total number of samples in x_total and x_prod
+        proportional_prior: GammaProportional prior
+
+    Returns:
+        GammaProportional posterior distribution
+
+    """
+    p_post = proportional_prior.p * x_prod
+    q_post = proportional_prior.q + x_total
+    r_post = proportional_prior.r + n
+    s_post = proportional_prior.s + n
+
+    return GammaProportional(p=p_post, q=q_post, r=r_post, s=s_post)
+
+
+def gamma_known_rate(
+    x_prod: NUMERIC,
+    n: NUMERIC,
+    beta: NUMERIC,
+    proportional_prior: GammaKnownRateProportional,
+) -> GammaKnownRateProportional:
+    """Posterior distribution for a gamma likelihood.
+
+    The rate beta is assumed to be known.
+
+    Args:
+        x_prod: product of all outcomes
+        n: total number of samples in x_prod
+        beta: known rate parameter
+
+    Returns:
+        GammaKnownRateProportional posterior distribution
+
+    """
+    a_post = proportional_prior.a * x_prod
+    b_post = proportional_prior.b + n
+    c_post = proportional_prior.c + n
+
+    return GammaKnownRateProportional(a=a_post, b=b_post, c=c_post)
+
+
+def beta(
+    x_prod: NUMERIC,
+    one_minus_x_prod: NUMERIC,
+    n: NUMERIC,
+    proportional_prior: BetaProportional,
+) -> BetaProportional:
+    """Posterior distribution for a Beta likelihood.
+
+    Inference on alpha and beta
+
+    Args:
+        x_prod: product of all outcomes
+        one_minus_x_prod: product of all (1 - outcomes)
+        n: total number of samples in x_prod and one_minus_x_prod
+        proportional_prior: BetaProportional prior
+
+    Returns:
+        BetaProportional posterior distribution
+
+    """
+    p_post = proportional_prior.p * x_prod
+    q_post = proportional_prior.q * one_minus_x_prod
+    k_post = proportional_prior.k + n
+
+    return BetaProportional(p=p_post, q=q_post, k=k_post)
