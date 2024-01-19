@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 from conjugate.distributions import (
     Beta,
+    BetaProportional,
     CompoundGamma,
     Dirichlet,
     Pareto,
@@ -21,6 +22,8 @@ from conjugate.distributions import (
     Normal,
     StudentT,
     MultivariateStudentT,
+    GammaProportional,
+    GammaKnownRateProportional,
 )
 from conjugate.models import (
     get_binomial_beta_posterior_params,
@@ -43,6 +46,9 @@ from conjugate.models import (
     normal_normal_inverse_gamma_posterior_predictive,
     gamma_known_shape,
     gamma_known_shape_posterior_predictive,
+    gamma,
+    gamma_known_rate,
+    beta,
 )
 
 rng = np.random.default_rng(42)
@@ -418,3 +424,59 @@ def test_gamma_known_shape(shape) -> None:
         alpha=shape, gamma=posterior
     )
     assert isinstance(posterior_predictive, CompoundGamma)
+
+
+def test_gamma_proportional_model() -> None:
+    true_alpha, true_beta = 2, 6
+    true = Gamma(alpha=true_alpha, beta=true_beta)
+
+    n_samples = 15
+    samples = true.dist.rvs(size=n_samples, random_state=0)
+
+    prior = GammaProportional(1, 1, 1, 1)
+    posterior = gamma(
+        x_total=samples.sum(),
+        x_prod=np.prod(samples),
+        n=n_samples,
+        proportional_prior=prior,
+    )
+
+    assert isinstance(posterior, GammaProportional)
+
+    # TODO: add a comparison to the true for prior and posterior
+
+
+def test_gamma_known_rate() -> None:
+    true_alpha, true_beta = 2, 6
+    true = Gamma(alpha=true_alpha, beta=true_beta)
+
+    n_samples = 15
+    samples = true.dist.rvs(size=n_samples, random_state=0)
+
+    prior = GammaKnownRateProportional(1, 1, 1)
+    posterior = gamma_known_rate(
+        x_prod=np.prod(samples),
+        n=n_samples,
+        beta=true_beta,
+        proportional_prior=prior,
+    )
+
+    assert isinstance(posterior, GammaKnownRateProportional)
+
+
+def test_beta_proportional_model() -> None:
+    true_alpha, true_beta = 2, 6
+    true = Beta(alpha=true_alpha, beta=true_beta)
+
+    n_samples = 15
+    samples = true.dist.rvs(size=n_samples, random_state=0)
+
+    prior = BetaProportional(0.25, 0.25, 1)
+    posterior = beta(
+        x_prod=np.prod(samples),
+        one_minus_x_prod=np.prod(1 - samples),
+        n=n_samples,
+        proportional_prior=prior,
+    )
+
+    assert isinstance(posterior, BetaProportional)
