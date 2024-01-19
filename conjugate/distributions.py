@@ -42,6 +42,7 @@ from packaging import version
 import numpy as np
 
 from scipy import stats, __version__ as scipy_version
+from scipy.special import gammaln
 
 from conjugate._typing import NUMERIC
 from conjugate.plot import (
@@ -671,3 +672,119 @@ class CompoundGamma(ContinuousPlotDistMixin, SliceMixin):
     alpha: NUMERIC
     beta: NUMERIC
     lam: NUMERIC
+
+
+@dataclass
+class GammaKnownRateProportional:
+    """Gamma known rate proportional distribution.
+
+    Args:
+        a: prod of observations
+        b: number of observations
+        c: number of observations
+
+    """
+
+    a: NUMERIC
+    b: NUMERIC
+    c: NUMERIC
+
+    def approx_log_likelihood(
+        self, alpha: NUMERIC, beta: NUMERIC, ln=np.log, gammaln=gammaln
+    ):
+        """Approximate log likelihood.
+
+        Args:
+            alpha: shape parameter
+            beta: known rate parameter
+            ln: log function
+            gammaln: log gamma function
+
+        Returns:
+            log likelihood up to a constant
+
+        """
+        return (
+            (alpha - 1) * ln(self.a)
+            + alpha * self.c * ln(beta)
+            - self.b * gammaln(alpha)
+        )
+
+
+@dataclass
+class GammaProportional:
+    """Gamma proportional distribution.
+
+    Args:
+        p: product of r observations
+        q: sum of s observations
+        r: number of observations for p
+        s: number of observations for q
+
+    """
+
+    p: NUMERIC
+    q: NUMERIC
+    r: NUMERIC
+    s: NUMERIC
+
+    def approx_log_likelihood(
+        self, alpha: NUMERIC, beta: NUMERIC, ln=np.log, gammaln=gammaln
+    ):
+        """Approximate log likelihood.
+
+        Args:
+            alpha: shape parameter
+            beta: rate parameter
+            ln: log function
+            gammaln: log gamma function
+
+        Returns:
+            log likelihood up to a constant
+
+        """
+        return (
+            (alpha - 1) * ln(self.p)
+            - self.q * beta
+            - self.r * gammaln(alpha)
+            + self.s * alpha * ln(beta)
+        )
+
+
+@dataclass
+class BetaProportional:
+    """Beta proportional distribution.
+
+    Args:
+        p: product of observations
+        q: product of complements
+        k: number of observations
+
+    """
+
+    p: NUMERIC
+    q: NUMERIC
+    k: NUMERIC
+
+    def approx_log_likelihood(
+        self, alpha: NUMERIC, beta: NUMERIC, ln=np.log, gammaln=gammaln
+    ):
+        """Approximate log likelihood.
+
+        Args:
+            alpha: shape parameter
+            beta: shape parameter
+            ln: log function
+            gammaln: log gamma function
+
+        Returns:
+            log likelihood up to a constant
+
+        """
+        return (
+            self.k * gammaln(alpha + beta)
+            + alpha * ln(self.p)
+            + beta * ln(self.q)
+            - self.k * gammaln(alpha)
+            - self.k * gammaln(beta)
+        )
