@@ -7,51 +7,58 @@ import matplotlib.pyplot as plt
 from conjugate.distributions import Beta, Dirichlet, Gamma, Normal
 from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
 
+FIGSIZE = (10, 7)
+
 
 @pytest.mark.mpl_image_compare
-def test_label():
+def test_label() -> None:
+    fig, ax = plt.subplots(figsize=FIGSIZE)
     beta = Beta(1, 1)
-    ax = beta.plot_pdf(label="Uniform")
+    beta.plot_pdf(ax=ax, label="Uniform")
     ax.legend()
-    return plt.gcf()
+    return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_multiple_labels_str():
+def test_multiple_labels_str() -> None:
+    fig, ax = plt.subplots(figsize=FIGSIZE)
     beta = Beta(np.array([1, 2, 3]), np.array([1, 2, 3]))
-    ax = beta.plot_pdf(label="Beta")
+    beta.plot_pdf(label="Beta", ax=ax)
     ax.legend()
-    return plt.gcf()
+    return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_multiple_with_labels():
+def test_multiple_with_labels() -> None:
+    fig, ax = plt.subplots(figsize=FIGSIZE)
     beta = Beta(np.array([1, 2, 3]), np.array([1, 2, 3]))
-    ax = beta.plot_pdf(label=["First Beta", "Second Beta", "Third Beta"])
+    ax = beta.plot_pdf(label=["First Beta", "Second Beta", "Third Beta"], ax=ax)
     ax.legend()
-    return plt.gcf()
+    return fig
 
 
 @pytest.mark.mpl_image_compare
 def test_skip_label() -> None:
+    fig, ax = plt.subplots(figsize=FIGSIZE)
     beta = Beta(np.array([1, 2, 3]), np.array([1, 2, 3]))
-    ax = beta.plot_pdf(label=["First Beta", None, "Third Beta"])
+    ax = beta.plot_pdf(label=["First Beta", None, "Third Beta"], ax=ax)
     ax.legend()
-    return plt.gcf()
+    return fig
 
 
 @pytest.mark.mpl_image_compare
 def test_different_distributions() -> None:
+    fig, ax = plt.subplots(figsize=FIGSIZE)
     beta = Beta(1, np.array([1, 2]))
     gamma = Gamma(1, 1)
     normal = Normal(0, 1)
 
-    ax = beta.plot_pdf(label="Beta")
+    beta.plot_pdf(label="Beta", ax=ax)
     gamma.set_bounds(0, upper=5).plot_pdf(ax=ax, label="Gamma")
     normal.set_bounds(-5, 5).plot_pdf(ax=ax, label="Normal")
 
     ax.legend()
-    return plt.gcf()
+    return fig
 
 
 @pytest.mark.mpl_image_compare
@@ -90,25 +97,30 @@ def test_analysis() -> None:
 
 @pytest.mark.mpl_image_compare
 def test_dirichlet() -> None:
+    fig, ax = plt.subplots(figsize=FIGSIZE)
     dirichlet = Dirichlet(np.array([1, 2, 3]))
-    ax = dirichlet.plot_pdf(random_state=0)
+    ax = dirichlet.plot_pdf(random_state=0, ax=ax)
     ax.legend()
-    return plt.gcf()
+    return fig
 
 
 @pytest.mark.mpl_image_compare
 def test_dirichlet_labels() -> None:
+    fig, ax = plt.subplots(figsize=FIGSIZE)
     dirichlet = Dirichlet(np.array([1, 2, 3]))
-    ax = dirichlet.plot_pdf(random_state=0, label="Category")
+    ax = dirichlet.plot_pdf(random_state=0, label="Category", ax=ax)
     ax.legend()
-    return plt.gcf()
+    return fig
 
 
 @pytest.mark.mpl_image_compare
 def test_dirichlet_multiple_labels() -> None:
+    fig, ax = plt.subplots(figsize=FIGSIZE)
     dirichlet = Dirichlet(np.array([1, 2, 3]))
     ax = dirichlet.plot_pdf(
-        random_state=0, label=["First Category", "Second Category", "Third Category"]
+        random_state=0,
+        label=["First Category", "Second Category", "Third Category"],
+        ax=ax,
     )
     ax.legend()
-    return plt.gcf()
+    return fig
