@@ -122,11 +122,14 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         Returns:
             new or modified Axes
 
-        """
-        ax = self._settle_axis(ax=ax)
+        Raises:
+            ValueError: If the max_value is not set.
 
+        """
         x = self._create_x_values()
         x = self._reshape_x_values(x)
+
+        ax = self._settle_axis(ax=ax)
 
         return self._create_plot_on_axis(x, ax, **kwargs)
 
@@ -164,7 +167,18 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
         random_state=None,
         **kwargs,
     ) -> plt.Axes:
-        """Plots the pdf"""
+        """Plots the pdf by sampling from the distribution.
+
+        Args:
+            ax: matplotlib Axes, optional
+            samples: number of samples to take from the distribution
+            random_state: random state to use for sampling
+            **kwargs: Additonal kwargs to pass to matplotlib
+
+        Returns:
+            new or modified Axes
+
+        """
         distribution_samples = self.dist.rvs(size=samples, random_state=random_state)
 
         ax = self._settle_axis(ax=ax)
@@ -190,11 +204,24 @@ class DiscretePlotMixin(PlotDistMixin):
     def plot_pmf(
         self, ax: Optional[plt.Axes] = None, mark: str = "o-", **kwargs
     ) -> plt.Axes:
-        ax = self._settle_axis(ax=ax)
+        """Plot the pmf of distribution
 
+        Args:
+            ax: matplotlib Axes, optional
+            mark: matplotlib line style
+            **kwargs: Additonal kwargs to pass to matplotlib
+
+        Returns:
+            new or modified Axes
+
+        Raises:
+            ValueError: If the max_value is not set.
+
+        """
         x = self._create_x_values()
         x = self._reshape_x_values(x)
 
+        ax = self._settle_axis(ax=ax)
         return self._create_plot_on_axis(x, ax, mark, **kwargs)
 
     def _create_x_values(self) -> np.ndarray:
