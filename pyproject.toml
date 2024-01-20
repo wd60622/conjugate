@@ -65,7 +65,7 @@ legacy_tox_ini = """
     deps = 
         pytest 
         pypika
-    commands = pytest tests
+    commands = pytest --mpl --mpl-baseline-path=tests/example-plots --cov=conjugate --cov-report=xml --cov-report=term-missing tests
 """
 
 [build-system]
