@@ -57,6 +57,11 @@ prior_predictive: BetaBinomial = binomial_beta_posterior_predictive(n=N, beta=pr
 
 posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
 posterior_predictive: BetaBinomial = binomial_beta_posterior_predictive(n=N, beta=posterior) 
+```
+
+From here, do any analysis you'd like!
+
+```python
 
 # Figure
 import matplotlib.pyplot as plt
