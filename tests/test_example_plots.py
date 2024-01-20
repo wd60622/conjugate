@@ -4,8 +4,12 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-from conjugate.distributions import Beta, Dirichlet, Gamma, Normal
-from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
+from conjugate.distributions import Beta, Dirichlet, Gamma, Normal, NormalInverseGamma
+from conjugate.models import (
+    binomial_beta,
+    binomial_beta_posterior_predictive,
+    normal_normal_inverse_gamma,
+)
 
 FIGSIZE = (10, 7)
 
@@ -123,4 +127,62 @@ def test_dirichlet_multiple_labels() -> None:
         ax=ax,
     )
     ax.legend()
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_bayesian_update_example() -> None:
+    def create_sampler(mu, sigma, rng):
+        def sample(n: int):
+            return rng.normal(loc=mu, scale=sigma, size=n)
+
+        return sample
+
+    mu = 5.0
+    sigma = 2.5
+    rng = np.random.default_rng(0)
+    sample = create_sampler(mu=mu, sigma=sigma, rng=rng)
+
+    prior = NormalInverseGamma(
+        mu=0,
+        alpha=1,
+        beta=1,
+        nu=1,
+    )
+
+    cumsum = 0
+    batch_sizes = [5, 10, 25]
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+    for i, batch_size in enumerate(batch_sizes):
+        x = sample(n=batch_size)
+
+        posterior = normal_normal_inverse_gamma(
+            x_total=x.sum(),
+            x2_total=(x**2).sum(),
+            n=batch_size,
+            normal_inverse_gamma_prior=prior,
+        )
+        beta_samples, variance_samples = posterior.sample_beta(
+            size=1000, return_variance=True, random_state=rng
+        )
+
+        cumsum += batch_size
+        label = f"n={cumsum}"
+        color = f"C{i}"
+        ax.scatter(
+            variance_samples**0.5, beta_samples, alpha=0.25, label=label, color=color
+        )
+
+        prior = posterior
+
+    ax.scatter(sigma, mu, color="black", label="true")
+    ax.set(
+        xlabel="$\sigma$",
+        ylabel="$\mu$",
+        xlim=(0, None),
+        ylim=(0, None),
+        title="Updated posterior samples of $\mu$ and $\sigma$",
+    )
+    ax.legend()
+
     return fig
