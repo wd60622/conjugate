@@ -861,3 +861,48 @@ class VonMisesKnownDirectionProportional:
 
         """
         return kappa * self.r - self.c * ln(i0(kappa))
+
+
+@dataclass
+class ScaledInverseChiSquared(ContinuousPlotDistMixin, SliceMixin):
+    """Scaled inverse chi squared distribution.
+
+    Args:
+        nu: degrees of freedom
+        sigma2: scale parameter
+
+    """
+
+    nu: NUMERIC
+    sigma2: NUMERIC
+
+    @classmethod
+    def from_inverse_gamma(
+        cls, inverse_gamma: InverseGamma
+    ) -> "ScaledInverseChiSquared":
+        """Alternative constructor from inverse gamma distribution.
+
+        Args:
+            inverse_gamma: inverse gamma distribution
+
+        Returns:
+            scaled inverse chi squared distribution
+
+        """
+        nu = inverse_gamma.alpha * 2
+        sigma2 = inverse_gamma.beta * 2 / nu
+
+        return cls(nu=nu, sigma2=sigma2)
+
+    def to_inverse_gamma(self) -> InverseGamma:
+        """Convert to inverse gamma distribution.
+
+        Returns:
+            inverse gamma distribution
+
+        """
+        return InverseGamma(alpha=self.nu / 2, beta=self.nu * self.sigma2 / 2)
+
+    @property
+    def dist(self):
+        return stats.invgamma(a=self.nu / 2, scale=self.nu * self.sigma2 / 2)
