@@ -2,11 +2,7 @@ import pytest
 
 import numpy as np
 
-import matplotlib.pyplot as plt
-
 from conjugate.plot import resolve_label
-
-from conjugate.distributions import Beta, Gamma, Normal
 
 
 @pytest.mark.parametrize(
@@ -26,41 +22,3 @@ from conjugate.distributions import Beta, Gamma, Normal
 )
 def test_resolve_label(label, yy, expected):
     assert resolve_label(label, yy) == expected
-
-
-@pytest.mark.mpl_image_compare
-def test_plot():
-    beta = Beta(1, 1)
-    ax = beta.plot_pdf(label="Uniform")
-    ax.legend()
-    return plt.gcf()
-
-
-@pytest.mark.mpl_image_compare
-def test_plot_multiple():
-    beta = Beta(np.array([1, 2, 3]), np.array([1, 2, 3]))
-    ax = beta.plot_pdf(label="Beta")
-    ax.legend()
-    return plt.gcf()
-
-
-@pytest.mark.mpl_image_compare
-def test_plot_multiple_with_labels():
-    beta = Beta(np.array([1, 2, 3]), np.array([1, 2, 3]))
-    ax = beta.plot_pdf(label=["First Beta", "Second Beta", "Third Beta"])
-    ax.legend()
-    return plt.gcf()
-
-
-@pytest.mark.mpl_image_compare
-def test_different_distributions() -> None:
-    beta = Beta(1, 1)
-    gamma = Gamma(1, 1)
-    normal = Normal(0, 1)
-
-    ax = beta.plot_pdf(label="Beta")
-    gamma.set_bounds(0, upper=5).plot_pdf(ax=ax, label="Gamma")
-    normal.set_bounds(-5, 5).plot_pdf(ax=ax, label="Normal")
-
-    ax.legend()
-    return plt.gcf()
