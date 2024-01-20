@@ -155,10 +155,14 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
     """Plot the pdf using samples from the dirichlet distribution."""
 
     def plot_pdf(
-        self, ax: Optional[plt.Axes] = None, samples: int = 1_000, **kwargs
+        self,
+        ax: Optional[plt.Axes] = None,
+        samples: int = 1_000,
+        random_state=None,
+        **kwargs,
     ) -> plt.Axes:
         """Plots the pdf"""
-        distribution_samples = self.dist.rvs(size=samples)
+        distribution_samples = self.dist.rvs(size=samples, random_state=random_state)
 
         ax = self._settle_axis(ax=ax)
         xx = self._create_x_values()
