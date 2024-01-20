@@ -134,6 +134,9 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         return np.linspace(self.min_value, self.max_value, 100)
 
     def _setup_labels(self, ax) -> None:
+        if isinstance(ax, plt.PolarAxes):
+            return
+
         ax.set_xlabel("Domain")
         ax.set_ylabel("Density $f(x)$")
 
