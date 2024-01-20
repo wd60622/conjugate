@@ -42,7 +42,7 @@ from packaging import version
 import numpy as np
 
 from scipy import stats, __version__ as scipy_version
-from scipy.special import gammaln
+from scipy.special import gammaln, i0
 
 from conjugate._typing import NUMERIC
 from conjugate.plot import (
@@ -691,7 +691,7 @@ class GammaKnownRateProportional:
 
     def approx_log_likelihood(
         self, alpha: NUMERIC, beta: NUMERIC, ln=np.log, gammaln=gammaln
-    ):
+    ) -> NUMERIC:
         """Approximate log likelihood.
 
         Args:
@@ -730,7 +730,7 @@ class GammaProportional:
 
     def approx_log_likelihood(
         self, alpha: NUMERIC, beta: NUMERIC, ln=np.log, gammaln=gammaln
-    ):
+    ) -> NUMERIC:
         """Approximate log likelihood.
 
         Args:
@@ -768,7 +768,7 @@ class BetaProportional:
 
     def approx_log_likelihood(
         self, alpha: NUMERIC, beta: NUMERIC, ln=np.log, gammaln=gammaln
-    ):
+    ) -> NUMERIC:
         """Approximate log likelihood.
 
         Args:
@@ -788,3 +788,76 @@ class BetaProportional:
             - self.k * gammaln(alpha)
             - self.k * gammaln(beta)
         )
+
+
+@dataclass
+class VonMises(ContinuousPlotDistMixin, SliceMixin):
+    """Von Mises distribution.
+
+    Args:
+        mu: mean
+        kappa: concentration
+
+    """
+
+    mu: NUMERIC
+    kappa: NUMERIC
+
+    def __post_init__(self) -> None:
+        self.min_value = -np.pi
+        self.max_value = np.pi
+
+    @property
+    def dist(self):
+        return stats.vonmises(loc=self.mu, kappa=self.kappa)
+
+
+@dataclass
+class VonMisesKnownConcentration:
+    """Von Mises known concentration distribution.
+
+    Taken from <a href=https://web.archive.org/web/20090529203101/http://www.people.cornell.edu/pages/df36/CONJINTRnew%20TEX.pdf>Section 2.13.1</a>.
+
+    Args:
+        a: positive value
+        b: value between 0 and 2 pi
+
+    """
+
+    a: NUMERIC
+    b: NUMERIC
+
+    def log_likelihood(self, mu: NUMERIC, cos=np.cos, ln=np.log, i0=i0) -> NUMERIC:
+        """Approximate log likelihood.
+
+        Args:
+            mu: mean
+            cos: cosine function
+            ln: log function
+            i0: modified bessel function of order 0
+
+        Returns:
+            log likelihood
+
+        """
+        return self.a + cos(mu - self.b) - ln(i0(self.a))
+
+
+@dataclass
+class VonMisesKnownDirectionProportional:
+    c: NUMERIC
+    r: NUMERIC
+
+    def approx_log_likelihood(self, kappa: NUMERIC, ln=np.log, i0=i0) -> NUMERIC:
+        """Approximate log likelihood.
+
+        Args:
+            kappa: concentration
+            ln: log function
+            i0: modified bessel function of order 0
+
+        Returns:
+            log likelihood up to a constant
+
+        """
+        return kappa * self.r - self.c * ln(i0(kappa))

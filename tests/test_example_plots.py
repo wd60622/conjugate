@@ -4,7 +4,14 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-from conjugate.distributions import Beta, Dirichlet, Gamma, Normal, NormalInverseGamma
+from conjugate.distributions import (
+    Beta,
+    Dirichlet,
+    Gamma,
+    Normal,
+    NormalInverseGamma,
+    VonMises,
+)
 from conjugate.models import (
     binomial_beta,
     binomial_beta_posterior_predictive,
@@ -185,4 +192,18 @@ def test_bayesian_update_example() -> None:
     )
     ax.legend()
 
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_polar_plot() -> None:
+    kappas = np.array([0.5, 1, 5, 10])
+    dist = VonMises(0, kappa=kappas)
+
+    fig = plt.figure(figsize=(12, 6))
+    ax = fig.add_subplot(121, projection="polar")
+    dist.plot_pdf(ax=ax)
+
+    ax = fig.add_subplot(122)
+    dist.plot_pdf(ax=ax)
     return fig

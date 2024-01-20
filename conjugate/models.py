@@ -26,6 +26,8 @@ from conjugate.distributions import (
     StudentT,
     MultivariateStudentT,
     Lomax,
+    VonMisesKnownConcentration,
+    VonMisesKnownDirectionProportional,
 )
 from conjugate._typing import NUMERIC
 
@@ -1248,3 +1250,60 @@ def beta(
     k_post = proportional_prior.k + n
 
     return BetaProportional(p=p_post, q=q_post, k=k_post)
+
+
+def von_mises_known_concentration(
+    cos_total: NUMERIC,
+    sin_total: NUMERIC,
+    n: NUMERIC,
+    kappa: NUMERIC,
+    von_mises_prior: VonMisesKnownConcentration,
+    sin=np.sin,
+    cos=np.cos,
+    arctan2=np.arctan2,
+) -> VonMisesKnownConcentration:
+    """VonMises likelihood with known concentration parameter.
+
+    Taken from <a href=https://web.archive.org/web/20090529203101/http://www.people.cornell.edu/pages/df36/CONJINTRnew%20TEX.pdf>Section 2.13.1</a>.
+
+    Args:
+        cos_total: sum of all cosines
+        sin_total: sum of all sines
+        n: total number of samples in cos_total and sin_total
+        kappa: known concentration parameter
+        von_mises_prior: VonMisesKnownConcentration prior
+
+    Returns:
+        VonMisesKnownConcentration posterior distribution
+
+    """
+    sin_total_post = von_mises_prior.a * sin(von_mises_prior.b) + sin_total
+    a_post = kappa * sin_total_post
+
+    b_post = arctan2(
+        sin_total_post, von_mises_prior.a * cos(von_mises_prior.b) + cos_total
+    )
+
+    return VonMisesKnownConcentration(a=a_post, b=b_post)
+
+
+def von_mises_known_direction(
+    centered_cos_total: NUMERIC,
+    n: NUMERIC,
+    proportional_prior: VonMisesKnownDirectionProportional,
+) -> VonMisesKnownDirectionProportional:
+    """VonMises likelihood with known direction parameter.
+
+    Taken from <a href=https://web.archive.org/web/20090529203101/http://www.people.cornell.edu/pages/df36/CONJINTRnew%20TEX.pdf>Section 2.13.2</a>
+
+    Args:
+        centered_cos_total: sum of all centered cosines. sum cos(x - known direction))
+        n: total number of samples in centered_cos_total
+        proportional_prior: VonMisesKnownDirectionProportional prior
+
+    """
+
+    return VonMisesKnownDirectionProportional(
+        c=proportional_prior.c + n,
+        r=proportional_prior.r + centered_cos_total,
+    )
