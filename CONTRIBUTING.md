@@ -2,13 +2,14 @@
 
 Contributions are welcomed in all forms. These may be bugs, feature requests, documentation, or examples. Please feel free to: 
 
-1. Submit an issue
-1. Open a pull request
-1. Help with outstanding issues and pull requests
+- Submit an issue
+- Open a pull request
+- Help with outstanding issues and pull requests
 
 ## Open an Issue
 
-If you find a bug or have a feature request, please [open an issue](https://github.com/wd60622/conjugate/issues/new) on GitHub.
+If you find a bug or have a feature request, please [open an issue](https://github.com/wd60622/conjugate/issues/new) on GitHub. 
+Please check that it is not one of the [open issues](https://github.com/wd60622/conjugate/issues).
 
 ## Local Development Steps
 
@@ -29,6 +30,18 @@ Do this once but keep it up to date
 
 The project is developed with [Poetry](https://python-poetry.org/).
 
+In the root of the repo, run:
+
+```bash
+poetry install
+```
+
+And also install the [pre-commit](https://pre-commit.com/) hooks with: 
+
+```bash 
+pre-commit install 
+```
+
 ## Pull Request Checklist
 
 Please check that your pull request meets the following criteria: 
@@ -39,15 +52,15 @@ Please check that your pull request meets the following criteria:
 
 ## Documentation
 
-The documentation is built using [MkDocs](https://www.mkdocs.org/) and [mkdocstrings](https://mkdocstrings.github.io/)
+The documentation is built using [MkDocs](https://www.mkdocs.org/) and [mkdocstrings](https://mkdocstrings.github.io/).
 
-The docstrings should be of [Google Style](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html)
+The docstrings should be of [Google Style](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
 
 ## Automations
 
-Formatting will be down with [pre-commit](https://pre-commit.com/). 
+Formatting will be down with ruff via the pre-commit hooks.
 
-Tests will run on each pull request
+Tests will run on each pull request.
 
 Documentation will be updated with each merge to `main` branch.
 
