@@ -1415,7 +1415,6 @@ def multivariate_normal(
             [0.5, 1],
         ])
 
-
         n_samples = 100
         rng = np.random.default_rng(42)
         data = rng.multivariate_normal(
@@ -1423,7 +1422,6 @@ def multivariate_normal(
             cov=true_cov,
             size=n_samples,
         )
-
 
         prior = NormalInverseWishart(
             mu=np.array([0, 0]),
@@ -1513,10 +1511,10 @@ def multivariate_normal_posterior_predictive(
             mu=np.array([0, 0]),
             kappa=1,
             nu=2,
-            psi=(np.array([
+            psi=np.array([
                 [5 ** 2, 0],
                 [0, 5 ** 2],
-            ])),
+            ]),
         )
 
         posterior = multivariate_normal(
@@ -1554,10 +1552,7 @@ def multivariate_normal_posterior_predictive(
         )
         ax.legend()
         plt.show()
-
         ```
-
-
     """
 
     p = normal_inverse_wishart.psi.shape[0]

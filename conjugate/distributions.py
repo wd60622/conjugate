@@ -999,7 +999,7 @@ class NormalInverseWishart:
 
     @property
     def inverse_wishart(self):
-        return stats.invwishart(df=self.nu, scale=self.psi)
+        return InverseWishart(nu=self.nu, psi=self.psi)
 
     @classmethod
     def from_inverse_wishart(
@@ -1018,18 +1018,32 @@ class NormalInverseWishart:
             samples from the inverse wishart distribution
 
         """
-        return (
-            self.inverse_wishart.rvs(size=size, random_state=random_state) / self.kappa
+        variance = (
+            self.inverse_wishart.dist.rvs(size=size, random_state=random_state)
+            / self.kappa
         )
-
-    def sample_beta(
-        self, size: int, return_variance: bool = False, random_state=None
-    ) -> NUMERIC:
-        variance = self.sample_variance(size=size, random_state=random_state)
         if size == 1:
             variance = variance[None, ...]
 
-        beta = np.stack(
+        return variance
+
+    def sample_mean(
+        self, size: int, return_variance: bool = False, random_state=None
+    ) -> NUMERIC:
+        """Sample the mean from the normal distribution.
+
+        Args:
+            size: number of samples
+            return_variance: whether to return variance as well
+            random_state: random state
+
+        Returns:
+            samples from the normal distribution and optionally variance
+
+        """
+        variance = self.sample_variance(size=size, random_state=random_state)
+
+        mean = np.stack(
             [
                 stats.multivariate_normal(self.mu, cov=cov).rvs(
                     size=1, random_state=random_state
@@ -1039,6 +1053,6 @@ class NormalInverseWishart:
         )
 
         if return_variance:
-            return beta, variance
+            return mean, variance
 
-        return beta
+        return mean
