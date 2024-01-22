@@ -23,6 +23,8 @@ from conjugate.distributions import (
     MultivariateStudentT,
     InverseWishart,
     NormalInverseWishart,
+    InverseGamma,
+    NormalInverseGamma,
 )
 
 
@@ -247,3 +249,28 @@ def test_normal_inverse_wishart() -> None:
 
     mean = distribution.sample_mean(size=1)
     assert mean.shape == (1, 2)
+
+
+@pytest.mark.parametrize("n_features", [1, 2, 3])
+@pytest.mark.parametrize("n_samples", [1, 2, 10])
+def test_normal_inverse_gamma(n_features, n_samples) -> None:
+    mu = np.zeros(n_features)
+    delta_inverse = np.eye(n_features)
+    distribution = NormalInverseGamma(
+        mu=mu,
+        alpha=1,
+        beta=1,
+        delta_inverse=delta_inverse,
+    )
+
+    assert isinstance(distribution.inverse_gamma, InverseGamma)
+
+    variance = distribution.sample_variance(size=n_samples)
+    assert variance.shape == (n_samples,)
+
+    mean = distribution.sample_mean(size=n_samples)
+
+    if n_features == 1:
+        assert mean.shape == (n_samples,)
+    else:
+        assert mean.shape == (n_samples, n_features)

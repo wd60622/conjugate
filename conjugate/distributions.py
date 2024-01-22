@@ -556,13 +556,35 @@ class NormalInverseGamma:
         return stats.norm(self.mu, sigma).rvs(size=size, random_state=random_state)
 
     def _sample_beta_nd(self, variance, size: int, random_state=None) -> NUMERIC:
+        variance = (self.delta_inverse[None, ...].T * variance).T
         return np.stack(
             [
-                stats.multivariate_normal(self.mu, v * self.delta_inverse).rvs(
+                stats.multivariate_normal(self.mu, v).rvs(
                     size=1, random_state=random_state
                 )
                 for v in variance
             ]
+        )
+
+    def sample_mean(
+        self,
+        size: int,
+        return_variance: bool = False,
+        random_state=None,
+    ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
+        """Sample the mean from the normal distribution.
+
+        Args:
+            size: number of samples
+            return_variance: whether to return variance as well
+            random_state: random state
+
+        Returns:
+            samples from the normal distribution and optionally variance
+
+        """
+        return self.sample_beta(
+            size=size, return_variance=return_variance, random_state=random_state
         )
 
     def sample_beta(
