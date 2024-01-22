@@ -82,3 +82,7 @@ plt.show()
 <img height=400 src="docs/images/binomial-beta.png" title="Binomial Beta Comparison">
 
 More examples on in the [documentation](https://wd60622.github.io/conjugate/).
+
+## Contributing
+
+If you are interested in contributing, check out the [contributing guidelines](https://github.com/wd60622/conjugate/blob/main/CONTRIBUTING.md)
