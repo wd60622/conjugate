@@ -11,7 +11,12 @@ test:
 		tests
 
 cov: 
-	poetry run pytest --mpl --cov-report html --cov=conjugate tests && open htmlcov/index.html
+	poetry run pytest \
+		--mpl --mpl-baseline-path=tests/example-plots \
+		--cov=conjugate \
+		--cov-report=html --cov-report=term-missing \
+		tests
+	open htmlcov/index.html
 
 format: 
 	poetry run pre-commit run --all-files
