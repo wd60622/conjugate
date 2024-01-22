@@ -21,6 +21,8 @@ from conjugate.distributions import (
     MultivariateNormal,
     StudentT,
     MultivariateStudentT,
+    InverseWishart,
+    NormalInverseWishart,
 )
 
 
@@ -228,3 +230,20 @@ def test_slice_multivariate_t() -> None:
     np.testing.assert_allclose(mvn_slice.dist.loc, mu[[1, 0]])
     np.testing.assert_allclose(mvn_slice.dist.shape, cov[[1, 0], :][:, [1, 0]])
     assert mvn_slice.dist.df == df
+
+
+def test_normal_inverse_wishart() -> None:
+    distribution = NormalInverseWishart(
+        mu=np.array([0, 1]),
+        kappa=1,
+        nu=2,
+        psi=np.array([[1, 0], [0, 1]]),
+    )
+
+    assert isinstance(distribution.inverse_wishart, InverseWishart)
+
+    variance = distribution.sample_variance(size=1)
+    assert variance.shape == (1, 2, 2)
+
+    mean = distribution.sample_mean(size=1)
+    assert mean.shape == (1, 2)

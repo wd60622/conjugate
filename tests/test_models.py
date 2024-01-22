@@ -24,6 +24,8 @@ from conjugate.distributions import (
     MultivariateStudentT,
     GammaProportional,
     GammaKnownRateProportional,
+    NormalInverseWishart,
+    MultivariateNormal,
 )
 from conjugate.models import (
     get_binomial_beta_posterior_params,
@@ -49,6 +51,8 @@ from conjugate.models import (
     gamma,
     gamma_known_rate,
     beta,
+    multivariate_normal,
+    multivariate_normal_posterior_predictive,
 )
 
 rng = np.random.default_rng(42)
@@ -480,3 +484,42 @@ def test_beta_proportional_model() -> None:
     )
 
     assert isinstance(posterior, BetaProportional)
+
+
+def test_multivariate_normal() -> None:
+    mu = np.array([1, 2, 3])
+    sigma = np.array(
+        [
+            [1, 0, 0],
+            [0, 2, 0],
+            [0, 0, 3],
+        ]
+    )
+
+    true = MultivariateNormal(mu, sigma)
+
+    n_samples = 15
+    X = true.dist.rvs(size=n_samples, random_state=0)
+
+    prior = NormalInverseWishart(
+        mu=np.zeros_like(mu),
+        kappa=1,
+        nu=len(mu),
+        psi=np.eye(len(mu)),
+    )
+    posterior = multivariate_normal(
+        X=X,
+        normal_inverse_wishart_prior=prior,
+    )
+    assert isinstance(posterior, NormalInverseWishart)
+
+    prior_predictive = multivariate_normal_posterior_predictive(
+        normal_inverse_wishart=prior
+    )
+    posterior_predictive = multivariate_normal_posterior_predictive(posterior)
+    assert isinstance(posterior_predictive, MultivariateStudentT)
+    assert prior_predictive.dist.logpdf(mu) < posterior_predictive.dist.logpdf(mu)
+    assert (
+        prior_predictive.dist.logpdf(X).sum()
+        < posterior_predictive.dist.logpdf(X).sum()
+    )

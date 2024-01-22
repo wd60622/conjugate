@@ -968,3 +968,91 @@ class NormalGamma:
             return beta, variance
 
         return beta
+
+
+@dataclass
+class InverseWishart:
+    nu: NUMERIC
+    psi: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.invwishart(df=self.nu, scale=self.psi)
+
+
+@dataclass
+class Wishart:
+    nu: NUMERIC
+    V: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.wishart(df=self.nu, scale=self.V)
+
+
+@dataclass
+class NormalInverseWishart:
+    mu: NUMERIC
+    kappa: NUMERIC
+    nu: NUMERIC
+    psi: NUMERIC
+
+    @property
+    def inverse_wishart(self):
+        return InverseWishart(nu=self.nu, psi=self.psi)
+
+    @classmethod
+    def from_inverse_wishart(
+        cls, mu: NUMERIC, kappa: NUMERIC, inverse_wishart: InverseWishart
+    ):
+        return cls(mu=mu, kappa=kappa, nu=inverse_wishart.nu, psi=inverse_wishart.psi)
+
+    def sample_variance(self, size: int, random_state=None) -> NUMERIC:
+        """Sample precision from gamma distribution and invert.
+
+        Args:
+            size: number of samples
+            random_state: random state
+
+        Returns:
+            samples from the inverse wishart distribution
+
+        """
+        variance = (
+            self.inverse_wishart.dist.rvs(size=size, random_state=random_state)
+            / self.kappa
+        )
+        if size == 1:
+            variance = variance[None, ...]
+
+        return variance
+
+    def sample_mean(
+        self, size: int, return_variance: bool = False, random_state=None
+    ) -> NUMERIC:
+        """Sample the mean from the normal distribution.
+
+        Args:
+            size: number of samples
+            return_variance: whether to return variance as well
+            random_state: random state
+
+        Returns:
+            samples from the normal distribution and optionally variance
+
+        """
+        variance = self.sample_variance(size=size, random_state=random_state)
+
+        mean = np.stack(
+            [
+                stats.multivariate_normal(self.mu, cov=cov).rvs(
+                    size=1, random_state=random_state
+                )
+                for cov in variance
+            ]
+        )
+
+        if return_variance:
+            return mean, variance
+
+        return mean

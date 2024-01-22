@@ -1,5 +1,30 @@
 """For more on these models, check out the <a href=https://en.wikipedia.org/wiki/Conjugate_prior#Table_of_conjugate_distributions>Conjugate Prior Wikipedia Table</a>
 
+# Supported Likelihoods
+
+## Discrete
+
+- Bernoulli / Binomial
+- Negative Binomial
+- Geometric 
+- Hypergeometric
+- Poisson
+- Categorical / Multinomial
+
+## Continuous
+
+- Normal 
+- Multivariate Normal
+- Linear Regression (Normal)
+- Uniform
+- Exponential
+- Pareto
+- Gamma
+- Beta
+- Von Mises
+
+# Model Functions
+
 Below are the supported models
 
 """
@@ -28,6 +53,8 @@ from conjugate.distributions import (
     Lomax,
     VonMisesKnownConcentration,
     VonMisesKnownDirectionProportional,
+    InverseWishart,
+    NormalInverseWishart,
 )
 from conjugate._typing import NUMERIC
 
@@ -141,11 +168,31 @@ def bernoulli_beta(x: NUMERIC, beta_prior: Beta) -> Beta:
     """Posterior distribution for a bernoulli likelihood with a beta prior.
 
     Args:
-        x: sucesses from that trials
+        x: sucesses from a single trial
         beta_prior: Beta distribution prior
 
     Returns:
         Beta distribution posterior
+
+    Examples:
+       Information gain from a single coin flip
+
+        ```python
+        from conjugate.distributions import Beta
+        from conjugate.models import bernoulli_beta
+
+        prior = Beta(1, 1)
+
+        # Positive outcome
+        x = 1
+        posterior = bernoulli_beta(
+            x=x,
+            beta_prior=prior
+        )
+
+        posterior.dist.ppf([0.025, 0.975])
+        # array([0.15811388, 0.98742088])
+        ```
 
     """
     return binomial_beta(n=1, x=x, beta_prior=beta_prior)
@@ -1307,3 +1354,214 @@ def von_mises_known_direction(
         c=proportional_prior.c + n,
         r=proportional_prior.r + centered_cos_total,
     )
+
+
+def multivariate_normal_known_mean(
+    X: NUMERIC,
+    mu: NUMERIC,
+    inverse_wishart_prior: InverseWishart,
+) -> InverseWishart:
+    """Multivariate normal likelihood with known mean and inverse wishart prior.
+
+    Args:
+        X: design matrix
+        mu: known mean
+        inverse_wishart_prior: InverseWishart prior
+
+    Returns:
+        InverseWishart posterior distribution
+
+    """
+    nu_post = inverse_wishart_prior.nu + X.shape[0]
+    psi_post = inverse_wishart_prior.psi + (X - mu).T @ (X - mu)
+
+    return InverseWishart(
+        nu=nu_post,
+        psi=psi_post,
+    )
+
+
+def multivariate_normal(
+    X: NUMERIC,
+    normal_inverse_wishart_prior: NormalInverseWishart,
+    outer=np.outer,
+) -> NormalInverseWishart:
+    """Multivariate normal likelihood with normal inverse wishart prior.
+
+    Args:
+        X: design matrix
+        mu: known mean
+        normal_inverse_wishart_prior: NormalInverseWishart prior
+        outer: function to take outer product, defaults to np.outer
+
+    Returns:
+        NormalInverseWishart posterior distribution
+
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import NormalInverseWishart
+        from conjugate.models import multivariate_normal
+
+        true_mean = np.array([1, 5])
+        true_cov = np.array([
+            [1, 0.5],
+            [0.5, 1],
+        ])
+
+        n_samples = 100
+        rng = np.random.default_rng(42)
+        data = rng.multivariate_normal(
+            mean=true_mean,
+            cov=true_cov,
+            size=n_samples,
+        )
+
+        prior = NormalInverseWishart(
+            mu=np.array([0, 0]),
+            kappa=1,
+            nu=3,
+            psi=np.array([
+                [1, 0],
+                [0, 1],
+            ]),
+        )
+
+        posterior = multivariate_normal(
+            X=data,
+            normal_inverse_wishart_prior=prior,
+        )
+        ```
+    """
+    n = X.shape[0]
+    X_mean = X.mean(axis=0)
+    C = (X - X_mean).T @ (X - X_mean)
+
+    mu_post = (
+        normal_inverse_wishart_prior.mu * normal_inverse_wishart_prior.kappa
+        + n * X_mean
+    ) / (normal_inverse_wishart_prior.kappa + n)
+
+    kappa_post = normal_inverse_wishart_prior.kappa + n
+    nu_post = normal_inverse_wishart_prior.nu + n
+
+    mean_difference = X_mean - normal_inverse_wishart_prior.mu
+    psi_post = (
+        normal_inverse_wishart_prior.psi
+        + C
+        + outer(mean_difference, mean_difference)
+        * n
+        * normal_inverse_wishart_prior.kappa
+        / kappa_post
+    )
+
+    return NormalInverseWishart(
+        mu=mu_post,
+        kappa=kappa_post,
+        nu=nu_post,
+        psi=psi_post,
+    )
+
+
+def multivariate_normal_posterior_predictive(
+    normal_inverse_wishart: NormalInverseWishart,
+) -> MultivariateStudentT:
+    """Multivariate normal likelihood with normal inverse wishart prior.
+
+    Args:
+        normal_inverse_wishart: NormalInverseWishart posterior
+
+    Returns:
+        MultivariateStudentT posterior predictive distribution
+
+    Examples:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import NormalInverseWishart, MultivariateNormal
+        from conjugate.models import multivariate_normal, multivariate_normal_posterior_predictive
+
+        mu_1 = 10
+        mu_2 = 5
+        sigma_1 = 2.5
+        sigma_2 = 1.5
+        rho = -0.65
+        true_mean = np.array([mu_1, mu_2])
+        true_cov = np.array([
+            [sigma_1 ** 2, rho * sigma_1 * sigma_2],
+            [rho * sigma_1 * sigma_2, sigma_2 ** 2],
+        ])
+        true = MultivariateNormal(true_mean, true_cov)
+
+        n_samples = 100
+        rng = np.random.default_rng(42)
+        data = true.dist.rvs(size=n_samples, random_state=rng)
+
+        prior = NormalInverseWishart(
+            mu=np.array([0, 0]),
+            kappa=1,
+            nu=2,
+            psi=np.array([
+                [5 ** 2, 0],
+                [0, 5 ** 2],
+            ]),
+        )
+
+        posterior = multivariate_normal(
+            X=data,
+            normal_inverse_wishart_prior=prior,
+        )
+        prior_predictive = multivariate_normal_posterior_predictive(prior)
+        posterior_predictive = multivariate_normal_posterior_predictive(posterior)
+
+        ax = plt.subplot(111)
+
+        xmax = mu_1 + 3 * sigma_1
+        ymax = mu_2 + 3 * sigma_2
+        x, y = np.mgrid[-xmax:xmax:.1, -ymax:ymax:.1]
+        pos = np.dstack((x, y))
+        z = true.dist.pdf(pos)
+        # z = np.where(z < 0.005, np.nan, z)
+        contours = ax.contour(x, y, z, alpha=0.55, color="black")
+
+        for label, dist in zip(["prior", "posterior"], [prior_predictive, posterior_predictive]):
+            X = dist.dist.rvs(size=1000)
+            ax.scatter(X[:, 0], X[:, 1], alpha=0.15, label=f"{label} predictive")
+
+        ax.axvline(0, color="black", linestyle="--")
+        ax.axhline(0, color="black", linestyle="--")
+        ax.scatter(data[:, 0], data[:, 1], label="data", alpha=0.5)
+        ax.scatter(mu_1, mu_2, color="black", marker="x", label="true mean")
+
+        ax.set(
+            xlabel="x1",
+            ylabel="x2",
+            title=f"Posterior predictive after {n_samples} samples",
+            xlim=(-xmax, xmax),
+            ylim=(-ymax, ymax),
+        )
+        ax.legend()
+        plt.show()
+        ```
+    """
+
+    p = normal_inverse_wishart.psi.shape[0]
+    mu = normal_inverse_wishart.mu
+    nu = normal_inverse_wishart.nu - p + 1
+    sigma = (
+        (normal_inverse_wishart.kappa + 1)
+        * normal_inverse_wishart.psi
+        / (normal_inverse_wishart.kappa * (normal_inverse_wishart.nu - p + 1))
+    )
+
+    return MultivariateStudentT(mu=mu, sigma=sigma, nu=nu)
