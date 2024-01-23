@@ -16,6 +16,7 @@
 - Normal 
 - Multivariate Normal
 - Linear Regression (Normal)
+- Log Normal
 - Uniform
 - Exponential
 - Pareto
@@ -1565,3 +1566,74 @@ def multivariate_normal_posterior_predictive(
     )
 
     return MultivariateStudentT(mu=mu, sigma=sigma, nu=nu)
+
+
+def log_normal_normal_inverse_gamma(
+    ln_x_total: NUMERIC,
+    ln_x2_total: NUMERIC,
+    n: NUMERIC,
+    normal_inverse_gamma_prior: NormalInverseGamma,
+) -> NormalInverseGamma:
+    """Log normal likelihood with a normal inverse gamma prior.
+
+    By taking the log of the data, we can use the normal inverse gamma posterior.
+
+    Reference: <a href=https://web.archive.org/web/20090529203101/http://www.people.cornell.edu/pages/df36/CONJINTRnew%20TEX.pdf>Section 1.2.1</a>
+
+    Args:
+        ln_x_total: sum of the log of all outcomes
+        ln_x2_total: sum of the log of all outcomes squared
+        n: total number of samples in ln_x_total and ln_x2_total
+        normal_inverse_gamma_prior: NormalInverseGamma prior
+
+    Returns:
+        NormalInverseGamma posterior distribution
+
+    Example:
+        Constructed example
+
+        ```python
+        import numpy as np
+
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import NormalInverseGamma, LogNormal
+        from conjugate.models import log_normal_normal_inverse_gamma
+
+        true_mu = 0
+        true_sigma = 2.5
+        true = LogNormal(true_mu, true_sigma)
+
+        n_samples = 15
+        data = true.dist.rvs(size=n_samples, random_state=42)
+
+        ln_data = np.log(data)
+
+        prior = NormalInverseGamma(1, 1, 1, nu=1)
+        posterior = log_normal_normal_inverse_gamma(
+            ln_x_total=ln_data.sum(),
+            ln_x2_total=(ln_data**2).sum(),
+            n=n_samples,
+            normal_inverse_gamma_prior=prior
+        )
+
+        fig, axes = plt.subplots(ncols=2)
+        mean, variance = posterior.sample_mean(4000, return_variance=True, random_state=42)
+
+        ax = axes[0]
+        ax.hist(mean, bins=20)
+        ax.axvline(true_mu, color="black", linestyle="--", label="true mu")
+
+        ax = axes[1]
+        ax.hist(variance, bins=20)
+        ax.axvline(true_sigma**2, color="black", linestyle="--", label="true sigma^2")
+        plt.show()
+        ```
+    """
+
+    return normal_normal_inverse_gamma(
+        x_total=ln_x_total,
+        x2_total=ln_x2_total,
+        n=n,
+        normal_inverse_gamma_prior=normal_inverse_gamma_prior,
+    )
