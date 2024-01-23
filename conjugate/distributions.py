@@ -1078,3 +1078,21 @@ class NormalInverseWishart:
             return mean, variance
 
         return mean
+
+
+@dataclass
+class LogNormal(ContinuousPlotDistMixin, SliceMixin):
+    """Log normal distribution.
+
+    Args:
+        mu: mean
+        sigma: standard deviation
+
+    """
+
+    mu: NUMERIC
+    sigma: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.lognorm(s=self.sigma, scale=np.exp(self.mu))

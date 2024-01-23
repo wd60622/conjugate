@@ -26,6 +26,7 @@ from conjugate.distributions import (
     GammaKnownRateProportional,
     NormalInverseWishart,
     MultivariateNormal,
+    LogNormal,
 )
 from conjugate.models import (
     get_binomial_beta_posterior_params,
@@ -53,6 +54,7 @@ from conjugate.models import (
     beta,
     multivariate_normal,
     multivariate_normal_posterior_predictive,
+    log_normal_normal_inverse_gamma,
 )
 
 rng = np.random.default_rng(42)
@@ -523,3 +525,26 @@ def test_multivariate_normal() -> None:
         prior_predictive.dist.logpdf(X).sum()
         < posterior_predictive.dist.logpdf(X).sum()
     )
+
+
+def test_log_normal_normal_inverse_gamma() -> None:
+    true_mu, true_sigma = 0.25, 2.5
+
+    true = LogNormal(true_mu, true_sigma)
+
+    n = 25
+    data = true.dist.rvs(size=n, random_state=rng)
+    ln_data = np.log(data)
+
+    prior = NormalInverseGamma(0.0, alpha=1 / 5, beta=10, nu=1 / 25)
+    posterior = log_normal_normal_inverse_gamma(
+        ln_x_total=ln_data.sum(),
+        ln_x2_total=(ln_data**2).sum(),
+        n=n,
+        normal_inverse_gamma_prior=prior,
+    )
+
+    assert isinstance(posterior, NormalInverseGamma)
+    assert posterior.inverse_gamma.dist.logpdf(
+        true_sigma**2
+    ) > prior.inverse_gamma.dist.logpdf(true_sigma**2)
