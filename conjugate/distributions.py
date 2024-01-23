@@ -1095,4 +1095,4 @@ class LogNormal(ContinuousPlotDistMixin, SliceMixin):
 
     @property
     def dist(self):
-        return stats.lognorm(s=self.sigma, scale=np.exp(self.mu))
+        return stats.lognorm(s=self.sigma, loc=self.mu)
