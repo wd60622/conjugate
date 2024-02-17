@@ -82,6 +82,10 @@ class Beta(ContinuousPlotDistMixin, SliceMixin):
         return cls(alpha=alpha, beta=beta)
 
     @classmethod
+    def uninformative(cls) -> "Beta":
+        return cls(alpha=1, beta=1)
+
+    @classmethod
     def from_successes_and_failures(
         cls, successes: NUMERIC, failures: NUMERIC
     ) -> "Beta":
@@ -144,6 +148,10 @@ class Dirichlet(DirichletPlotDistMixin):
 
     def __post_init__(self) -> None:
         self.max_value = 1.0
+
+    @classmethod
+    def uninformative(cls, n: int) -> "Dirichlet":
+        return cls(alpha=np.ones(n))
 
     @property
     def dist(self):
@@ -224,6 +232,10 @@ class Gamma(ContinuousPlotDistMixin, SliceMixin):
 
     alpha: NUMERIC
     beta: NUMERIC
+
+    @classmethod
+    def from_occurrences_in_intervals(cls, occurrences: NUMERIC, intervals: NUMERIC):
+        return cls(alpha=occurrences, beta=intervals)
 
     @property
     def dist(self):
@@ -398,6 +410,11 @@ class Normal(ContinuousPlotDistMixin, SliceMixin):
     @property
     def dist(self):
         return stats.norm(self.mu, self.sigma)
+
+    @classmethod
+    def uninformative(cls, sigma: NUMERIC = 1) -> "Normal":
+        """Uninformative normal distribution."""
+        return cls(mu=0, sigma=sigma)
 
     @classmethod
     def from_mean_and_variance(cls, mean: NUMERIC, variance: NUMERIC) -> "Normal":
