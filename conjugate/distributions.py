@@ -44,6 +44,7 @@ import numpy as np
 from scipy import stats, __version__ as scipy_version
 from scipy.special import gammaln, i0
 
+from conjugate._compound_gamma import compound_gamma
 from conjugate._typing import NUMERIC
 from conjugate.plot import (
     DirichletPlotDistMixin,
@@ -124,6 +125,8 @@ class Binomial(DiscretePlotMixin, SliceMixin):
 
 
 class VectorizedDist:
+    """Vectorized distribution to handle scipy distributions that don't support vectorization."""
+
     def __init__(self, params: np.ndarray, dist: Any):
         self.params = params
         self.dist = dist
@@ -435,6 +438,14 @@ class Normal(ContinuousPlotDistMixin, SliceMixin):
 
 @dataclass
 class MultivariateNormal:
+    """Multivariate normal distribution.
+
+    Args:
+        mu: mean
+        sigma: covariance matrix
+
+    """
+
     mu: NUMERIC
     sigma: NUMERIC
 
@@ -712,6 +723,10 @@ class CompoundGamma(ContinuousPlotDistMixin, SliceMixin):
     beta: NUMERIC
     lam: NUMERIC
 
+    @property
+    def dist(self):
+        return compound_gamma(a=self.alpha, b=self.beta, q=self.lam)
+
 
 @dataclass
 class GammaKnownRateProportional:
@@ -884,8 +899,14 @@ class VonMisesKnownConcentration:
 
 @dataclass
 class VonMisesKnownDirectionProportional:
+    """Von Mises known direction proportional distribution.
+
+    Taken from <a href=https://web.archive.org/web/20090529203101/http://www.people.cornell.edu/pages/df36/CONJINTRnew%20TEX.pdf>Section 2.13.2</a>.
+
+    Args:
     c: NUMERIC
     r: NUMERIC
+    """
 
     def approx_log_likelihood(self, kappa: NUMERIC, ln=np.log, i0=i0) -> NUMERIC:
         """Approximate log likelihood.
@@ -1011,6 +1032,14 @@ class NormalGamma:
 
 @dataclass
 class InverseWishart:
+    """Inverse wishart distribution.
+
+    Args:
+        nu: degrees of freedom
+        psi: scale matrix
+
+    """
+
     nu: NUMERIC
     psi: NUMERIC
 
@@ -1021,6 +1050,14 @@ class InverseWishart:
 
 @dataclass
 class Wishart:
+    """Wishart distribution.
+
+    Args:
+        nu: degrees of freedom
+        V: scale matrix
+
+    """
+
     nu: NUMERIC
     V: NUMERIC
 
@@ -1031,6 +1068,16 @@ class Wishart:
 
 @dataclass
 class NormalInverseWishart:
+    """Normal inverse wishart distribution.
+
+    Args:
+        mu: mean
+        kappa: precision
+        nu: degrees of freedom
+        psi: scale matrix
+
+    """
+
     mu: NUMERIC
     kappa: NUMERIC
     nu: NUMERIC

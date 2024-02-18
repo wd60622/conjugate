@@ -25,6 +25,7 @@ from conjugate.distributions import (
     NormalInverseWishart,
     InverseGamma,
     NormalInverseGamma,
+    CompoundGamma,
 )
 
 
@@ -274,3 +275,24 @@ def test_normal_inverse_gamma(n_features, n_samples) -> None:
         assert mean.shape == (n_samples,)
     else:
         assert mean.shape == (n_samples, n_features)
+
+
+@pytest.mark.parametrize(
+    "a, b, q, size",
+    [
+        (1, 1, 1, (10,)),
+        (np.array([1, 2, 3]), 1, 1, (10, 3)),
+        (1, np.array([1, 2, 3]), 1, (10, 3)),
+        (np.array([1, 2, 3]), np.array([1, 2, 3]), 1, (10, 3)),
+        # Check for broadcasting
+        (
+            np.array([1, 2, 3]),
+            np.array([1, 2])[:, None],
+            np.array([1, 2, 3]),
+            (10, 2, 3),
+        ),
+    ],
+)
+def test_compound_gamma(a, b, q, size) -> None:
+    dist = CompoundGamma(alpha=1, beta=1, lam=1)
+    assert dist.dist.rvs(size=size).shape == size

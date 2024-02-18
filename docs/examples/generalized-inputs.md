@@ -5,6 +5,9 @@ comments: true
 
 Though the plotting is meant for numpy and python numbers, the conjugate models work with anything that works like numbers. 
 
+
+## Models with SQL
+
 For instance, Bayesian models in SQL using the SQL Builder, [PyPika](https://github.com/kayak/pypika)
 
 ```python
@@ -35,6 +38,9 @@ print("Posterior beta:", posterior.beta)
 # Posterior alpha: "previous_successes"-1+"successes"
 # Posterior beta: "previous_failures"-1+"total"-"successes"
 ```
+
+
+## PyMC
 
 Using PyMC distributions for sampling with additional uncertainty
 

@@ -44,17 +44,20 @@ nav:
     - Distributions: distributions.md
     - Mixins: mixins.md
   - Examples: 
-    - Binomial Model: examples/binomial.md
-    - Scaling Distributions: examples/scaling-distributions.md
-    - SciPy Distributions: examples/scipy-connection.md
-    - Plotting: examples/plotting.md
-    - Vectorized Operations: examples/vectorized-inputs.md
-    - Indexing: examples/indexing.md
-    - Generalized Numerical Inputs: examples/generalized-inputs.md
-    - Unsupported Distributions: examples/pymc-sampling.md
-    - Bayesian Update: examples/bayesian-update.md
-    - Linear Regression: examples/linear-regression.md
-    - Inference in SQL: examples/sql.md
+    - Case Studies: 
+      - Binomial Model: examples/binomial.md
+      - Bayesian Update: examples/bayesian-update.md
+      - Linear Regression: examples/linear-regression.md
+      - Unsupported Distributions: examples/unsupported-distributions.md
+      - Inference in SQL: examples/sql.md
+    - Features: 
+      - Plotting: examples/plotting.md
+      - SciPy Distributions: examples/scipy-connection.md
+      - Sampling Distributions: examples/sampling-distributions.md
+      - Vectorized Operations: examples/vectorized-inputs.md
+      - Indexing: examples/indexing.md
+      - Generalized Numerical Inputs: examples/generalized-inputs.md
+      - Scaling Distributions: examples/scaling-distributions.md
 
 plugins:
 - search
