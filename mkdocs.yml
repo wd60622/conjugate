@@ -47,6 +47,7 @@ nav:
     - Case Studies: 
       - Binomial Model: examples/binomial.md
       - Bayesian Update: examples/bayesian-update.md
+      - Thompson Sampling: examples/thompson.md
       - Linear Regression: examples/linear-regression.md
       - Unsupported Distributions: examples/unsupported-distributions.md
       - Inference in SQL: examples/sql.md
