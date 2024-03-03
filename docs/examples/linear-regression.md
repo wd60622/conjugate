@@ -68,8 +68,6 @@ pp: MultivariateStudentT = linear_regression_posterior_predictive(normal_inverse
 
 samples = pp.dist.rvs(5_000).T
 df_samples = pd.DataFrame(samples, index=x_new)
-
-
 ```
 
 ## Plot Results
@@ -79,8 +77,6 @@ We can see that the posterior predictive distribution begins to widen as we move
 Overall, the posterior predictive distribution is a good fit for the data. The true line is within the 95% posterior predictive interval.
 
 ```python
-
-
 def plot_abline(intercept: float, slope: float, ax: plt.Axes = None, **kwargs):
     """Plot a line from slope and intercept"""
     if ax is None:
