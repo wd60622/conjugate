@@ -3,25 +3,63 @@ comments: true
 ---
 # Binomial Model 
 
+## Import modules
+
+Import the required distributions: 
+
+- `Binomial`: The assumed model likelihood
+- `Beta`: Prior for `Binomial` distribution
+- `BetaBinomial`: The posterior predictive distribution
+
+and the functions: 
+
+- `binomial_beta`: get the posterior distribution from data and prior
+- `binomial_beta_posterior_predictive`: get the posterior predictive
+
 ```python 
 from conjugate.distributions import Beta, Binomial, BetaBinomial
 from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
 
 import matplotlib.pyplot as plt
+```
 
+## Observed Data
+
+Generate some data from the assumed likelihood
+
+```python
 N = 10
 true_dist = Binomial(n=N, p=0.5)
 
 # Observed Data
 X = true_dist.dist.rvs(size=1, random_state=42)
+```
 
+## Bayesian Inference
+
+Get the posterior and posterior predictive distributions
+
+```python
 # Conjugate prior
 prior = Beta(alpha=1, beta=1)
 posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
 
 # Comparison
-prior_predictive: BetaBinomial = binomial_beta_posterior_predictive(n=N, beta=prior)
-posterior_predictive: BetaBinomial = binomial_beta_posterior_predictive(n=N, beta=posterior)
+prior_predictive: BetaBinomial = binomial_beta_posterior_predictive(
+    n=N, 
+    beta=prior, 
+)
+posterior_predictive: BetaBinomial = binomial_beta_posterior_predictive(
+    n=N, 
+    beta=posterior, 
+)
+```
+
+## Additional Analysis
+
+Perform any analysis on the distributions
+
+```python
 
 # Figure 
 fig, axes = plt.subplots(ncols=2, nrows=1, figsize=(8, 4))
