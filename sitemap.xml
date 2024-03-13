@@ -2,87 +2,87 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://wd60622.github.io/conjugate/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/distributions/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/mixins/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/models/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/bayesian-update/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/binomial/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/generalized-inputs/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/indexing/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/linear-regression/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/plotting/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/sampling-distributions/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/scaling-distributions/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/scipy-connection/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/sql/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/thompson/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/unsupported-distributions/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://wd60622.github.io/conjugate/examples/vectorized-inputs/</loc>
-         <lastmod>2024-03-03</lastmod>
+         <lastmod>2024-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
