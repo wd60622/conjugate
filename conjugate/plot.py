@@ -10,16 +10,16 @@ from scipy.stats import gaussian_kde
 
 class Distribution(Protocol):
     def pdf(self, *args, **kwargs) -> np.ndarray:
-        ...
+        ...  # pragma: no cover
 
     def pmf(self, *args, **kwargs) -> np.ndarray:
-        ...
+        ...  # pragma: no cover
 
     def rvs(self, size, *args, **kwargs) -> np.ndarray:
-        ...
+        ...  # pragma: no cover
 
 
-LABEL_INPUT = Union[str, Iterable[str], Callable[[int], str]]
+LABEL_INPUT = Optional[Union[str, Iterable[str], Callable[[int], str]]]
 
 
 def label_to_iterable(label: LABEL_INPUT, ncols: int) -> Iterable[str]:
