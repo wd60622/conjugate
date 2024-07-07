@@ -10,51 +10,58 @@ import matplotlib.pyplot as plt
 
 from conjugate.distributions import (
     Beta,
+    BetaBinomial,
+    BetaNegativeBinomial,
     BetaProportional,
     CompoundGamma,
     Dirichlet,
-    Pareto,
     Gamma,
-    Lomax,
-    NegativeBinomial,
-    NormalInverseGamma,
-    InverseGamma,
-    Normal,
-    StudentT,
-    MultivariateStudentT,
-    GammaProportional,
     GammaKnownRateProportional,
-    NormalInverseWishart,
-    MultivariateNormal,
+    GammaProportional,
+    InverseGamma,
     LogNormal,
+    Lomax,
+    MultivariateNormal,
+    MultivariateStudentT,
+    NegativeBinomial,
+    Normal,
+    NormalInverseGamma,
+    NormalInverseWishart,
+    Pareto,
+    StudentT,
 )
 from conjugate.models import (
-    get_binomial_beta_posterior_params,
+    bernoulli_beta,
+    bernoulli_beta_posterior_predictive,
+    beta,
     binomial_beta,
-    multinomial_dirichlet,
-    geometric_beta,
-    poisson_gamma,
-    poisson_gamma_posterior_predictive,
-    linear_regression,
-    linear_regression_posterior_predictive,
-    uniform_pareto,
-    pareto_gamma,
     exponential_gamma,
     exponential_gamma_posterior_predictive,
-    normal_known_variance,
-    normal_known_variance_posterior_predictive,
-    normal_known_mean,
-    normal_known_mean_posterior_predictive,
-    normal_normal_inverse_gamma,
-    normal_normal_inverse_gamma_posterior_predictive,
-    gamma_known_shape,
-    gamma_known_shape_posterior_predictive,
     gamma,
     gamma_known_rate,
-    beta,
+    gamma_known_shape,
+    gamma_known_shape_posterior_predictive,
+    geometric_beta,
+    get_binomial_beta_posterior_params,
+    hypergeometric_beta_binomial,
+    linear_regression,
+    linear_regression_posterior_predictive,
+    log_normal_normal_inverse_gamma,
+    multinomial_dirichlet,
     multivariate_normal,
     multivariate_normal_posterior_predictive,
-    log_normal_normal_inverse_gamma,
+    negative_binomial_beta,
+    negative_binomial_beta_posterior_predictive,
+    normal_known_mean,
+    normal_known_mean_posterior_predictive,
+    normal_known_variance,
+    normal_known_variance_posterior_predictive,
+    normal_normal_inverse_gamma,
+    normal_normal_inverse_gamma_posterior_predictive,
+    pareto_gamma,
+    poisson_gamma,
+    poisson_gamma_posterior_predictive,
+    uniform_pareto,
 )
 
 rng = np.random.default_rng(42)
@@ -548,3 +555,56 @@ def test_log_normal_normal_inverse_gamma() -> None:
     assert posterior.inverse_gamma.dist.logpdf(
         true_sigma**2
     ) > prior.inverse_gamma.dist.logpdf(true_sigma**2)
+
+
+def test_bernoulli_beta() -> None:
+    prior = Beta(alpha=1, beta=1)
+    posterior = bernoulli_beta(
+        x=0,
+        beta_prior=prior,
+    )
+    assert posterior == Beta(alpha=1, beta=2)
+
+
+def test_bernoulli_beta_posterior_predictive() -> None:
+    prior = Beta(alpha=1, beta=1)
+    pp = bernoulli_beta_posterior_predictive(beta=prior)
+
+    assert pp == BetaBinomial(n=1, alpha=1, beta=1)
+
+
+def test_negative_binomial_beta() -> None:
+    prior = Beta(alpha=1, beta=1)
+    posterior = negative_binomial_beta(
+        r=10,
+        n=15,
+        x=5,
+        beta_prior=prior,
+    )
+
+    assert posterior == Beta(
+        alpha=151,
+        beta=6,
+    )
+
+
+def test_negative_binomial_beta_posterior_predictive() -> None:
+    prior = Beta(alpha=1, beta=1)
+    pp = negative_binomial_beta_posterior_predictive(r=10, beta=prior)
+
+    assert pp == BetaNegativeBinomial(n=10, alpha=1, beta=1)
+
+
+def test_hypergeometric_beta_binomial() -> None:
+    prior = BetaBinomial(n=10, alpha=1, beta=1)
+    posterior = hypergeometric_beta_binomial(
+        x_total=5,
+        n=20,
+        beta_binomial_prior=prior,
+    )
+
+    assert posterior == BetaBinomial(
+        n=10,
+        alpha=6,
+        beta=6,
+    )

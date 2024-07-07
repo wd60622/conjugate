@@ -9,23 +9,35 @@ import matplotlib.pyplot as plt
 from scipy import __version__ as scipy_version
 
 from conjugate.distributions import (
-    get_beta_param_from_mean_and_alpha,
     Beta,
+    BetaBinomial,
     BetaNegativeBinomial,
-    Dirichlet,
-    Gamma,
-    Exponential,
-    NegativeBinomial,
-    Poisson,
-    Normal,
-    MultivariateNormal,
-    StudentT,
-    MultivariateStudentT,
-    InverseWishart,
-    NormalInverseWishart,
-    InverseGamma,
-    NormalInverseGamma,
+    Geometric,
+    Binomial,
     CompoundGamma,
+    Dirichlet,
+    Exponential,
+    Gamma,
+    NormalGamma,
+    InverseGamma,
+    InverseWishart,
+    Hypergeometric,
+    LogNormal,
+    Lomax,
+    MultivariateNormal,
+    MultivariateStudentT,
+    NegativeBinomial,
+    Normal,
+    NormalInverseGamma,
+    NormalInverseWishart,
+    Pareto,
+    Poisson,
+    ScaledInverseChiSquared,
+    StudentT,
+    Uniform,
+    VectorizedDist,
+    VonMises,
+    get_beta_param_from_mean_and_alpha,
 )
 
 
@@ -45,6 +57,18 @@ def test_beta(alpha, beta) -> None:
 
     ax = beta.plot_pdf()
     assert isinstance(ax, plt.Axes)
+
+
+def test_beta_uninformative() -> None:
+    beta = Beta.uninformative()
+    assert beta.alpha == 1.0
+    assert beta.beta == 1.0
+
+
+def test_beta_from_success_and_failures() -> None:
+    beta = Beta.from_successes_and_failures(successes=0, failures=0)
+    assert beta.alpha == 1.0
+    assert beta.beta == 1.0
 
 
 @pytest.mark.parametrize("mean", [0.025, 0.5, 0.75])
@@ -251,6 +275,9 @@ def test_normal_inverse_wishart() -> None:
     mean = distribution.sample_mean(size=1)
     assert mean.shape == (1, 2)
 
+    _, variance = distribution.sample_mean(size=1, return_variance=True)
+    assert variance.shape == (1, 2, 2)
+
 
 @pytest.mark.parametrize("n_features", [1, 2, 3])
 @pytest.mark.parametrize("n_samples", [1, 2, 10])
@@ -296,3 +323,110 @@ def test_normal_inverse_gamma(n_features, n_samples) -> None:
 def test_compound_gamma(a, b, q, size) -> None:
     dist = CompoundGamma(alpha=1, beta=1, lam=1)
     assert dist.dist.rvs(size=size).shape == size
+
+
+def test_binomial_max_value() -> None:
+    n = np.array([10, 20, 15])
+    p = 0.5
+    binomial = Binomial(n=n, p=p)
+
+    assert binomial.max_value == 20
+
+
+def test_dirichlet_rvs() -> None:
+    dirichlet = Dirichlet(alpha=np.array([[1, 2, 3], [1, 1, 1]]))
+
+    dist = dirichlet.dist
+    assert isinstance(dist, VectorizedDist)
+    samples = dist.rvs(size=10)
+    assert isinstance(samples, np.ndarray)
+
+
+@pytest.mark.parametrize(
+    "dist",
+    [
+        Binomial(n=10, p=0.5),
+        Geometric(p=0.5),
+        BetaBinomial(n=10, alpha=1, beta=1),
+        Poisson(lam=1),
+        BetaNegativeBinomial(n=10, alpha=1, beta=1),
+        NegativeBinomial(n=10, p=0.5),
+        Hypergeometric(N=100, k=5, n=10),
+    ],
+)
+def test_plot_pmf(dist) -> None:
+    dist.max_value = 10
+    ax = dist.plot_pmf()
+    assert isinstance(ax, plt.Axes)
+
+
+@pytest.mark.parametrize(
+    "dist",
+    [
+        Beta(alpha=1, beta=1),
+        Gamma(alpha=1, beta=1),
+        CompoundGamma(alpha=1, beta=1, lam=1),
+        LogNormal(mu=1, sigma=1),
+        ScaledInverseChiSquared(nu=1, sigma2=1),
+        VonMises(mu=0, kappa=1),
+        Lomax(alpha=1, lam=1),
+        StudentT(mu=0, sigma=1, nu=10),
+        InverseGamma(alpha=1, beta=1),
+        Pareto(x_m=10, alpha=1),
+        Uniform(low=10, high=20),
+        Normal(mu=0, sigma=1),
+        Exponential(lam=1),
+    ],
+)
+def test_plot_pdf(dist) -> None:
+    dist.max_value = 10
+    dist.min_value = 0
+    ax = dist.plot_pdf()
+    assert isinstance(ax, plt.Axes)
+
+
+def test_normal_gamma() -> None:
+    normal_gamma = NormalGamma(
+        mu=0,
+        lam=1,
+        alpha=1,
+        beta=1,
+    )
+
+    assert normal_gamma.gamma == Gamma(alpha=1, beta=1)
+
+    mean = normal_gamma.sample_mean(size=10)
+    assert mean.shape == (10,)
+
+    _, variance = normal_gamma.sample_mean(size=1, return_variance=True)
+    assert variance.shape == (1,)
+
+
+def test_scaled_inverse_chi_squared_round_trip() -> None:
+    inverse_gamma = InverseGamma(alpha=1, beta=1)
+    scaled_inverse_gamma = ScaledInverseChiSquared.from_inverse_gamma(inverse_gamma)
+    back_again = scaled_inverse_gamma.to_inverse_gamma()
+
+    assert inverse_gamma == back_again
+
+
+def test_combining_poisson() -> None:
+    poisson_1 = Poisson(lam=1)
+    poisson_2 = Poisson(lam=2)
+    poisson_3 = poisson_1 + poisson_2
+    assert poisson_3 == Poisson(lam=3)
+
+
+def test_scaling_of_normal() -> None:
+    normal = Normal(mu=0, sigma=1)
+
+    scaled_normal = 4 * normal
+    assert scaled_normal == Normal(mu=0, sigma=2)
+
+
+def test_normal_alternative_constructors() -> None:
+    assert Normal.uninformative() == Normal(mu=0, sigma=1)
+    assert Normal.from_mean_and_variance(mean=0, variance=4) == Normal(mu=0, sigma=2)
+    assert Normal.from_mean_and_precision(mean=0, precision=1 / 4) == Normal(
+        mu=0, sigma=2
+    )

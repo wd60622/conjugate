@@ -1,15 +1,15 @@
 """These are the supported distributions based on the conjugate models.
 
-Many have the `dist` attribute which is a <a href=https://docs.scipy.org/doc/scipy/reference/stats.html>scipy.stats distribution</a> object. From there, 
+Many have the `dist` attribute which is a <a href=https://docs.scipy.org/doc/scipy/reference/stats.html>scipy.stats distribution</a> object. From there,
 you can use the methods from scipy.stats to get the pdf, cdf, etc.
 
 Distributions can be plotted using the `plot_pmf` or `plot_pdf` methods of the distribution.
 
-```python 
-from conjugate.distribution import Beta 
+```python
+from conjugate.distribution import Beta
 
 beta = Beta(1, 1)
-scipy_dist = beta.dist 
+scipy_dist = beta.dist
 
 print(scipy_dist.mean())
 # 0.5
@@ -21,9 +21,9 @@ samples = scipy_dist.rvs(100)
 beta.plot_pmf(label="beta distribution")
 ```
 
-Distributions like Poisson can be added with other Poissons or multiplied by numerical values in order to scale rate. For instance, 
+Distributions like Poisson can be added with other Poissons or multiplied by numerical values in order to scale rate. For instance,
 
-```python 
+```python
 daily_rate = 0.25
 daily_pois = Poisson(lam=daily_rate)
 
@@ -34,6 +34,7 @@ weekly_pois = 7 * daily_pois
 Below are the currently supported distributions
 
 """
+
 from dataclasses import dataclass
 from typing import Any, Tuple, Union
 
@@ -1003,6 +1004,27 @@ class NormalGamma:
         precision = self.lam * self.gamma.dist.rvs(size=size, random_state=random_state)
 
         return 1 / precision
+
+    def sample_mean(
+        self,
+        size: int,
+        return_variance: bool = False,
+        random_state=None,
+    ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
+        """Sample mean from the normal distribution.
+
+        Args:
+            size: number of samples
+            return_variance: whether to return variance as well
+            random_state: random state
+
+        Returns:
+            samples from the normal distribution
+
+        """
+        return self.sample_beta(
+            size=size, return_variance=return_variance, random_state=random_state
+        )
 
     def sample_beta(
         self, size: int, return_variance: bool = False, random_state=None

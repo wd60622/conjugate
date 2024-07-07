@@ -9,7 +9,7 @@ def compound_gamma_pdf(x, a, b, q):
 
 
 class compound_gamma:
-    """ "Implementation to work like scipy distribution classes.
+    """Implementation to work like scipy distribution classes.
 
     Reference:
     https://en.wikipedia.org/wiki/Beta_prime_distribution#Generalization
