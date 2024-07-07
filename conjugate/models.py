@@ -6,14 +6,14 @@
 
 - Bernoulli / Binomial
 - Negative Binomial
-- Geometric 
+- Geometric
 - Hypergeometric
 - Poisson
 - Categorical / Multinomial
 
 ## Continuous
 
-- Normal 
+- Normal
 - Multivariate Normal
 - Linear Regression (Normal)
 - Log Normal
@@ -29,6 +29,7 @@
 Below are the supported models
 
 """
+
 from typing import Tuple
 
 import numpy as np
@@ -250,7 +251,7 @@ def negative_binomial_beta_posterior_predictive(
         BetaNegativeBinomial posterior predictive distribution
 
     """
-    return BetaNegativeBinomial(r=r, alpha=beta.alpha, beta=beta.beta)
+    return BetaNegativeBinomial(n=r, alpha=beta.alpha, beta=beta.beta)
 
 
 def hypergeometric_beta_binomial(
