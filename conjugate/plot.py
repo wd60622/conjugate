@@ -1,22 +1,22 @@
+from collections.abc import Iterable
 from dataclasses import asdict
 from itertools import zip_longest
-from typing import Callable, Iterable, Optional, Protocol, Union
+from typing import Callable, Optional, Protocol, Union
 
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.projections.polar import PolarAxes
 
 import numpy as np
 from scipy.stats import gaussian_kde
 
 
 class Distribution(Protocol):
-    def pdf(self, *args, **kwargs) -> np.ndarray:
-        ...  # pragma: no cover
+    def pdf(self, *args, **kwargs) -> np.ndarray: ...  # pragma: no cover
 
-    def pmf(self, *args, **kwargs) -> np.ndarray:
-        ...  # pragma: no cover
+    def pmf(self, *args, **kwargs) -> np.ndarray: ...  # pragma: no cover
 
-    def rvs(self, size, *args, **kwargs) -> np.ndarray:
-        ...  # pragma: no cover
+    def rvs(self, size, *args, **kwargs) -> np.ndarray: ...  # pragma: no cover
 
 
 LABEL_INPUT = Optional[Union[str, Iterable[str], Callable[[int], str]]]
@@ -105,14 +105,14 @@ class PlotDistMixin:
 
         return x
 
-    def _settle_axis(self, ax: Optional[plt.Axes] = None) -> plt.Axes:
+    def _settle_axis(self, ax: Optional[Axes] = None) -> Axes:
         return ax if ax is not None else plt.gca()
 
 
 class ContinuousPlotDistMixin(PlotDistMixin):
     """Functionality for plot_pdf method of continuous distributions."""
 
-    def plot_pdf(self, ax: Optional[plt.Axes] = None, **kwargs) -> plt.Axes:
+    def plot_pdf(self, ax: Optional[Axes] = None, **kwargs) -> Axes:
         """Plot the pdf of distribution
 
         Args:
@@ -137,19 +137,22 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         return np.linspace(self.min_value, self.max_value, 100)
 
     def _setup_labels(self, ax) -> None:
-        if isinstance(ax, plt.PolarAxes):
+        if isinstance(ax, PolarAxes):
             return
 
         ax.set_xlabel("Domain")
         ax.set_ylabel("Density $f(x)$")
 
-    def _create_plot_on_axis(self, x, ax, **kwargs) -> plt.Axes:
+    def _create_plot_on_axis(self, x, ax: Axes, **kwargs) -> Axes:
         yy = self.dist.pdf(x)
         if "label" in kwargs:
             label = kwargs.pop("label")
             label = resolve_label(label, yy)
         else:
             label = None
+
+        if "color" in kwargs and isinstance(kwargs["color"], Iterable):
+            ax.set_prop_cycle(color=kwargs.pop("color"))
 
         ax.plot(x, yy, label=label, **kwargs)
         self._setup_labels(ax=ax)
@@ -162,11 +165,11 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
 
     def plot_pdf(
         self,
-        ax: Optional[plt.Axes] = None,
+        ax: Optional[Axes] = None,
         samples: int = 1_000,
         random_state=None,
         **kwargs,
-    ) -> plt.Axes:
+    ) -> Axes:
         """Plots the pdf by sampling from the distribution.
 
         Args:
@@ -201,9 +204,7 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
 class DiscretePlotMixin(PlotDistMixin):
     """Adding the plot_pmf method to class."""
 
-    def plot_pmf(
-        self, ax: Optional[plt.Axes] = None, mark: str = "o-", **kwargs
-    ) -> plt.Axes:
+    def plot_pmf(self, ax: Optional[Axes] = None, mark: str = "o-", **kwargs) -> Axes:
         """Plot the pmf of distribution
 
         Args:
@@ -229,7 +230,7 @@ class DiscretePlotMixin(PlotDistMixin):
 
     def _create_plot_on_axis(
         self, x, ax, mark, conditional: bool = False, **kwargs
-    ) -> plt.Axes:
+    ) -> Axes:
         yy = self.dist.pmf(x)
         if conditional:
             yy = yy / np.sum(yy)
@@ -242,6 +243,9 @@ class DiscretePlotMixin(PlotDistMixin):
             label = resolve_label(label, yy)
         else:
             label = None
+
+        if "color" in kwargs and isinstance(kwargs["color"], Iterable):
+            ax.set_prop_cycle(color=kwargs.pop("color"))
 
         ax.plot(x, yy, mark, label=label, **kwargs)
 
