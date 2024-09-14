@@ -75,7 +75,7 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
 
     Args:
         n: total number of trials
-        x: sucesses from that trials
+        x: successes from that trials
         beta_prior: Beta distribution prior
 
     Returns:
@@ -170,7 +170,7 @@ def bernoulli_beta(x: NUMERIC, beta_prior: Beta) -> Beta:
     """Posterior distribution for a bernoulli likelihood with a beta prior.
 
     Args:
-        x: sucesses from a single trial
+        x: successes from a single trial
         beta_prior: Beta distribution prior
 
     Returns:
