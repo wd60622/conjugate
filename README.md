@@ -21,7 +21,8 @@ pip install conjugate-models
 - [Built in Plotting](https://wd60622.github.io/conjugate/examples/plotting) with `plot_pdf` and `plot_pmf` methods
 - [Vectorized Operations](https://wd60622.github.io/conjugate/examples/vectorized-inputs) for parameters and data
 - [Indexing Parameters](https://wd60622.github.io/conjugate/examples/indexing) for subsetting and slicing
-- [Generalized Numerical Inputs](https://wd60622.github.io/conjugate/examples/generalized-inputs) for inputs other than builtins and numpy arrays
+- [Generalized Numerical Inputs](https://wd60622.github.io/conjugate/examples/generalized-inputs) for any inputs that act like numbers
+    - Out of box compatibility with `polars`, `pandas`, `numpy`, and more.
 - [Unsupported Distributions](https://wd60622.github.io/conjugate/examples/pymc-sampling) for sampling from unsupported distributions
 
 ## Supported Models 
