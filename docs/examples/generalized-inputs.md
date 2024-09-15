@@ -3,8 +3,30 @@ comments: true
 ---
 # Generalized Numerical Inputs
 
-Though the plotting is meant for numpy and python numbers, the conjugate models work with anything that works like numbers. 
+Conjugate models work with anything that works like numbers. 
 
+## Polars
+
+For instance, Bayesian models with the Polars package: 
+
+```python
+import polars as pl
+
+# Data
+df = pl.DataFrame({
+    "total": [10, 20, 50],
+    "successes": [5, 10, 25]
+})
+
+# Conjugate prior
+prior = Beta(alpha=1, beta=1)
+posterior = binomial_beta(n=df["total"], x=df["successes"], beta_prior=prior)
+
+ax = posterior.plot_pdf(label=df["total"])
+ax.legend(title="sample size")
+```
+
+![Polars Example](./../images/polars.png)
 
 ## Models with SQL
 
@@ -38,7 +60,6 @@ print("Posterior beta:", posterior.beta)
 # Posterior alpha: "previous_successes"-1+"successes"
 # Posterior beta: "previous_failures"-1+"total"-"successes"
 ```
-
 
 ## PyMC
 
