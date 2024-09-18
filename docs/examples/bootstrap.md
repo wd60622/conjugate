@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 # Bootstrap Comparison
 
 In this example, we will compare the bootstrap method with the use of a
