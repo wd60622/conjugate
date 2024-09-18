@@ -51,6 +51,7 @@ nav:
       - Linear Regression: examples/linear-regression.md
       - Unsupported Distributions: examples/unsupported-distributions.md
       - Inference in SQL: examples/sql.md
+      - Bootstrap Comparison: examples/bootstrap.md
     - Features: 
       - Plotting: examples/plotting.md
       - SciPy Distributions: examples/scipy-connection.md
