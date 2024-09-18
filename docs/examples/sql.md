@@ -44,7 +44,7 @@ the columns.
 from conjugate.distributions import NormalInverseGamma
 from conjugate.models import (
     normal_normal_inverse_gamma,
-    normal_normal_inverse_gamma_posterior_predictive,
+    normal_normal_inverse_gamma_predictive,
 )
 
 # Bayesian Inference
@@ -55,7 +55,7 @@ posterior = normal_normal_inverse_gamma(
     n=n,
     normal_inverse_gamma_prior=prior,
 )
-posterior_predictive = normal_normal_inverse_gamma_posterior_predictive(posterior)
+posterior_predictive = normal_normal_inverse_gamma_predictive(posterior)
 ```
 
 Then add the columns we want from the inference
