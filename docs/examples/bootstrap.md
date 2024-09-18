@@ -1,3 +1,6 @@
+---
+comments: true 
+---
 # Bootstrap Comparison
 
 In this example, we will compare the bootstrap method with the use of a
@@ -33,7 +36,7 @@ from conjugate.distributions import (
 )
 from conjugate.models import (
     poisson_gamma, 
-    poisson_gamma_posterior_predictive,
+    poisson_gamma_predictive,
 )
 
 seed = sum(map(ord, "Bootstrap comparison"))
@@ -85,7 +88,7 @@ def get_posterior_predictive(data: pd.Series, prior: Gamma) -> NegativeBinomial:
     x_total = data.sum()
     n = len(data)
     posterior = poisson_gamma(x_total=x_total, n=n, gamma_prior=prior)
-    return poisson_gamma_posterior_predictive(posterior)
+    return poisson_gamma_predictive(posterior)
 
 def create_conjugate_stat(n_new: int, samples: int, prior: Gamma): 
     def conjugate_stat(data: pd.Series) -> pd.Series: 

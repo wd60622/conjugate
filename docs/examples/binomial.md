@@ -14,11 +14,11 @@ Import the required distributions:
 and the functions: 
 
 - `binomial_beta`: get the posterior distribution from data and prior
-- `binomial_beta_posterior_predictive`: get the posterior predictive
+- `binomial_beta_predictive`: get the posterior predictive
 
 ```python 
 from conjugate.distributions import Beta, Binomial, BetaBinomial
-from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
+from conjugate.models import binomial_beta, binomial_beta_predictive
 
 import matplotlib.pyplot as plt
 ```
@@ -45,11 +45,11 @@ prior = Beta(alpha=1, beta=1)
 posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
 
 # Comparison
-prior_predictive: BetaBinomial = binomial_beta_posterior_predictive(
+prior_predictive: BetaBinomial = binomial_beta_predictive(
     n=N, 
     beta=prior, 
 )
-posterior_predictive: BetaBinomial = binomial_beta_posterior_predictive(
+posterior_predictive: BetaBinomial = binomial_beta_predictive(
     n=N, 
     beta=posterior, 
 )

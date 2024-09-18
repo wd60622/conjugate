@@ -34,6 +34,8 @@ from typing import Tuple
 
 import numpy as np
 
+import warnings
+
 from conjugate.distributions import (
     Beta,
     BetaProportional,
@@ -118,7 +120,7 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
     return Beta(alpha=alpha_post, beta=beta_post)
 
 
-def binomial_beta_posterior_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
+def binomial_beta_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
     """Posterior predictive distribution for a binomial likelihood with a beta prior.
 
     Args:
@@ -137,7 +139,7 @@ def binomial_beta_posterior_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
         import matplotlib.pyplot as plt
 
         from conjugate.distributions import Beta
-        from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
+        from conjugate.models import binomial_beta, binomial_beta_predictive
 
         impressions = np.array([100, 250])
         clicks = np.array([10, 35])
@@ -148,7 +150,7 @@ def binomial_beta_posterior_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
             x=clicks,
             beta_prior=prior
         )
-        posterior_predictive = binomial_beta_posterior_predictive(
+        posterior_predictive = binomial_beta_predictive(
             n=100,
             beta=posterior
         )
@@ -200,17 +202,19 @@ def bernoulli_beta(x: NUMERIC, beta_prior: Beta) -> Beta:
     return binomial_beta(n=1, x=x, beta_prior=beta_prior)
 
 
-def bernoulli_beta_posterior_predictive(beta: Beta) -> BetaBinomial:
-    """Posterior predictive distribution for a bernoulli likelihood with a beta prior.
+def bernoulli_beta_predictive(beta: Beta) -> BetaBinomial:
+    """Predictive distribution for a bernoulli likelihood with a beta prior.
+
+    Use for either prior or posterior predictive distribution.
 
     Args:
         beta: Beta distribution
 
     Returns:
-        BetaBinomial posterior predictive distribution
+        BetaBinomial predictive distribution
 
     """
-    return binomial_beta_posterior_predictive(n=1, beta=beta)
+    return binomial_beta_predictive(n=1, beta=beta)
 
 
 def negative_binomial_beta(
@@ -236,10 +240,8 @@ def negative_binomial_beta(
     return Beta(alpha=alpha_post, beta=beta_post)
 
 
-def negative_binomial_beta_posterior_predictive(
-    r: NUMERIC, beta: Beta
-) -> BetaNegativeBinomial:
-    """Posterior predictive distribution for a negative binomial likelihood with a beta prior
+def negative_binomial_beta_predictive(r: NUMERIC, beta: Beta) -> BetaNegativeBinomial:
+    """Predictive distribution for a negative binomial likelihood with a beta prior
 
     Assumed known number of failures r
 
@@ -248,7 +250,7 @@ def negative_binomial_beta_posterior_predictive(
         beta: Beta distribution
 
     Returns:
-        BetaNegativeBinomial posterior predictive distribution
+        BetaNegativeBinomial predictive distribution
 
     """
     return BetaNegativeBinomial(n=r, alpha=beta.alpha, beta=beta.beta)
@@ -358,14 +360,17 @@ def categorical_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
     return Dirichlet(alpha=alpha_post)
 
 
-def categorical_dirichlet_posterior_predictive(
+def categorical_dirichlet_predictive(
     dirichlet: Dirichlet, n: NUMERIC = 1
 ) -> DirichletMultinomial:
-    """Posterior predictive distribution of Categorical model with Dirichlet prior.
+    """Predictive distribution of Categorical model with Dirichlet prior.
 
     Args:
         dirichlet: Dirichlet distribution
         n: Number of trials for each sample, defaults to 1.
+
+    Returns:
+        DirichletMultinomial distribution related to predictive
 
     """
 
@@ -425,14 +430,17 @@ def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
     return Dirichlet(alpha=alpha_post)
 
 
-def multinomial_dirichlet_posterior_predictive(
+def multinomial_dirichlet_predictive(
     dirichlet: Dirichlet, n: NUMERIC = 1
 ) -> DirichletMultinomial:
-    """Posterior predictive distribution of Multinomial model with Dirichlet prior.
+    """Predictive distribution of Multinomial model with Dirichlet prior.
 
     Args:
         dirichlet: Dirichlet distribution
         n: Number of trials for each sample, defaults to 1.
+
+    Returns:
+        DirichletMultinomial distribution related to predictive
 
     """
 
@@ -467,10 +475,8 @@ def poisson_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-def poisson_gamma_posterior_predictive(
-    gamma: Gamma, n: NUMERIC = 1
-) -> NegativeBinomial:
-    """Posterior predictive distribution for a poisson likelihood with a gamma prior
+def poisson_gamma_predictive(gamma: Gamma, n: NUMERIC = 1) -> NegativeBinomial:
+    """Predictive distribution for a poisson likelihood with a gamma prior
 
     Args:
         gamma: Gamma distribution
@@ -478,7 +484,7 @@ def poisson_gamma_posterior_predictive(
             Can be used to scale the distributions to a different unit of time.
 
     Returns:
-        NegativeBinomial distribution related to posterior predictive
+        NegativeBinomial distribution related to predictive
 
     """
     n = n * gamma.alpha
@@ -510,14 +516,14 @@ def exponential_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-def exponential_gamma_posterior_predictive(gamma: Gamma) -> Lomax:
-    """Posterior predictive distribution for an exponential likelihood with a gamma prior
+def exponential_gamma_predictive(gamma: Gamma) -> Lomax:
+    """Predictive distribution for an exponential likelihood with a gamma prior
 
     Args:
         gamma: Gamma distribution
 
     Returns:
-        Lomax distribution related to posterior predictive
+        Lomax distribution related to predictive
 
     Examples:
         Constructed example
@@ -528,7 +534,7 @@ def exponential_gamma_posterior_predictive(gamma: Gamma) -> Lomax:
         import matplotlib.pyplot as plt
 
         from conjugate.distributions import Exponential, Gamma
-        from conjugate.models import exponential_gamma, expotential_gamma_posterior_predictive
+        from conjugate.models import exponential_gamma, expotential_gamma_predictive
 
         true = Exponential(1)
 
@@ -543,8 +549,8 @@ def exponential_gamma_posterior_predictive(gamma: Gamma) -> Lomax:
             gamma_prior=prior
         )
 
-        prior_predictive = expotential_gamma_posterior_predictive(prior)
-        posterior_predictive = expotential_gamma_posterior_predictive(posterior)
+        prior_predictive = expotential_gamma_predictive(prior)
+        posterior_predictive = expotential_gamma_predictive(posterior)
 
         ax = plt.subplot(111)
         prior_predictive.set_bounds(0, 2.5).plot_pdf(ax=ax, label="prior predictive")
@@ -616,17 +622,15 @@ def gamma_known_shape(
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-def gamma_known_shape_posterior_predictive(
-    gamma: Gamma, alpha: NUMERIC
-) -> CompoundGamma:
-    """Posterior predictive distribution for a gamma likelihood with a gamma prior
+def gamma_known_shape_predictive(gamma: Gamma, alpha: NUMERIC) -> CompoundGamma:
+    """Predictive distribution for a gamma likelihood with a gamma prior
 
     Args:
         gamma: Gamma distribution
         alpha: known shape parameter
 
     Returns:
-        CompoundGamma distribution related to posterior predictive
+        CompoundGamma distribution related to predictive
 
     """
     return CompoundGamma(alpha=alpha, beta=gamma.alpha, lam=gamma.beta)
@@ -695,15 +699,15 @@ def normal_known_variance(
     return Normal(mu=mu_post, sigma=var_post**0.5)
 
 
-def normal_known_variance_posterior_predictive(var: NUMERIC, normal: Normal) -> Normal:
-    """Posterior predictive distribution for a normal likelihood with known variance and a normal prior on mean.
+def normal_known_variance_predictive(var: NUMERIC, normal: Normal) -> Normal:
+    """Predictive distribution for a normal likelihood with known variance and a normal prior on mean.
 
     Args:
         var: known variance
         normal: Normal posterior distribution for the mean
 
     Returns:
-        Normal posterior predictive distribution
+        Normal predictive distribution
 
     Examples:
         Constructed example
@@ -714,7 +718,7 @@ def normal_known_variance_posterior_predictive(var: NUMERIC, normal: Normal) -> 
         import matplotlib.pyplot as plt
 
         from conjugate.distributions import Normal
-        from conjugate.models import normal_known_variance, normal_known_variance_posterior_predictive
+        from conjugate.models import normal_known_variance, normal_known_variance_predictive
 
         unknown_mu = 0
         known_var = 2.5
@@ -732,11 +736,11 @@ def normal_known_variance_posterior_predictive(var: NUMERIC, normal: Normal) -> 
             normal_prior=prior
         )
 
-        prior_predictive = normal_known_variance_posterior_predictive(
+        prior_predictive = normal_known_variance_predictive(
             var=known_var,
             normal=prior
         )
-        posterior_predictive = normal_known_variance_posterior_predictive(
+        posterior_predictive = normal_known_variance_predictive(
             var=known_var,
             normal=posterior
         )
@@ -817,17 +821,15 @@ def normal_known_precision(
     )
 
 
-def normal_known_precision_posterior_predictive(
-    precision: NUMERIC, normal: Normal
-) -> Normal:
-    """Posterior predictive distribution for a normal likelihood with known precision and a normal prior on mean.
+def normal_known_precision_predictive(precision: NUMERIC, normal: Normal) -> Normal:
+    """Predictive distribution for a normal likelihood with known precision and a normal prior on mean.
 
     Args:
         precision: known precision
         normal: Normal posterior distribution for the mean
 
     Returns:
-        Normal posterior predictive distribution
+        Normal predictive distribution
 
     Examples:
         Constructed example
@@ -838,7 +840,7 @@ def normal_known_precision_posterior_predictive(
         import matplotlib.pyplot as plt
 
         from conjugate.distributions import Normal
-        from conjugate.models import normal_known_precision, normal_known_precision_posterior_predictive
+        from conjugate.models import normal_known_precision, normal_known_precision_predictive
 
         unknown_mu = 0
         known_precision = 0.5
@@ -856,11 +858,11 @@ def normal_known_precision_posterior_predictive(
             normal_prior=prior
         )
 
-        prior_predictive = normal_known_precision_posterior_predictive(
+        prior_predictive = normal_known_precision_predictive(
             precision=known_precision,
             normal=prior
         )
-        posterior_predictive = normal_known_precision_posterior_predictive(
+        posterior_predictive = normal_known_precision_predictive(
             precision=known_precision,
             normal=posterior
         )
@@ -875,7 +877,7 @@ def normal_known_precision_posterior_predictive(
         ```
 
     """
-    return normal_known_variance_posterior_predictive(
+    return normal_known_variance_predictive(
         var=1 / precision,
         normal=normal,
     )
@@ -909,17 +911,15 @@ def normal_known_mean(
     return InverseGamma(alpha=alpha_post, beta=beta_post)
 
 
-def normal_known_mean_posterior_predictive(
-    mu: NUMERIC, inverse_gamma: InverseGamma
-) -> StudentT:
-    """Posterior predictive distribution for a normal likelihood with a known mean and a variance prior.
+def normal_known_mean_predictive(mu: NUMERIC, inverse_gamma: InverseGamma) -> StudentT:
+    """Predictive distribution for a normal likelihood with a known mean and a variance prior.
 
     Args:
         mu: known mean
         inverse_gamma: InverseGamma prior
 
     Returns:
-        StudentT posterior predictive distribution
+        StudentT predictive distribution
 
     Examples:
         Constructed example
@@ -930,7 +930,7 @@ def normal_known_mean_posterior_predictive(
         import matplotlib.pyplot as plt
 
         from conjugate.distributions import Normal, InverseGamma
-        from conjugate.models import normal_known_mean, normal_known_mean_posterior_predictive
+        from conjugate.models import normal_known_mean, normal_known_mean_predictive
 
         unknown_var = 2.5
         known_mu = 0
@@ -951,13 +951,13 @@ def normal_known_mean_posterior_predictive(
 
         bound = 5
         ax = plt.subplot(111)
-        prior_predictive = normal_known_mean_posterior_predictive(
+        prior_predictive = normal_known_mean_predictive(
             mu=known_mu,
             inverse_gamma=prior
         )
         prior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior predictive")
         true.set_bounds(-bound, bound).plot_pdf(ax=ax, label="true distribution")
-        posterior_predictive = normal_known_mean_posterior_predictive(
+        posterior_predictive = normal_known_mean_predictive(
             mu=known_mu,
             inverse_gamma=posterior
         )
@@ -1016,16 +1016,16 @@ def normal_normal_inverse_gamma(
     )
 
 
-def normal_normal_inverse_gamma_posterior_predictive(
+def normal_normal_inverse_gamma_predictive(
     normal_inverse_gamma: NormalInverseGamma,
 ) -> StudentT:
-    """Posterior predictive distribution for a normal likelihood with a normal inverse gamma prior.
+    """Predictive distribution for a normal likelihood with a normal inverse gamma prior.
 
     Args:
         normal_inverse_gamma: NormalInverseGamma posterior
 
     Returns:
-        StudentT posterior predictive distribution
+        StudentT predictive distribution
 
     """
     var = (
@@ -1092,10 +1092,10 @@ def linear_regression(
     )
 
 
-def linear_regression_posterior_predictive(
+def linear_regression_predictive(
     normal_inverse_gamma: NormalInverseGamma, X: NUMERIC, eye=np.eye
 ) -> MultivariateStudentT:
-    """Posterior predictive distribution for a linear regression model with a normal inverse gamma prior.
+    """Predictive distribution for a linear regression model with a normal inverse gamma prior.
 
     Args:
         normal_inverse_gamma: NormalInverseGamma posterior
@@ -1103,7 +1103,7 @@ def linear_regression_posterior_predictive(
         eye: function to get identity matrix, defaults to np.eye
 
     Returns:
-        MultivariateStudentT posterior predictive distribution
+        MultivariateStudentT predictive distribution
 
     """
     mu = X @ normal_inverse_gamma.mu
@@ -1471,7 +1471,7 @@ def multivariate_normal(
     )
 
 
-def multivariate_normal_posterior_predictive(
+def multivariate_normal_predictive(
     normal_inverse_wishart: NormalInverseWishart,
 ) -> MultivariateStudentT:
     """Multivariate normal likelihood with normal inverse wishart prior.
@@ -1480,7 +1480,7 @@ def multivariate_normal_posterior_predictive(
         normal_inverse_wishart: NormalInverseWishart posterior
 
     Returns:
-        MultivariateStudentT posterior predictive distribution
+        MultivariateStudentT predictive distribution
 
     Examples:
         Constructed example
@@ -1491,7 +1491,7 @@ def multivariate_normal_posterior_predictive(
         import matplotlib.pyplot as plt
 
         from conjugate.distributions import NormalInverseWishart, MultivariateNormal
-        from conjugate.models import multivariate_normal, multivariate_normal_posterior_predictive
+        from conjugate.models import multivariate_normal, multivariate_normal_predictive
 
         mu_1 = 10
         mu_2 = 5
@@ -1523,8 +1523,8 @@ def multivariate_normal_posterior_predictive(
             X=data,
             normal_inverse_wishart_prior=prior,
         )
-        prior_predictive = multivariate_normal_posterior_predictive(prior)
-        posterior_predictive = multivariate_normal_posterior_predictive(posterior)
+        prior_predictive = multivariate_normal_predictive(prior)
+        posterior_predictive = multivariate_normal_predictive(posterior)
 
         ax = plt.subplot(111)
 
@@ -1638,3 +1638,54 @@ def log_normal_normal_inverse_gamma(
         n=n,
         normal_inverse_gamma_prior=normal_inverse_gamma_prior,
     )
+
+
+def _use_predictive_instead(func):
+    def wrapper(*args, **kwargs):
+        name = func.__name__
+        warnings.warn(
+            f"This function is deprecated and will be removed in future version. Use the {name!r} instead.",
+            DeprecationWarning,
+            stacklevel=1,
+        )
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+binomial_beta_posterior_predictive = _use_predictive_instead(binomial_beta_predictive)
+bernoulli_beta_posterior_predictive = _use_predictive_instead(bernoulli_beta_predictive)
+negative_binomial_beta_posterior_predictive = _use_predictive_instead(
+    negative_binomial_beta_predictive,
+)
+categorical_dirichlet_posterior_predictive = _use_predictive_instead(
+    categorical_dirichlet_predictive,
+)
+multinomial_dirichlet_posterior_predictive = _use_predictive_instead(
+    multinomial_dirichlet_predictive,
+)
+poisson_gamma_posterior_predictive = _use_predictive_instead(poisson_gamma_predictive)
+exponential_gamma_posterior_predictive = _use_predictive_instead(
+    exponential_gamma_predictive
+)
+gamma_known_shape_posterior_predictive = _use_predictive_instead(
+    gamma_known_shape_predictive
+)
+normal_known_variance_posterior_predictive = _use_predictive_instead(
+    normal_known_variance_predictive
+)
+normal_known_precision_posterior_predictive = _use_predictive_instead(
+    normal_known_precision_predictive
+)
+normal_known_mean_posterior_predictive = _use_predictive_instead(
+    normal_known_mean_predictive
+)
+normal_normal_inverse_gamma_posterior_predictive = _use_predictive_instead(
+    normal_normal_inverse_gamma_predictive
+)
+linear_regression_posterior_predictive = _use_predictive_instead(
+    linear_regression_predictive
+)
+multivariate_normal_posterior_predictive = _use_predictive_instead(
+    multivariate_normal_predictive
+)

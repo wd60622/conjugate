@@ -15,7 +15,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from conjugate.distributions import NormalInverseGamma, MultivariateStudentT
-from conjugate.models import linear_regression, linear_regression_posterior_predictive
+from conjugate.models import linear_regression, linear_regression_predictive
 
 intercept = 3.5
 slope = -2.0
@@ -64,7 +64,7 @@ The multivariate student-t distribution is used for the posterior predictive dis
 x_lim_new = 1.5 * x_lim
 x_new = np.linspace(-x_lim_new, x_lim_new, 20)
 X_new = create_X(x_new)
-pp: MultivariateStudentT = linear_regression_posterior_predictive(normal_inverse_gamma=posterior, X=X_new)
+pp: MultivariateStudentT = linear_regression_predictive(normal_inverse_gamma=posterior, X=X_new)
 
 samples = pp.dist.rvs(5_000).T
 df_samples = pd.DataFrame(samples, index=x_new)

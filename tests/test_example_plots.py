@@ -14,7 +14,7 @@ from conjugate.distributions import (
 )
 from conjugate.models import (
     binomial_beta,
-    binomial_beta_posterior_predictive,
+    binomial_beta_predictive,
     normal_normal_inverse_gamma,
 )
 
@@ -81,11 +81,11 @@ def test_analysis() -> None:
 
     posterior = binomial_beta(n=N, x=x, beta_prior=prior)
 
-    prior_predictive = binomial_beta_posterior_predictive(
+    prior_predictive = binomial_beta_predictive(
         n=5,
         beta=prior,
     )
-    posterior_predictive = binomial_beta_posterior_predictive(
+    posterior_predictive = binomial_beta_predictive(
         n=5,
         beta=posterior,
     )

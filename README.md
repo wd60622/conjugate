@@ -43,7 +43,7 @@ Many likelihoods are supported including
 
 ```python 
 from conjugate.distributions import Beta, BetaBinomial
-from conjugate.models import binomial_beta, binomial_beta_posterior_predictive
+from conjugate.models import binomial_beta, binomial_beta_predictive
 
 # Observed Data
 X = 4
@@ -51,10 +51,10 @@ N = 10
 
 # Analytics
 prior = Beta(1, 1)
-prior_predictive: BetaBinomial = binomial_beta_posterior_predictive(n=N, beta=prior)
+prior_predictive: BetaBinomial = binomial_beta_predictive(n=N, beta=prior)
 
 posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
-posterior_predictive: BetaBinomial = binomial_beta_posterior_predictive(n=N, beta=posterior) 
+posterior_predictive: BetaBinomial = binomial_beta_predictive(n=N, beta=posterior) 
 ```
 
 From here, do any analysis you'd like!
