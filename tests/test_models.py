@@ -35,6 +35,7 @@ from conjugate.models import (
     bernoulli_beta_predictive,
     beta,
     binomial_beta,
+    binomial_beta_posterior_predictive,
     exponential_gamma,
     exponential_gamma_predictive,
     gamma,
@@ -604,3 +605,15 @@ def test_hypergeometric_beta_binomial() -> None:
         alpha=6,
         beta=6,
     )
+
+
+def test_old_model_raises_deprecation_warning() -> None:
+    beta = Beta(alpha=1, beta=1)
+    match = "This function is deprecated"
+    with pytest.warns(DeprecationWarning, match=match):
+        predictive = binomial_beta_posterior_predictive(
+            n=10,
+            beta=beta,
+        )
+
+    assert isinstance(predictive, BetaBinomial)
