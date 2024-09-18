@@ -34,6 +34,8 @@ from typing import Tuple
 
 import numpy as np
 
+import warnings
+
 from conjugate.distributions import (
     Beta,
     BetaProportional,
@@ -1636,3 +1638,54 @@ def log_normal_normal_inverse_gamma(
         n=n,
         normal_inverse_gamma_prior=normal_inverse_gamma_prior,
     )
+
+
+def _use_predictive_instead(func):
+    def wrapper(*args, **kwargs):
+        name = func.__name__
+        warnings.warn(
+            f"This function is deprecated and will be removed in future version. Use the {name!r} instead.",
+            DeprecationWarning,
+            stacklevel=1,
+        )
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+binomial_beta_posterior_predictive = _use_predictive_instead(binomial_beta_predictive)
+bernoulli_beta_posterior_predictive = _use_predictive_instead(bernoulli_beta_predictive)
+negative_binomial_beta_posterior_predictive = _use_predictive_instead(
+    negative_binomial_beta_predictive,
+)
+categorical_dirichlet_posterior_predictive = _use_predictive_instead(
+    categorical_dirichlet_predictive,
+)
+multinomial_dirichlet_posterior_predictive = _use_predictive_instead(
+    multinomial_dirichlet_predictive,
+)
+poisson_gamma_posterior_predictive = _use_predictive_instead(poisson_gamma_predictive)
+exponential_gamma_posterior_predictive = _use_predictive_instead(
+    exponential_gamma_predictive
+)
+gamma_known_shape_posterior_predictive = _use_predictive_instead(
+    gamma_known_shape_predictive
+)
+normal_known_variance_posterior_predictive = _use_predictive_instead(
+    normal_known_variance_predictive
+)
+normal_known_precision_posterior_predictive = _use_predictive_instead(
+    normal_known_precision_predictive
+)
+normal_known_mean_posterior_predictive = _use_predictive_instead(
+    normal_known_mean_predictive
+)
+normal_normal_inverse_gamma_posterior_predictive = _use_predictive_instead(
+    normal_normal_inverse_gamma_predictive
+)
+linear_regression_posterior_predictive = _use_predictive_instead(
+    linear_regression_predictive
+)
+multivariate_normal_posterior_predictive = _use_predictive_instead(
+    multivariate_normal_predictive
+)
