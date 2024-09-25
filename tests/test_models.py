@@ -261,7 +261,7 @@ def test_linear_regression(intercept, slope, sigma) -> None:
         beta=10,
     )
 
-    posterior = linear_regression(X, y, prior)
+    posterior = linear_regression(X, y, prior=prior)
 
     beta_samples, variance_samples = posterior.sample_beta(
         size=500, return_variance=True, random_state=rng
