@@ -73,9 +73,11 @@ def validate_prior_type(func):
             prior = kwargs.get("prior", None)
             recieved_type = type(prior)
             if not isinstance(prior, prior_type):
-                raise ValueError(
-                    f"Expected prior to be of type {prior_type.__name__!r}. Got {recieved_type.__name__!r}"
+                msg = (
+                    f"Expected prior to be of type {prior_type.__name__!r}, "
+                    f"got {recieved_type.__name__!r} instead."
                 )
+                raise ValueError(msg)
 
         return func(*args, **kwargs)
 
