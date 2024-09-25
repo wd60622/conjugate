@@ -87,7 +87,7 @@ prior for the Poisson distribution.
 def get_posterior_predictive(data: pd.Series, prior: Gamma) -> NegativeBinomial:
     x_total = data.sum()
     n = len(data)
-    posterior = poisson_gamma(x_total=x_total, n=n, gamma_prior=prior)
+    posterior = poisson_gamma(x_total=x_total, n=n, prior=prior)
     return poisson_gamma_predictive(posterior)
 
 def create_conjugate_stat(n_new: int, samples: int, prior: Gamma): 

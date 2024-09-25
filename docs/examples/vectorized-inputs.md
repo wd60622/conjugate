@@ -21,7 +21,7 @@ x = 4
 
 # Analytics 
 prior = Beta(alpha=1, beta=np.array([1, 10]))
-posterior = binomial_beta(n=N, x=x, beta_prior=prior)
+posterior = binomial_beta(n=N, x=x, prior=prior)
 
 # Figure
 colors = ["blue", "red"]

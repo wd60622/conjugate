@@ -20,7 +20,7 @@ df = pl.DataFrame({
 
 # Conjugate prior
 prior = Beta(alpha=1, beta=1)
-posterior = binomial_beta(n=df["total"], x=df["successes"], beta_prior=prior)
+posterior = binomial_beta(n=df["total"], x=df["successes"], prior=prior)
 
 ax = posterior.plot_pdf(label=df["total"])
 ax.legend(title="sample size")
@@ -41,7 +41,7 @@ X = Field("successes")
 
 # Conjugate prior
 prior = Beta(alpha=1, beta=1)
-posterior = binomial_beta(n=N, x=X, beta_prior=prior)
+posterior = binomial_beta(n=N, x=X, prior=prior)
 
 print("Posterior alpha:", posterior.alpha)
 print("Posterior beta:", posterior.beta)
@@ -53,7 +53,7 @@ alpha = Field("previous_successes") - 1
 beta = Field("previous_failures") - 1
 
 prior = Beta(alpha=alpha, beta=beta)
-posterior = binomial_beta(n=N, x=X, beta_prior=prior)
+posterior = binomial_beta(n=N, x=X, prior=prior)
 
 print("Posterior alpha:", posterior.alpha)
 print("Posterior beta:", posterior.beta)
@@ -77,7 +77,7 @@ X = 4
 
 # Conjugate prior 
 prior = Beta(alpha=alpha, beta=beta)
-posterior = binomial_beta(n=N, x=X, beta_prior=prior)
+posterior = binomial_beta(n=N, x=X, prior=prior)
 
 # Reconstruct the posterior distribution with PyMC
 prior_dist = pm.Beta.dist(alpha=prior.alpha, beta=prior.beta)

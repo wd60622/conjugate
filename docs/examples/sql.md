@@ -53,7 +53,7 @@ posterior = normal_normal_inverse_gamma(
     x_total=x_total,
     x2_total=x2_total,
     n=n,
-    normal_inverse_gamma_prior=prior,
+    prior=prior,
 )
 posterior_predictive = normal_normal_inverse_gamma_predictive(posterior)
 ```
