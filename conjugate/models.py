@@ -31,6 +31,7 @@ Below are the supported models
 """
 
 from typing import Tuple
+from functools import wraps
 
 import numpy as np
 
@@ -63,6 +64,28 @@ from conjugate.distributions import (
 from conjugate._typing import NUMERIC
 
 
+def deprecate_prior_parameter(old_name: str):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if old_name in kwargs:
+                msg = (
+                    f"Parameter {old_name!r} is deprecated, use 'prior' instead. "
+                    "It will be removed in a future version."
+                )
+                warnings.warn(
+                    msg,
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                kwargs["prior"] = kwargs.pop(old_name)
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
 def get_binomial_beta_posterior_params(
     alpha_prior: NUMERIC, beta_prior: NUMERIC, n: NUMERIC, x: NUMERIC
 ) -> Tuple[NUMERIC, NUMERIC]:
@@ -72,6 +95,7 @@ def get_binomial_beta_posterior_params(
     return alpha_post, beta_post
 
 
+@deprecate_prior_parameter("beta_prior")
 def binomial_beta(n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a binomial likelihood with a beta prior.
 
@@ -168,6 +192,7 @@ def binomial_beta_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
     return BetaBinomial(n=n, alpha=beta.alpha, beta=beta.beta)
 
 
+@deprecate_prior_parameter("beta_prior")
 def bernoulli_beta(x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a bernoulli likelihood with a beta prior.
 
@@ -217,6 +242,7 @@ def bernoulli_beta_predictive(beta: Beta) -> BetaBinomial:
     return binomial_beta_predictive(n=1, beta=beta)
 
 
+@deprecate_prior_parameter("beta_prior")
 def negative_binomial_beta(r: NUMERIC, n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a negative binomial likelihood with a beta prior.
 
@@ -254,6 +280,7 @@ def negative_binomial_beta_predictive(r: NUMERIC, beta: Beta) -> BetaNegativeBin
     return BetaNegativeBinomial(n=r, alpha=beta.alpha, beta=beta.beta)
 
 
+@deprecate_prior_parameter("beta_binomial_prior")
 def hypergeometric_beta_binomial(
     x_total: NUMERIC, n: NUMERIC, prior: BetaBinomial
 ) -> BetaBinomial:
@@ -279,6 +306,7 @@ def hypergeometric_beta_binomial(
     return BetaBinomial(n=n, alpha=alpha_post, beta=beta_post)
 
 
+@deprecate_prior_parameter("beta_prior")
 def geometric_beta(x_total, n, prior: Beta, one_start: bool = True) -> Beta:
     """Posterior distribution for a geometric likelihood with a beta prior.
 
@@ -342,6 +370,7 @@ def get_categorical_dirichlet_posterior_params(
     return get_dirichlet_posterior_params(alpha_prior, x)
 
 
+@deprecate_prior_parameter("dirichlet_prior")
 def categorical_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     """Posterior distribution of Categorical model with Dirichlet prior.
 
@@ -381,6 +410,7 @@ def get_multi_categorical_dirichlet_posterior_params(
     return get_dirichlet_posterior_params(alpha_prior, x)
 
 
+@deprecate_prior_parameter("dirichlet_prior")
 def multinomial_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     """Posterior distribution of Multinomial model with Dirichlet prior.
 
@@ -454,6 +484,7 @@ def get_poisson_gamma_posterior_params(
     return alpha_post, beta_post
 
 
+@deprecate_prior_parameter("gamma_prior")
 def poisson_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     """Posterior distribution for a poisson likelihood with a gamma prior.
 
@@ -495,6 +526,7 @@ def poisson_gamma_predictive(gamma: Gamma, n: NUMERIC = 1) -> NegativeBinomial:
 get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
 
 
+@deprecate_prior_parameter("gamma_prior")
 def exponential_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     """Posterior distribution for an exponential likelihood with a gamma prior.
 
@@ -561,6 +593,7 @@ def exponential_gamma_predictive(gamma: Gamma) -> Lomax:
     return Lomax(alpha=gamma.beta, lam=gamma.alpha)
 
 
+@deprecate_prior_parameter("gamma_prior")
 def gamma_known_shape(
     x_total: NUMERIC, n: NUMERIC, alpha: NUMERIC, prior: Gamma
 ) -> Gamma:
@@ -634,6 +667,7 @@ def gamma_known_shape_predictive(gamma: Gamma, alpha: NUMERIC) -> CompoundGamma:
     return CompoundGamma(alpha=alpha, beta=gamma.alpha, lam=gamma.beta)
 
 
+@deprecate_prior_parameter("normal_prior")
 def normal_known_variance(
     x_total: NUMERIC,
     n: NUMERIC,
@@ -757,6 +791,7 @@ def normal_known_variance_predictive(var: NUMERIC, normal: Normal) -> Normal:
     return Normal(mu=normal.mu, sigma=var_posterior_predictive**0.5)
 
 
+@deprecate_prior_parameter("normal_prior")
 def normal_known_precision(
     x_total: NUMERIC,
     n: NUMERIC,
@@ -819,6 +854,7 @@ def normal_known_precision(
     )
 
 
+@deprecate_prior_parameter("normal_prior")
 def normal_known_precision_predictive(precision: NUMERIC, normal: Normal) -> Normal:
     """Predictive distribution for a normal likelihood with known precision and a normal prior on mean.
 
@@ -881,6 +917,7 @@ def normal_known_precision_predictive(precision: NUMERIC, normal: Normal) -> Nor
     )
 
 
+@deprecate_prior_parameter("inverse_gamma_prior")
 def normal_known_mean(
     x_total: NUMERIC,
     x2_total: NUMERIC,
@@ -970,6 +1007,7 @@ def normal_known_mean_predictive(mu: NUMERIC, inverse_gamma: InverseGamma) -> St
     )
 
 
+@deprecate_prior_parameter("normal_inverse_gamma_prior")
 def normal_normal_inverse_gamma(
     x_total: NUMERIC,
     x2_total: NUMERIC,
@@ -1034,6 +1072,7 @@ def normal_normal_inverse_gamma_predictive(
     )
 
 
+@deprecate_prior_parameter("normal_inverse_gamma_prior")
 def linear_regression(
     X: NUMERIC,
     y: NUMERIC,
@@ -1113,6 +1152,7 @@ def linear_regression_predictive(
     )
 
 
+@deprecate_prior_parameter("pareto_prior")
 def uniform_pareto(
     x_max: NUMERIC, n: NUMERIC, prior: Pareto, max_fn=np.maximum
 ) -> Pareto:
@@ -1156,6 +1196,7 @@ def uniform_pareto(
     return Pareto(x_m=x_m_post, alpha=alpha_post)
 
 
+@deprecate_prior_parameter("gamma_prior")
 def pareto_gamma(
     n: NUMERIC, ln_x_total: NUMERIC, x_m: NUMERIC, prior: Gamma, ln=np.log
 ) -> Gamma:
@@ -1214,6 +1255,7 @@ def pareto_gamma(
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
+@deprecate_prior_parameter("gamma_proportial_prior")
 def gamma(
     x_total: NUMERIC,
     x_prod: NUMERIC,
@@ -1242,6 +1284,7 @@ def gamma(
     return GammaProportional(p=p_post, q=q_post, r=r_post, s=s_post)
 
 
+@deprecate_prior_parameter("gamma_known_rate_proportial_prior")
 def gamma_known_rate(
     x_prod: NUMERIC,
     n: NUMERIC,
@@ -1268,6 +1311,7 @@ def gamma_known_rate(
     return GammaKnownRateProportional(a=a_post, b=b_post, c=c_post)
 
 
+@deprecate_prior_parameter("beta_proportial_prior")
 def beta(
     x_prod: NUMERIC,
     one_minus_x_prod: NUMERIC,
@@ -1295,6 +1339,7 @@ def beta(
     return BetaProportional(p=p_post, q=q_post, k=k_post)
 
 
+@deprecate_prior_parameter("von_mises_known_concentration_prior")
 def von_mises_known_concentration(
     cos_total: NUMERIC,
     sin_total: NUMERIC,
@@ -1328,6 +1373,7 @@ def von_mises_known_concentration(
     return VonMisesKnownConcentration(a=a_post, b=b_post)
 
 
+@deprecate_prior_parameter("von_mises_known_direction_proportial_prior")
 def von_mises_known_direction(
     centered_cos_total: NUMERIC,
     n: NUMERIC,
@@ -1350,6 +1396,7 @@ def von_mises_known_direction(
     )
 
 
+@deprecate_prior_parameter("inverse_wishart_prior")
 def multivariate_normal_known_mean(
     X: NUMERIC,
     mu: NUMERIC,
@@ -1375,6 +1422,7 @@ def multivariate_normal_known_mean(
     )
 
 
+@deprecate_prior_parameter("normal_inverse_wishart_prior")
 def multivariate_normal(
     X: NUMERIC,
     prior: NormalInverseWishart,
@@ -1457,6 +1505,7 @@ def multivariate_normal(
     )
 
 
+@deprecate_prior_parameter("normal_inverse_wishart_prior")
 def multivariate_normal_predictive(
     normal_inverse_wishart: NormalInverseWishart,
 ) -> MultivariateStudentT:
@@ -1555,6 +1604,7 @@ def multivariate_normal_predictive(
     return MultivariateStudentT(mu=mu, sigma=sigma, nu=nu)
 
 
+@deprecate_prior_parameter("normal_inverse_wishart_prior")
 def log_normal_normal_inverse_gamma(
     ln_x_total: NUMERIC,
     ln_x2_total: NUMERIC,
@@ -1627,6 +1677,7 @@ def log_normal_normal_inverse_gamma(
 
 
 def _use_predictive_instead(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         name = func.__name__
         warnings.warn(
