@@ -49,7 +49,7 @@ X = create_X(x)
 posterior: NormalInverseGamma = linear_regression(
     X=X,
     y=y,
-    normal_inverse_gamma_prior=prior,
+    prior=prior,
 )
 
 ```

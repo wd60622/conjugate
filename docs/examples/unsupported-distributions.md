@@ -12,7 +12,7 @@ from conjugate.distributions import Beta
 from conjugate.models import geometric_beta
 
 prior = Beta(1, 1)
-posterior: Beta = geometric_beta(x_total=12, n=10, beta_prior=prior)
+posterior: Beta = geometric_beta(x_total=12, n=10, prior=prior)
 ```
 
 We can get posterior predictive samples by: 

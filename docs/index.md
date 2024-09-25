@@ -57,7 +57,7 @@ N = 10
 prior = Beta(1, 1)
 prior_predictive: BetaBinomial = binomial_beta_predictive(n=N, beta=prior)
 
-posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
+posterior: Beta = binomial_beta(n=N, x=X, prior=prior)
 posterior_predictive: BetaBinomial = binomial_beta_predictive(n=N, beta=posterior) 
 ```
 
@@ -105,7 +105,7 @@ samples = rng.binomial(n=1, p=p, size=n_times)
 # Model
 n = np.arange(n_times) + 1
 prior = Beta(alpha=1, beta=1)
-posterior = binomial_beta(n=n, x=samples.cumsum(), beta_prior=prior)
+posterior = binomial_beta(n=n, x=samples.cumsum(), prior=prior)
 
 # Figure
 plt.plot(n, p, color="black", label="true p", linestyle="--")

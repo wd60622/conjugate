@@ -42,7 +42,7 @@ Get the posterior and posterior predictive distributions
 ```python
 # Conjugate prior
 prior = Beta(alpha=1, beta=1)
-posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
+posterior: Beta = binomial_beta(n=N, x=X, prior=prior)
 
 # Comparison
 prior_predictive: BetaBinomial = binomial_beta_predictive(

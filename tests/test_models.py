@@ -168,7 +168,7 @@ def test_get_binomial_beta_posterior_params(
 )
 def test_handle_vectorize_values(alpha, beta, N, x) -> None:
     prior = Beta(alpha=alpha, beta=beta)
-    posterior = binomial_beta(n=N, x=x, beta_prior=prior)
+    posterior = binomial_beta(n=N, x=x, prior=prior)
 
     assert isinstance(posterior, Beta)
 
@@ -182,9 +182,9 @@ def test_geometric_beta_model() -> None:
     N = 10
     X_TOTAL = 12
 
-    posterior_one_start = geometric_beta(x_total=X_TOTAL, n=N, beta_prior=prior)
+    posterior_one_start = geometric_beta(x_total=X_TOTAL, n=N, prior=prior)
     poisterior_zero_start = geometric_beta(
-        x_total=X_TOTAL, n=N, beta_prior=prior, one_start=False
+        x_total=X_TOTAL, n=N, prior=prior, one_start=False
     )
 
     assert isinstance(posterior_one_start, Beta)
@@ -194,7 +194,7 @@ def test_geometric_beta_model() -> None:
 
 def test_poisson_gamma_analysis() -> None:
     prior = Gamma(alpha=1, beta=1)
-    posterior = poisson_gamma(n=10, x_total=5, gamma_prior=prior)
+    posterior = poisson_gamma(n=10, x_total=5, prior=prior)
 
     assert isinstance(posterior, Gamma)
 
@@ -220,7 +220,7 @@ def test_poisson_gamma_analysis() -> None:
 )
 def test_multinomial_dirichlet_analysis(alpha) -> None:
     prior = Dirichlet(alpha=alpha)
-    posterior = multinomial_dirichlet(x=1, dirichlet_prior=prior)
+    posterior = multinomial_dirichlet(x=1, prior=prior)
 
     assert isinstance(posterior, Dirichlet)
     assert isinstance(posterior.alpha, np.ndarray)
@@ -287,7 +287,7 @@ def test_uniform_pareto_python_objects() -> None:
     n_samples = len(samples)
 
     prior = Pareto(x_m=1, alpha=1)
-    posterior = uniform_pareto(x_max=max(samples), n=n_samples, pareto_prior=prior)
+    posterior = uniform_pareto(x_max=max(samples), n=n_samples, prior=prior)
 
     assert isinstance(posterior, Pareto)
     assert posterior.x_m == 5
@@ -299,7 +299,7 @@ def test_uniform_pareto_numpy_objects() -> None:
     n_samples = len(samples)
 
     prior = Pareto(x_m=1, alpha=1)
-    posterior = uniform_pareto(x_max=samples.max(), n=n_samples, pareto_prior=prior)
+    posterior = uniform_pareto(x_max=samples.max(), n=n_samples, prior=prior)
 
     assert isinstance(posterior, Pareto)
     assert posterior.x_m == 5
@@ -316,7 +316,7 @@ def test_pareto_gamma() -> None:
         n=n_samples,
         ln_x_total=np.log(samples).sum(),
         x_m=samples.min(),
-        gamma_prior=prior,
+        prior=prior,
     )
 
     assert isinstance(posterior, Gamma)
@@ -331,7 +331,7 @@ def test_exponential_gamma() -> None:
     x_total = sum(data)
 
     prior = Gamma(alpha=1, beta=1)
-    posterior = exponential_gamma(x_total=x_total, n=n, gamma_prior=prior)
+    posterior = exponential_gamma(x_total=x_total, n=n, prior=prior)
 
     assert isinstance(posterior, Gamma)
 
@@ -347,7 +347,7 @@ def test_normal_known_variance() -> None:
 
     prior = Normal(0, 1)
     posterior = normal_known_variance(
-        x_total=data.sum(), n=len(data), var=known_var, normal_prior=prior
+        x_total=data.sum(), n=len(data), var=known_var, prior=prior
     )
 
     assert isinstance(posterior, Normal)
@@ -369,7 +369,7 @@ def test_normal_known_mean() -> None:
         x2_total=(data**2).sum(),
         n=len(data),
         mu=known_mu,
-        inverse_gamma_prior=prior,
+        prior=prior,
     )
 
     assert isinstance(posterior, InverseGamma)
@@ -393,7 +393,7 @@ def test_normal_normal_inverse_gamma() -> None:
         x_total=data.sum(),
         x2_total=(data**2).sum(),
         n=n,
-        normal_inverse_gamma_prior=prior,
+        prior=prior,
     )
 
     assert isinstance(posterior, NormalInverseGamma)
@@ -429,7 +429,7 @@ def test_gamma_known_shape(shape) -> None:
         x_total=data.sum(),
         n=len(data),
         alpha=shape,
-        gamma_prior=prior,
+        prior=prior,
     )
 
     assert isinstance(posterior, Gamma)
@@ -450,7 +450,7 @@ def test_gamma_proportional_model() -> None:
         x_total=samples.sum(),
         x_prod=np.prod(samples),
         n=n_samples,
-        proportional_prior=prior,
+        prior=prior,
     )
 
     assert isinstance(posterior, GammaProportional)
@@ -470,7 +470,7 @@ def test_gamma_known_rate() -> None:
         x_prod=np.prod(samples),
         n=n_samples,
         beta=true_beta,
-        proportional_prior=prior,
+        prior=prior,
     )
 
     assert isinstance(posterior, GammaKnownRateProportional)
@@ -488,7 +488,7 @@ def test_beta_proportional_model() -> None:
         x_prod=np.prod(samples),
         one_minus_x_prod=np.prod(1 - samples),
         n=n_samples,
-        proportional_prior=prior,
+        prior=prior,
     )
 
     assert isinstance(posterior, BetaProportional)
@@ -517,7 +517,7 @@ def test_multivariate_normal() -> None:
     )
     posterior = multivariate_normal(
         X=X,
-        normal_inverse_wishart_prior=prior,
+        prior=prior,
     )
     assert isinstance(posterior, NormalInverseWishart)
 
@@ -545,7 +545,7 @@ def test_log_normal_normal_inverse_gamma() -> None:
         ln_x_total=ln_data.sum(),
         ln_x2_total=(ln_data**2).sum(),
         n=n,
-        normal_inverse_gamma_prior=prior,
+        prior=prior,
     )
 
     assert isinstance(posterior, NormalInverseGamma)
@@ -558,7 +558,7 @@ def test_bernoulli_beta() -> None:
     prior = Beta(alpha=1, beta=1)
     posterior = bernoulli_beta(
         x=0,
-        beta_prior=prior,
+        prior=prior,
     )
     assert posterior == Beta(alpha=1, beta=2)
 
@@ -576,7 +576,7 @@ def test_negative_binomial_beta() -> None:
         r=10,
         n=15,
         x=5,
-        beta_prior=prior,
+        prior=prior,
     )
 
     assert posterior == Beta(
@@ -597,7 +597,7 @@ def test_hypergeometric_beta_binomial() -> None:
     posterior = hypergeometric_beta_binomial(
         x_total=5,
         n=20,
-        beta_binomial_prior=prior,
+        prior=prior,
     )
 
     assert posterior == BetaBinomial(
@@ -617,3 +617,12 @@ def test_old_model_raises_deprecation_warning() -> None:
         )
 
     assert isinstance(predictive, BetaBinomial)
+
+
+def test_old_parameter_raises_deprecation_warning() -> None:
+    beta = Beta(1, 1)
+    match = "Parameter 'beta_prior' is deprecated, use 'prior' instead."
+    with pytest.warns(DeprecationWarning, match=match):
+        posterior = binomial_beta(n=10, x=5, beta_prior=beta)
+
+    assert isinstance(posterior, Beta)

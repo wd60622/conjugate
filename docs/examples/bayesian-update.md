@@ -60,7 +60,7 @@ for batch_size in batch_sizes:
         x_total=data.sum(), 
         x2_total=(data ** 2).sum(), 
         n=batch_size, 
-        normal_inverse_gamma_prior=prior
+        prior=prior
     )
 
     beta_samples, variance_samples = posterior.sample_beta(size=1000, return_variance=True, random_state=rng)
@@ -120,7 +120,7 @@ for batch_size in batch_sizes:
     posterior = binomial_beta(
         x=x, 
         n=batch_size, 
-        beta_prior=prior, 
+        prior=prior, 
     )
 
     cumsum += batch_size
