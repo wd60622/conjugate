@@ -909,6 +909,9 @@ class VonMisesKnownDirectionProportional:
     r: NUMERIC
     """
 
+    c: NUMERIC
+    r: NUMERIC
+
     def approx_log_likelihood(self, kappa: NUMERIC, ln=np.log, i0=i0) -> NUMERIC:
         """Approximate log likelihood.
 
