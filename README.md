@@ -53,7 +53,7 @@ N = 10
 prior = Beta(1, 1)
 prior_predictive: BetaBinomial = binomial_beta_predictive(n=N, beta=prior)
 
-posterior: Beta = binomial_beta(n=N, x=X, beta_prior=prior)
+posterior: Beta = binomial_beta(n=N, x=X, prior=prior)
 posterior_predictive: BetaBinomial = binomial_beta_predictive(n=N, beta=posterior) 
 ```
 
