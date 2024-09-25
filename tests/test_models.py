@@ -617,3 +617,12 @@ def test_old_model_raises_deprecation_warning() -> None:
         )
 
     assert isinstance(predictive, BetaBinomial)
+
+
+def test_old_parameter_raises_deprecation_warning() -> None:
+    beta = Beta(1, 1)
+    match = "Parameter 'beta_prior' is deprecated, use 'prior' instead."
+    with pytest.warns(DeprecationWarning, match=match):
+        posterior = binomial_beta(n=10, x=5, beta_prior=beta)
+
+    assert isinstance(posterior, Beta)
