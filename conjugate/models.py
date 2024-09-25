@@ -72,13 +72,13 @@ def get_binomial_beta_posterior_params(
     return alpha_post, beta_post
 
 
-def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
+def binomial_beta(n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a binomial likelihood with a beta prior.
 
     Args:
         n: total number of trials
         x: successes from that trials
-        beta_prior: Beta distribution prior
+        prior: Beta distribution prior
 
     Returns:
         Beta distribution posterior
@@ -102,7 +102,7 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
         posterior = binomial_beta(
             n=impressions,
             x=clicks,
-            beta_prior=prior
+            prior=prior
         )
 
         ax = plt.subplot(111)
@@ -114,7 +114,7 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, beta_prior: Beta) -> Beta:
 
     """
     alpha_post, beta_post = get_binomial_beta_posterior_params(
-        beta_prior.alpha, beta_prior.beta, n, x
+        prior.alpha, prior.beta, n, x
     )
 
     return Beta(alpha=alpha_post, beta=beta_post)
@@ -168,12 +168,12 @@ def binomial_beta_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
     return BetaBinomial(n=n, alpha=beta.alpha, beta=beta.beta)
 
 
-def bernoulli_beta(x: NUMERIC, beta_prior: Beta) -> Beta:
+def bernoulli_beta(x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a bernoulli likelihood with a beta prior.
 
     Args:
         x: successes from a single trial
-        beta_prior: Beta distribution prior
+        prior: Beta distribution prior
 
     Returns:
         Beta distribution posterior
@@ -191,7 +191,7 @@ def bernoulli_beta(x: NUMERIC, beta_prior: Beta) -> Beta:
         x = 1
         posterior = bernoulli_beta(
             x=x,
-            beta_prior=prior
+            prior=prior
         )
 
         posterior.dist.ppf([0.025, 0.975])
@@ -199,7 +199,7 @@ def bernoulli_beta(x: NUMERIC, beta_prior: Beta) -> Beta:
         ```
 
     """
-    return binomial_beta(n=1, x=x, beta_prior=beta_prior)
+    return binomial_beta(n=1, x=x, prior=prior)
 
 
 def bernoulli_beta_predictive(beta: Beta) -> BetaBinomial:
@@ -217,9 +217,7 @@ def bernoulli_beta_predictive(beta: Beta) -> BetaBinomial:
     return binomial_beta_predictive(n=1, beta=beta)
 
 
-def negative_binomial_beta(
-    r: NUMERIC, n: NUMERIC, x: NUMERIC, beta_prior: Beta
-) -> Beta:
+def negative_binomial_beta(r: NUMERIC, n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a negative binomial likelihood with a beta prior.
 
     Assumed known number of failures r
@@ -228,14 +226,14 @@ def negative_binomial_beta(
         r: number of failures
         n: number of trials
         x: number of successes
-        beta_prior: Beta distribution prior
+        prior: Beta distribution prior
 
     Returns:
         Beta distribution posterior
 
     """
-    alpha_post = beta_prior.alpha + (r * n)
-    beta_post = beta_prior.beta + x
+    alpha_post = prior.alpha + (r * n)
+    beta_post = prior.beta + x
 
     return Beta(alpha=alpha_post, beta=beta_post)
 
@@ -257,7 +255,7 @@ def negative_binomial_beta_predictive(r: NUMERIC, beta: Beta) -> BetaNegativeBin
 
 
 def hypergeometric_beta_binomial(
-    x_total: NUMERIC, n: NUMERIC, beta_binomial_prior: BetaBinomial
+    x_total: NUMERIC, n: NUMERIC, prior: BetaBinomial
 ) -> BetaBinomial:
     """Hypergeometric likelihood with a BetaBinomial prior.
 
@@ -267,27 +265,27 @@ def hypergeometric_beta_binomial(
     Args:
         x_total: sum of all trials outcomes
         n: total number of trials
-        beta_binomial_prior: BetaBinomial prior
+        prior: BetaBinomial prior
             n is the known N / total population size
 
     Returns:
         BetaBinomial posterior distribution
 
     """
-    n = beta_binomial_prior.n
-    alpha_post = beta_binomial_prior.alpha + x_total
-    beta_post = beta_binomial_prior.beta + (n - x_total)
+    n = prior.n
+    alpha_post = prior.alpha + x_total
+    beta_post = prior.beta + (n - x_total)
 
     return BetaBinomial(n=n, alpha=alpha_post, beta=beta_post)
 
 
-def geometric_beta(x_total, n, beta_prior: Beta, one_start: bool = True) -> Beta:
+def geometric_beta(x_total, n, prior: Beta, one_start: bool = True) -> Beta:
     """Posterior distribution for a geometric likelihood with a beta prior.
 
     Args:
         x_total: sum of all trials outcomes
         n: total number of trials
-        beta_prior: Beta distribution prior
+        prior: Beta distribution prior
         one_start: whether to outcomes start at 1, defaults to True. False is 0 start.
 
     Returns:
@@ -310,7 +308,7 @@ def geometric_beta(x_total, n, beta_prior: Beta, one_start: bool = True) -> Beta
         posterior = geometric_beta(
             x_total=data.sum(),
             n=data.size,
-            beta_prior=prior
+            prior=prior
         )
 
         ax = plt.subplot(111)
@@ -322,8 +320,8 @@ def geometric_beta(x_total, n, beta_prior: Beta, one_start: bool = True) -> Beta
         ```
 
     """
-    alpha_post = beta_prior.alpha + n
-    beta_post = beta_prior.beta + x_total
+    alpha_post = prior.alpha + n
+    beta_post = prior.beta + x_total
 
     if one_start:
         beta_post = beta_post - n
@@ -344,18 +342,18 @@ def get_categorical_dirichlet_posterior_params(
     return get_dirichlet_posterior_params(alpha_prior, x)
 
 
-def categorical_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
+def categorical_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     """Posterior distribution of Categorical model with Dirichlet prior.
 
     Args:
         x: counts
-        dirichlet_prior: Dirichlet prior on the counts
+        prior: Dirichlet prior on the counts
 
     Returns:
         Dirichlet posterior distribution
 
     """
-    alpha_post = get_dirichlet_posterior_params(dirichlet_prior.alpha, x)
+    alpha_post = get_dirichlet_posterior_params(prior.alpha, x)
 
     return Dirichlet(alpha=alpha_post)
 
@@ -383,12 +381,12 @@ def get_multi_categorical_dirichlet_posterior_params(
     return get_dirichlet_posterior_params(alpha_prior, x)
 
 
-def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
+def multinomial_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     """Posterior distribution of Multinomial model with Dirichlet prior.
 
     Args:
         x: counts
-        dirichlet_prior: Dirichlet prior on the counts
+        prior: Dirichlet prior on the counts
 
     Returns:
         Dirichlet posterior distribution
@@ -414,7 +412,7 @@ def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
         prior = Dirichlet([1, 1, 1])
         posterior = multinomial_dirichlet(
             x=data.sum(axis=0),
-            dirichlet_prior=prior
+            prior=prior
         )
 
         ax = plt.subplot(111)
@@ -425,7 +423,7 @@ def multinomial_dirichlet(x: NUMERIC, dirichlet_prior: Dirichlet) -> Dirichlet:
         ```
 
     """
-    alpha_post = get_dirichlet_posterior_params(dirichlet_prior.alpha, x)
+    alpha_post = get_dirichlet_posterior_params(prior.alpha, x)
 
     return Dirichlet(alpha=alpha_post)
 
@@ -456,20 +454,20 @@ def get_poisson_gamma_posterior_params(
     return alpha_post, beta_post
 
 
-def poisson_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
+def poisson_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     """Posterior distribution for a poisson likelihood with a gamma prior.
 
     Args:
         x_total: sum of all outcomes
         n: total number of samples in x_total
-        gamma_prior: Gamma prior
+        prior: Gamma prior
 
     Returns:
         Gamma posterior distribution
 
     """
     alpha_post, beta_post = get_poisson_gamma_posterior_params(
-        alpha=gamma_prior.alpha, beta=gamma_prior.beta, x_total=x_total, n=n
+        alpha=prior.alpha, beta=prior.beta, x_total=x_total, n=n
     )
 
     return Gamma(alpha=alpha_post, beta=beta_post)
@@ -497,20 +495,20 @@ def poisson_gamma_predictive(gamma: Gamma, n: NUMERIC = 1) -> NegativeBinomial:
 get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
 
 
-def exponential_gamma(x_total: NUMERIC, n: NUMERIC, gamma_prior: Gamma) -> Gamma:
+def exponential_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     """Posterior distribution for an exponential likelihood with a gamma prior.
 
     Args:
         x_total: sum of all outcomes
         n: total number of samples in x_total
-        gamma_prior: Gamma prior
+        prior: Gamma prior
 
     Returns:
         Gamma posterior distribution
 
     """
     alpha_post, beta_post = get_exponential_gamma_posterior_params(
-        alpha=gamma_prior.alpha, beta=gamma_prior.beta, x_total=x_total, n=n
+        alpha=prior.alpha, beta=prior.beta, x_total=x_total, n=n
     )
 
     return Gamma(alpha=alpha_post, beta=beta_post)
@@ -546,7 +544,7 @@ def exponential_gamma_predictive(gamma: Gamma) -> Lomax:
         posterior = exponential_gamma(
             n=n_samples,
             x_total=data.sum(),
-            gamma_prior=prior
+            prior=prior
         )
 
         prior_predictive = expotential_gamma_predictive(prior)
@@ -564,7 +562,7 @@ def exponential_gamma_predictive(gamma: Gamma) -> Lomax:
 
 
 def gamma_known_shape(
-    x_total: NUMERIC, n: NUMERIC, alpha: NUMERIC, gamma_prior: Gamma
+    x_total: NUMERIC, n: NUMERIC, alpha: NUMERIC, prior: Gamma
 ) -> Gamma:
     """Gamma likelihood with a gamma prior.
 
@@ -574,7 +572,7 @@ def gamma_known_shape(
         x_total: sum of all outcomes
         n: total number of samples in x_total
         alpha: known shape parameter
-        gamma_prior: Gamma prior
+        prior: Gamma prior
 
     Returns:
         Gamma posterior distribution
@@ -603,7 +601,7 @@ def gamma_known_shape(
             n=n_samples,
             x_total=data.sum(),
             alpha=known_shape,
-            gamma_prior=prior
+            prior=prior
         )
 
         bound = 10
@@ -616,8 +614,8 @@ def gamma_known_shape(
         ```
 
     """
-    alpha_post = gamma_prior.alpha + n * alpha
-    beta_post = gamma_prior.beta + x_total
+    alpha_post = prior.alpha + n * alpha
+    beta_post = prior.beta + x_total
 
     return Gamma(alpha=alpha_post, beta=beta_post)
 
@@ -640,7 +638,7 @@ def normal_known_variance(
     x_total: NUMERIC,
     n: NUMERIC,
     var: NUMERIC,
-    normal_prior: Normal,
+    prior: Normal,
 ) -> Normal:
     """Posterior distribution for a normal likelihood with known variance and a normal prior on mean.
 
@@ -648,7 +646,7 @@ def normal_known_variance(
         x_total: sum of all outcomes
         n: total number of samples in x_total
         var: known variance
-        normal_prior: Normal prior for mean
+        prior: Normal prior for mean
 
     Returns:
         Normal posterior distribution for the mean
@@ -677,7 +675,7 @@ def normal_known_variance(
             n=n_samples,
             x_total=data.sum(),
             var=known_var,
-            normal_prior=prior
+            prior=prior
         )
 
         bound = 5
@@ -690,11 +688,11 @@ def normal_known_variance(
         ```
 
     """
-    mu_post = ((normal_prior.mu / normal_prior.sigma**2) + (x_total / var)) / (
-        (1 / normal_prior.sigma**2) + (n / var)
+    mu_post = ((prior.mu / prior.sigma**2) + (x_total / var)) / (
+        (1 / prior.sigma**2) + (n / var)
     )
 
-    var_post = 1 / ((1 / normal_prior.sigma**2) + (n / var))
+    var_post = 1 / ((1 / prior.sigma**2) + (n / var))
 
     return Normal(mu=mu_post, sigma=var_post**0.5)
 
@@ -733,7 +731,7 @@ def normal_known_variance_predictive(var: NUMERIC, normal: Normal) -> Normal:
             n=n_samples,
             x_total=data.sum(),
             var=known_var,
-            normal_prior=prior
+            prior=prior
         )
 
         prior_predictive = normal_known_variance_predictive(
@@ -763,7 +761,7 @@ def normal_known_precision(
     x_total: NUMERIC,
     n: NUMERIC,
     precision: NUMERIC,
-    normal_prior: Normal,
+    prior: Normal,
 ) -> Normal:
     """Posterior distribution for a normal likelihood with known precision and a normal prior on mean.
 
@@ -771,7 +769,7 @@ def normal_known_precision(
         x_total: sum of all outcomes
         n: total number of samples in x_total
         precision: known precision
-        normal_prior: Normal prior for mean
+        prior: Normal prior for mean
 
     Returns:
         Normal posterior distribution for the mean
@@ -800,7 +798,7 @@ def normal_known_precision(
             n=n_samples,
             x_total=data.sum(),
             precision=known_precision,
-            normal_prior=prior
+            prior=prior
         )
 
         bound = 5
@@ -817,7 +815,7 @@ def normal_known_precision(
         x_total=x_total,
         n=n,
         var=1 / precision,
-        normal_prior=normal_prior,
+        prior=prior,
     )
 
 
@@ -855,7 +853,7 @@ def normal_known_precision_predictive(precision: NUMERIC, normal: Normal) -> Nor
             n=n_samples,
             x_total=data.sum(),
             precision=known_precision,
-            normal_prior=prior
+            prior=prior
         )
 
         prior_predictive = normal_known_precision_predictive(
@@ -888,7 +886,7 @@ def normal_known_mean(
     x2_total: NUMERIC,
     n: NUMERIC,
     mu: NUMERIC,
-    inverse_gamma_prior: InverseGamma,
+    prior: InverseGamma,
 ) -> InverseGamma:
     """Posterior distribution for a normal likelihood with a known mean and a variance prior.
 
@@ -897,16 +895,14 @@ def normal_known_mean(
         x2_total: sum of all outcomes squared
         n: total number of samples in x_total
         mu: known mean
-        inverse_gamma_prior: InverseGamma prior for variance
+        prior: InverseGamma prior for variance
 
     Returns:
         InverseGamma posterior distribution for the variance
 
     """
-    alpha_post = inverse_gamma_prior.alpha + (n / 2)
-    beta_post = inverse_gamma_prior.beta + (
-        0.5 * (x2_total - (2 * mu * x_total) + (n * (mu**2)))
-    )
+    alpha_post = prior.alpha + (n / 2)
+    beta_post = prior.beta + (0.5 * (x2_total - (2 * mu * x_total) + (n * (mu**2))))
 
     return InverseGamma(alpha=alpha_post, beta=beta_post)
 
@@ -946,7 +942,7 @@ def normal_known_mean_predictive(mu: NUMERIC, inverse_gamma: InverseGamma) -> St
             x_total=data.sum(),
             x2_total=(data**2).sum(),
             mu=known_mu,
-            inverse_gamma_prior=prior
+            prior=prior
         )
 
         bound = 5
@@ -978,7 +974,7 @@ def normal_normal_inverse_gamma(
     x_total: NUMERIC,
     x2_total: NUMERIC,
     n: NUMERIC,
-    normal_inverse_gamma_prior: NormalInverseGamma,
+    prior: NormalInverseGamma,
 ) -> NormalInverseGamma:
     """Posterior distribution for a normal likelihood with a normal inverse gamma prior.
 
@@ -988,7 +984,7 @@ def normal_normal_inverse_gamma(
         x_total: sum of all outcomes
         x2_total: sum of all outcomes squared
         n: total number of samples in x_total and x2_total
-        normal_inverse_gamma_prior: NormalInverseGamma prior
+        prior: NormalInverseGamma prior
 
     Returns:
         NormalInverseGamma posterior distribution
@@ -996,16 +992,14 @@ def normal_normal_inverse_gamma(
     """
     x_mean = x_total / n
 
-    nu_0_inv = normal_inverse_gamma_prior.nu
+    nu_0_inv = prior.nu
 
     nu_post_inv = nu_0_inv + n
-    mu_post = ((nu_0_inv * normal_inverse_gamma_prior.mu) + (n * x_mean)) / nu_post_inv
+    mu_post = ((nu_0_inv * prior.mu) + (n * x_mean)) / nu_post_inv
 
-    alpha_post = normal_inverse_gamma_prior.alpha + (n / 2)
-    beta_post = normal_inverse_gamma_prior.beta + 0.5 * (
-        (normal_inverse_gamma_prior.mu**2) * nu_0_inv
-        + x2_total
-        - (mu_post**2) * nu_post_inv
+    alpha_post = prior.alpha + (n / 2)
+    beta_post = prior.beta + 0.5 * (
+        (prior.mu**2) * nu_0_inv + x2_total - (mu_post**2) * nu_post_inv
     )
 
     return NormalInverseGamma(
@@ -1043,7 +1037,7 @@ def normal_normal_inverse_gamma_predictive(
 def linear_regression(
     X: NUMERIC,
     y: NUMERIC,
-    normal_inverse_gamma_prior: NormalInverseGamma,
+    prior: NormalInverseGamma,
     inv=np.linalg.inv,
 ) -> NormalInverseGamma:
     """Posterior distribution for a linear regression model with a normal inverse gamma prior.
@@ -1053,7 +1047,7 @@ def linear_regression(
     Args:
         X: design matrix
         y: response vector
-        normal_inverse_gamma_prior: NormalInverseGamma prior
+        prior: NormalInverseGamma prior
         inv: function to invert matrix, defaults to np.linalg.inv
 
     Returns:
@@ -1062,7 +1056,7 @@ def linear_regression(
     """
     N = X.shape[0]
 
-    delta = inv(normal_inverse_gamma_prior.delta_inverse)
+    delta = inv(prior.delta_inverse)
 
     delta_post = (X.T @ X) + delta
     delta_post_inverse = inv(delta_post)
@@ -1072,16 +1066,16 @@ def linear_regression(
         delta_post_inverse
         # (B, 1)
         # (B, B) * (B, 1) +  (B, N) * (N, 1)
-        @ (delta @ normal_inverse_gamma_prior.mu + X.T @ y)
+        @ (delta @ prior.mu + X.T @ y)
     )
 
-    alpha_post = normal_inverse_gamma_prior.alpha + (0.5 * N)
-    beta_post = normal_inverse_gamma_prior.beta + (
+    alpha_post = prior.alpha + (0.5 * N)
+    beta_post = prior.beta + (
         0.5
         * (
             (y.T @ y)
             # (1, B) * (B, B) * (B, 1)
-            + (normal_inverse_gamma_prior.mu.T @ delta @ normal_inverse_gamma_prior.mu)
+            + (prior.mu.T @ delta @ prior.mu)
             # (1, B) * (B, B) * (B, 1)
             - (mu_post.T @ delta_post @ mu_post)
         )
@@ -1120,14 +1114,14 @@ def linear_regression_predictive(
 
 
 def uniform_pareto(
-    x_max: NUMERIC, n: NUMERIC, pareto_prior: Pareto, max_fn=np.maximum
+    x_max: NUMERIC, n: NUMERIC, prior: Pareto, max_fn=np.maximum
 ) -> Pareto:
     """Posterior distribution for a uniform likelihood with a pareto prior.
 
     Args:
         x_max: maximum value
         n: number of samples
-        pareto_prior: Pareto prior
+        prior: Pareto prior
         max_fn: elementwise max function, defaults to np.maximum
 
     Returns:
@@ -1151,19 +1145,19 @@ def uniform_pareto(
         posterior = uniform_pareto(
             x_max=data.max(),
             n=n_samples,
-            pareto_prior=prior
+            prior=prior
         )
         ```
 
     """
-    alpha_post = pareto_prior.alpha + n
-    x_m_post = max_fn(pareto_prior.x_m, x_max)
+    alpha_post = prior.alpha + n
+    x_m_post = max_fn(prior.x_m, x_max)
 
     return Pareto(x_m=x_m_post, alpha=alpha_post)
 
 
 def pareto_gamma(
-    n: NUMERIC, ln_x_total: NUMERIC, x_m: NUMERIC, gamma_prior: Gamma, ln=np.log
+    n: NUMERIC, ln_x_total: NUMERIC, x_m: NUMERIC, prior: Gamma, ln=np.log
 ) -> Gamma:
     """Posterior distribution for a pareto likelihood with a gamma prior.
 
@@ -1173,7 +1167,7 @@ def pareto_gamma(
         n: number of samples
         ln_x_total: sum of the log of all outcomes
         x_m: The known minimum value
-        gamma_prior: Gamma prior
+        prior: Gamma prior
         ln: function to take the natural log, defaults to np.log
 
     Returns:
@@ -1202,7 +1196,7 @@ def pareto_gamma(
             n=n_samples,
             ln_x_total=np.log(data).sum(),
             x_m=x_m_known,
-            gamma_prior=prior
+            prior=prior
         )
 
         ax = plt.subplot(111)
@@ -1214,8 +1208,8 @@ def pareto_gamma(
         ```
 
     """
-    alpha_post = gamma_prior.alpha + n
-    beta_post = gamma_prior.beta + ln_x_total - n * ln(x_m)
+    alpha_post = prior.alpha + n
+    beta_post = prior.beta + ln_x_total - n * ln(x_m)
 
     return Gamma(alpha=alpha_post, beta=beta_post)
 
@@ -1224,7 +1218,7 @@ def gamma(
     x_total: NUMERIC,
     x_prod: NUMERIC,
     n: NUMERIC,
-    proportional_prior: GammaProportional,
+    prior: GammaProportional,
 ) -> GammaProportional:
     """Posterior distribution for a gamma likelihood.
 
@@ -1234,16 +1228,16 @@ def gamma(
         x_total: sum of all outcomes
         x_prod: product of all outcomes
         n: total number of samples in x_total and x_prod
-        proportional_prior: GammaProportional prior
+        prior: GammaProportional prior
 
     Returns:
         GammaProportional posterior distribution
 
     """
-    p_post = proportional_prior.p * x_prod
-    q_post = proportional_prior.q + x_total
-    r_post = proportional_prior.r + n
-    s_post = proportional_prior.s + n
+    p_post = prior.p * x_prod
+    q_post = prior.q + x_total
+    r_post = prior.r + n
+    s_post = prior.s + n
 
     return GammaProportional(p=p_post, q=q_post, r=r_post, s=s_post)
 
@@ -1252,7 +1246,7 @@ def gamma_known_rate(
     x_prod: NUMERIC,
     n: NUMERIC,
     beta: NUMERIC,
-    proportional_prior: GammaKnownRateProportional,
+    prior: GammaKnownRateProportional,
 ) -> GammaKnownRateProportional:
     """Posterior distribution for a gamma likelihood.
 
@@ -1267,9 +1261,9 @@ def gamma_known_rate(
         GammaKnownRateProportional posterior distribution
 
     """
-    a_post = proportional_prior.a * x_prod
-    b_post = proportional_prior.b + n
-    c_post = proportional_prior.c + n
+    a_post = prior.a * x_prod
+    b_post = prior.b + n
+    c_post = prior.c + n
 
     return GammaKnownRateProportional(a=a_post, b=b_post, c=c_post)
 
@@ -1278,7 +1272,7 @@ def beta(
     x_prod: NUMERIC,
     one_minus_x_prod: NUMERIC,
     n: NUMERIC,
-    proportional_prior: BetaProportional,
+    prior: BetaProportional,
 ) -> BetaProportional:
     """Posterior distribution for a Beta likelihood.
 
@@ -1288,15 +1282,15 @@ def beta(
         x_prod: product of all outcomes
         one_minus_x_prod: product of all (1 - outcomes)
         n: total number of samples in x_prod and one_minus_x_prod
-        proportional_prior: BetaProportional prior
+        prior: BetaProportional prior
 
     Returns:
         BetaProportional posterior distribution
 
     """
-    p_post = proportional_prior.p * x_prod
-    q_post = proportional_prior.q * one_minus_x_prod
-    k_post = proportional_prior.k + n
+    p_post = prior.p * x_prod
+    q_post = prior.q * one_minus_x_prod
+    k_post = prior.k + n
 
     return BetaProportional(p=p_post, q=q_post, k=k_post)
 
@@ -1306,7 +1300,7 @@ def von_mises_known_concentration(
     sin_total: NUMERIC,
     n: NUMERIC,
     kappa: NUMERIC,
-    von_mises_prior: VonMisesKnownConcentration,
+    prior: VonMisesKnownConcentration,
     sin=np.sin,
     cos=np.cos,
     arctan2=np.arctan2,
@@ -1320,18 +1314,16 @@ def von_mises_known_concentration(
         sin_total: sum of all sines
         n: total number of samples in cos_total and sin_total
         kappa: known concentration parameter
-        von_mises_prior: VonMisesKnownConcentration prior
+        prior: VonMisesKnownConcentration prior
 
     Returns:
         VonMisesKnownConcentration posterior distribution
 
     """
-    sin_total_post = von_mises_prior.a * sin(von_mises_prior.b) + sin_total
+    sin_total_post = prior.a * sin(prior.b) + sin_total
     a_post = kappa * sin_total_post
 
-    b_post = arctan2(
-        sin_total_post, von_mises_prior.a * cos(von_mises_prior.b) + cos_total
-    )
+    b_post = arctan2(sin_total_post, prior.a * cos(prior.b) + cos_total)
 
     return VonMisesKnownConcentration(a=a_post, b=b_post)
 
@@ -1339,7 +1331,7 @@ def von_mises_known_concentration(
 def von_mises_known_direction(
     centered_cos_total: NUMERIC,
     n: NUMERIC,
-    proportional_prior: VonMisesKnownDirectionProportional,
+    prior: VonMisesKnownDirectionProportional,
 ) -> VonMisesKnownDirectionProportional:
     """VonMises likelihood with known direction parameter.
 
@@ -1348,34 +1340,34 @@ def von_mises_known_direction(
     Args:
         centered_cos_total: sum of all centered cosines. sum cos(x - known direction))
         n: total number of samples in centered_cos_total
-        proportional_prior: VonMisesKnownDirectionProportional prior
+        prior: VonMisesKnownDirectionProportional prior
 
     """
 
     return VonMisesKnownDirectionProportional(
-        c=proportional_prior.c + n,
-        r=proportional_prior.r + centered_cos_total,
+        c=prior.c + n,
+        r=prior.r + centered_cos_total,
     )
 
 
 def multivariate_normal_known_mean(
     X: NUMERIC,
     mu: NUMERIC,
-    inverse_wishart_prior: InverseWishart,
+    prior: InverseWishart,
 ) -> InverseWishart:
     """Multivariate normal likelihood with known mean and inverse wishart prior.
 
     Args:
         X: design matrix
         mu: known mean
-        inverse_wishart_prior: InverseWishart prior
+        prior: InverseWishart prior
 
     Returns:
         InverseWishart posterior distribution
 
     """
-    nu_post = inverse_wishart_prior.nu + X.shape[0]
-    psi_post = inverse_wishart_prior.psi + (X - mu).T @ (X - mu)
+    nu_post = prior.nu + X.shape[0]
+    psi_post = prior.psi + (X - mu).T @ (X - mu)
 
     return InverseWishart(
         nu=nu_post,
@@ -1385,7 +1377,7 @@ def multivariate_normal_known_mean(
 
 def multivariate_normal(
     X: NUMERIC,
-    normal_inverse_wishart_prior: NormalInverseWishart,
+    prior: NormalInverseWishart,
     outer=np.outer,
 ) -> NormalInverseWishart:
     """Multivariate normal likelihood with normal inverse wishart prior.
@@ -1393,7 +1385,7 @@ def multivariate_normal(
     Args:
         X: design matrix
         mu: known mean
-        normal_inverse_wishart_prior: NormalInverseWishart prior
+        prior: NormalInverseWishart prior
         outer: function to take outer product, defaults to np.outer
 
     Returns:
@@ -1437,7 +1429,7 @@ def multivariate_normal(
 
         posterior = multivariate_normal(
             X=data,
-            normal_inverse_wishart_prior=prior,
+            prior=prior,
         )
         ```
     """
@@ -1445,22 +1437,16 @@ def multivariate_normal(
     X_mean = X.mean(axis=0)
     C = (X - X_mean).T @ (X - X_mean)
 
-    mu_post = (
-        normal_inverse_wishart_prior.mu * normal_inverse_wishart_prior.kappa
-        + n * X_mean
-    ) / (normal_inverse_wishart_prior.kappa + n)
+    mu_post = (prior.mu * prior.kappa + n * X_mean) / (prior.kappa + n)
 
-    kappa_post = normal_inverse_wishart_prior.kappa + n
-    nu_post = normal_inverse_wishart_prior.nu + n
+    kappa_post = prior.kappa + n
+    nu_post = prior.nu + n
 
-    mean_difference = X_mean - normal_inverse_wishart_prior.mu
+    mean_difference = X_mean - prior.mu
     psi_post = (
-        normal_inverse_wishart_prior.psi
+        prior.psi
         + C
-        + outer(mean_difference, mean_difference)
-        * n
-        * normal_inverse_wishart_prior.kappa
-        / kappa_post
+        + outer(mean_difference, mean_difference) * n * prior.kappa / kappa_post
     )
 
     return NormalInverseWishart(
@@ -1521,7 +1507,7 @@ def multivariate_normal_predictive(
 
         posterior = multivariate_normal(
             X=data,
-            normal_inverse_wishart_prior=prior,
+            prior=prior,
         )
         prior_predictive = multivariate_normal_predictive(prior)
         posterior_predictive = multivariate_normal_predictive(posterior)
@@ -1573,7 +1559,7 @@ def log_normal_normal_inverse_gamma(
     ln_x_total: NUMERIC,
     ln_x2_total: NUMERIC,
     n: NUMERIC,
-    normal_inverse_gamma_prior: NormalInverseGamma,
+    prior: NormalInverseGamma,
 ) -> NormalInverseGamma:
     """Log normal likelihood with a normal inverse gamma prior.
 
@@ -1585,7 +1571,7 @@ def log_normal_normal_inverse_gamma(
         ln_x_total: sum of the log of all outcomes
         ln_x2_total: sum of the log of all outcomes squared
         n: total number of samples in ln_x_total and ln_x2_total
-        normal_inverse_gamma_prior: NormalInverseGamma prior
+        prior: NormalInverseGamma prior
 
     Returns:
         NormalInverseGamma posterior distribution
@@ -1615,7 +1601,7 @@ def log_normal_normal_inverse_gamma(
             ln_x_total=ln_data.sum(),
             ln_x2_total=(ln_data**2).sum(),
             n=n_samples,
-            normal_inverse_gamma_prior=prior
+            prior=prior
         )
 
         fig, axes = plt.subplots(ncols=2)
@@ -1636,7 +1622,7 @@ def log_normal_normal_inverse_gamma(
         x_total=ln_x_total,
         x2_total=ln_x2_total,
         n=n,
-        normal_inverse_gamma_prior=normal_inverse_gamma_prior,
+        prior=prior,
     )
 
 
