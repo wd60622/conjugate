@@ -261,7 +261,7 @@ def test_linear_regression(intercept, slope, sigma) -> None:
         beta=10,
     )
 
-    posterior = linear_regression(X, y, prior)
+    posterior = linear_regression(X, y, prior=prior)
 
     beta_samples, variance_samples = posterior.sample_beta(
         size=500, return_variance=True, random_state=rng
@@ -626,3 +626,13 @@ def test_old_parameter_raises_deprecation_warning() -> None:
         posterior = binomial_beta(n=10, x=5, beta_prior=beta)
 
     assert isinstance(posterior, Beta)
+
+
+@pytest.mark.filterwarnings("ignore")
+@pytest.mark.parametrize("prior_name", ["prior", "beta_prior"])
+def test_wrong_prior_type_raises(prior_name: str) -> None:
+    prior = Gamma(1, 1)
+    kwargs = {prior_name: prior}
+    match = "Expected prior to be of type 'Beta', got 'Gamma' instead."
+    with pytest.raises(ValueError, match=match):
+        bernoulli_beta(x=0, **kwargs)
