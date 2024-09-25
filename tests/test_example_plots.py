@@ -79,7 +79,7 @@ def test_analysis() -> None:
     N = 10
     x = 8
 
-    posterior = binomial_beta(n=N, x=x, beta_prior=prior)
+    posterior = binomial_beta(n=N, x=x, prior=prior)
 
     prior_predictive = binomial_beta_predictive(
         n=5,
@@ -167,7 +167,7 @@ def test_bayesian_update_example() -> None:
             x_total=x.sum(),
             x2_total=(x**2).sum(),
             n=batch_size,
-            normal_inverse_gamma_prior=prior,
+            prior=prior,
         )
         beta_samples, variance_samples = posterior.sample_beta(
             size=1000, return_variance=True, random_state=rng
