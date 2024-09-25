@@ -626,3 +626,13 @@ def test_old_parameter_raises_deprecation_warning() -> None:
         posterior = binomial_beta(n=10, x=5, beta_prior=beta)
 
     assert isinstance(posterior, Beta)
+
+
+@pytest.mark.filterwarnings("ignore")
+@pytest.mark.parametrize("prior_name", ["prior", "beta_prior"])
+def test_wrong_prior_type_raises(prior_name: str) -> None:
+    prior = Gamma(1, 1)
+    kwargs = {prior_name: prior}
+    match = "Expected prior to be of type 'Beta', got 'Gamma' instead."
+    with pytest.raises(ValueError, match=match):
+        bernoulli_beta(x=0, **kwargs)
