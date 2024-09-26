@@ -621,7 +621,7 @@ def test_old_model_raises_deprecation_warning() -> None:
     assert isinstance(predictive, BetaBinomial)
 
 
-def test_old_parameter_raises_deprecation_warning() -> None:
+def test_old_parameter_raises_deprecation_warning_model() -> None:
     beta = Beta(1, 1)
     match = "Parameter 'beta_prior' is deprecated, use 'prior' instead."
     with pytest.warns(DeprecationWarning, match=match):
@@ -638,3 +638,22 @@ def test_wrong_prior_type_raises(prior_name: str) -> None:
     match = "Expected prior to be of type 'Beta', got 'Gamma' instead."
     with pytest.raises(ValueError, match=match):
         bernoulli_beta(x=0, **kwargs)
+
+
+def test_old_parameter_raises_deprecation_warning_predictive() -> None:
+    distribution = Beta(1, 1)
+    match = "Parameter 'beta' is deprecated, use 'distribution' instead."
+    with pytest.warns(DeprecationWarning, match=match):
+        predictive = bernoulli_beta_predictive(beta=distribution)
+
+    assert isinstance(predictive, BetaBinomial)
+
+
+@pytest.mark.filterwarnings("ignore")
+@pytest.mark.parametrize("distribution_name", ["distribution", "beta"])
+def test_wrong_distribution_type_raises(distribution_name: str) -> None:
+    distribution = Gamma(1, 1)
+    kwargs = {distribution_name: distribution}
+    match = "Expected distribution to be of type 'Beta', got 'Gamma' instead."
+    with pytest.raises(ValueError, match=match):
+        bernoulli_beta_predictive(**kwargs)
