@@ -441,7 +441,8 @@ def categorical_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
 @deprecate_distribution_parameter("dirichlet")
 @validate_distribution_type
 def categorical_dirichlet_predictive(
-    distribution: Dirichlet, n: NUMERIC = 1
+    distribution: Dirichlet,
+    n: NUMERIC = 1,
 ) -> DirichletMultinomial:
     """Predictive distribution of Categorical model with Dirichlet distribution.
 
@@ -839,11 +840,11 @@ def normal_known_variance_predictive(var: NUMERIC, distribution: Normal) -> Norm
 
         prior_predictive = normal_known_variance_predictive(
             var=known_var,
-            distribution=prior
+            distribution=prior,
         )
         posterior_predictive = normal_known_variance_predictive(
             var=known_var,
-            distribution=posterior
+            distribution=posterior,
         )
 
         bound = 5
@@ -924,14 +925,17 @@ def normal_known_precision(
     )
 
 
-@deprecate_prior_parameter("normal_prior")
-@validate_prior_type
-def normal_known_precision_predictive(precision: NUMERIC, normal: Normal) -> Normal:
+@deprecate_distribution_parameter("normal")
+@validate_distribution_type
+def normal_known_precision_predictive(
+    precision: NUMERIC,
+    distribution: Normal,
+) -> Normal:
     """Predictive distribution for a normal likelihood with known precision and a normal prior on mean.
 
     Args:
         precision: known precision
-        normal: Normal posterior distribution for the mean
+        distribution: Normal posterior distribution for the mean
 
     Returns:
         Normal predictive distribution
@@ -965,11 +969,11 @@ def normal_known_precision_predictive(precision: NUMERIC, normal: Normal) -> Nor
 
         prior_predictive = normal_known_precision_predictive(
             precision=known_precision,
-            normal=prior
+            distribution=prior,
         )
         posterior_predictive = normal_known_precision_predictive(
             precision=known_precision,
-            normal=posterior
+            distribution=posterior,
         )
 
         bound = 5
@@ -984,7 +988,7 @@ def normal_known_precision_predictive(precision: NUMERIC, normal: Normal) -> Nor
     """
     return normal_known_variance_predictive(
         var=1 / precision,
-        normal=normal,
+        distribution=distribution,
     )
 
 
@@ -1060,13 +1064,13 @@ def normal_known_mean_predictive(mu: NUMERIC, distribution: InverseGamma) -> Stu
         ax = plt.subplot(111)
         prior_predictive = normal_known_mean_predictive(
             mu=known_mu,
-            distribution=prior
+            distribution=prior,
         )
         prior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior predictive")
         true.set_bounds(-bound, bound).plot_pdf(ax=ax, label="true distribution")
         posterior_predictive = normal_known_mean_predictive(
             mu=known_mu,
-            distribution=posterior
+            distribution=posterior,
         )
         posterior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior predictive")
         ax.legend()
@@ -1206,7 +1210,9 @@ def linear_regression(
 @deprecate_distribution_parameter("normal_inverse_gamma")
 @validate_distribution_type
 def linear_regression_predictive(
-    distribution: NormalInverseGamma, X: NUMERIC, eye=np.eye
+    distribution: NormalInverseGamma,
+    X: NUMERIC,
+    eye=np.eye,
 ) -> MultivariateStudentT:
     """Predictive distribution for a linear regression model with a normal inverse gamma prior.
 
