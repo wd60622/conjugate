@@ -64,17 +64,17 @@ from conjugate.distributions import (
 from conjugate._typing import NUMERIC
 
 
-def validate_prior_type(func):
-    prior_type = func.__annotations__.get("prior", None)
+def validate_type(func, parameter: str):
+    expected_type = func.__annotations__.get(parameter, None)
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if prior_type is not None:
-            prior = kwargs.get("prior", None)
-            recieved_type = type(prior)
-            if not isinstance(prior, prior_type):
+        if expected_type is not None:
+            parameter_value = kwargs.get(parameter, None)
+            recieved_type = type(parameter_value)
+            if not isinstance(parameter_value, expected_type):
                 msg = (
-                    f"Expected prior to be of type {prior_type.__name__!r}, "
+                    f"Expected {parameter} to be of type {expected_type.__name__!r}, "
                     f"got {recieved_type.__name__!r} instead."
                 )
                 raise ValueError(msg)
@@ -84,13 +84,21 @@ def validate_prior_type(func):
     return wrapper
 
 
-def deprecate_prior_parameter(old_name: str):
+def validate_prior_type(func):
+    return validate_type(func, "prior")
+
+
+def validate_distribution_type(func):
+    return validate_type(func, "distribution")
+
+
+def deprecate_parameter(old_name: str, new_name: str):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if old_name in kwargs:
                 msg = (
-                    f"Parameter {old_name!r} is deprecated, use 'prior' instead. "
+                    f"Parameter {old_name!r} is deprecated, use {new_name!r} instead. "
                     "It will be removed in a future version."
                 )
                 warnings.warn(
@@ -98,12 +106,20 @@ def deprecate_prior_parameter(old_name: str):
                     DeprecationWarning,
                     stacklevel=2,
                 )
-                kwargs["prior"] = kwargs.pop(old_name)
+                kwargs[new_name] = kwargs.pop(old_name)
             return func(*args, **kwargs)
 
         return wrapper
 
     return decorator
+
+
+def deprecate_prior_parameter(old_name: str):
+    return deprecate_parameter(old_name, "prior")
+
+
+def deprecate_distribution_parameter(old_name: str):
+    return deprecate_parameter(old_name, "distribution")
 
 
 def get_binomial_beta_posterior_params(
@@ -165,15 +181,17 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     return Beta(alpha=alpha_post, beta=beta_post)
 
 
-def binomial_beta_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
+@deprecate_distribution_parameter("beta")
+@validate_distribution_type
+def binomial_beta_predictive(n: NUMERIC, distribution: Beta) -> BetaBinomial:
     """Posterior predictive distribution for a binomial likelihood with a beta prior.
 
     Args:
         n: number of trials
-        beta: Beta distribution
+        distribution: Beta distribution
 
     Returns:
-        BetaBinomial posterior predictive distribution
+        BetaBinomial predictive distribution
 
     Examples:
         A / B test example with 100 new impressions
@@ -193,11 +211,11 @@ def binomial_beta_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
         posterior = binomial_beta(
             n=impressions,
             x=clicks,
-            beta_prior=prior
+            prior=prior
         )
         posterior_predictive = binomial_beta_predictive(
             n=100,
-            beta=posterior
+            distribution=posterior
         )
 
 
@@ -210,7 +228,7 @@ def binomial_beta_predictive(n: NUMERIC, beta: Beta) -> BetaBinomial:
         plt.show()
         ```
     """
-    return BetaBinomial(n=n, alpha=beta.alpha, beta=beta.beta)
+    return BetaBinomial(n=n, alpha=distribution.alpha, beta=distribution.beta)
 
 
 @deprecate_prior_parameter("beta_prior")
@@ -249,19 +267,21 @@ def bernoulli_beta(x: NUMERIC, prior: Beta) -> Beta:
     return binomial_beta(n=1, x=x, prior=prior)
 
 
-def bernoulli_beta_predictive(beta: Beta) -> BetaBinomial:
+@deprecate_distribution_parameter("beta")
+@validate_distribution_type
+def bernoulli_beta_predictive(distribution: Beta) -> BetaBinomial:
     """Predictive distribution for a bernoulli likelihood with a beta prior.
 
     Use for either prior or posterior predictive distribution.
 
     Args:
-        beta: Beta distribution
+        distribution: Beta distribution
 
     Returns:
         BetaBinomial predictive distribution
 
     """
-    return binomial_beta_predictive(n=1, beta=beta)
+    return binomial_beta_predictive(n=1, distribution=distribution)
 
 
 @deprecate_prior_parameter("beta_prior")
@@ -287,20 +307,25 @@ def negative_binomial_beta(r: NUMERIC, n: NUMERIC, x: NUMERIC, prior: Beta) -> B
     return Beta(alpha=alpha_post, beta=beta_post)
 
 
-def negative_binomial_beta_predictive(r: NUMERIC, beta: Beta) -> BetaNegativeBinomial:
+@deprecate_distribution_parameter("beta")
+@validate_distribution_type
+def negative_binomial_beta_predictive(
+    r: NUMERIC,
+    distribution: Beta,
+) -> BetaNegativeBinomial:
     """Predictive distribution for a negative binomial likelihood with a beta prior
 
     Assumed known number of failures r
 
     Args:
         r: number of failures
-        beta: Beta distribution
+        distribution: Beta distribution
 
     Returns:
         BetaNegativeBinomial predictive distribution
 
     """
-    return BetaNegativeBinomial(n=r, alpha=beta.alpha, beta=beta.beta)
+    return BetaNegativeBinomial(n=r, alpha=distribution.alpha, beta=distribution.beta)
 
 
 @deprecate_prior_parameter("beta_binomial_prior")
@@ -413,13 +438,15 @@ def categorical_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     return Dirichlet(alpha=alpha_post)
 
 
+@deprecate_distribution_parameter("dirichlet")
+@validate_distribution_type
 def categorical_dirichlet_predictive(
-    dirichlet: Dirichlet, n: NUMERIC = 1
+    distribution: Dirichlet, n: NUMERIC = 1
 ) -> DirichletMultinomial:
-    """Predictive distribution of Categorical model with Dirichlet prior.
+    """Predictive distribution of Categorical model with Dirichlet distribution.
 
     Args:
-        dirichlet: Dirichlet distribution
+        distribution: Dirichlet distribution
         n: Number of trials for each sample, defaults to 1.
 
     Returns:
@@ -427,7 +454,7 @@ def categorical_dirichlet_predictive(
 
     """
 
-    return DirichletMultinomial(n=n, alpha=dirichlet.alpha)
+    return DirichletMultinomial(n=n, alpha=distribution.alpha)
 
 
 def get_multi_categorical_dirichlet_posterior_params(
@@ -485,13 +512,16 @@ def multinomial_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     return Dirichlet(alpha=alpha_post)
 
 
+@deprecate_distribution_parameter("dirichlet")
+@validate_distribution_type
 def multinomial_dirichlet_predictive(
-    dirichlet: Dirichlet, n: NUMERIC = 1
+    distribution: Dirichlet,
+    n: NUMERIC = 1,
 ) -> DirichletMultinomial:
-    """Predictive distribution of Multinomial model with Dirichlet prior.
+    """Predictive distribution of Multinomial model with Dirichlet distribution.
 
     Args:
-        dirichlet: Dirichlet distribution
+        distribution: Dirichlet distribution
         n: Number of trials for each sample, defaults to 1.
 
     Returns:
@@ -499,7 +529,7 @@ def multinomial_dirichlet_predictive(
 
     """
 
-    return DirichletMultinomial(n=n, alpha=dirichlet.alpha)
+    return DirichletMultinomial(n=n, alpha=distribution.alpha)
 
 
 def get_poisson_gamma_posterior_params(
@@ -532,11 +562,13 @@ def poisson_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-def poisson_gamma_predictive(gamma: Gamma, n: NUMERIC = 1) -> NegativeBinomial:
-    """Predictive distribution for a poisson likelihood with a gamma prior
+@deprecate_distribution_parameter("gamma")
+@validate_distribution_type
+def poisson_gamma_predictive(distribution: Gamma, n: NUMERIC = 1) -> NegativeBinomial:
+    """Predictive distribution for a poisson likelihood with a gamma distribution.
 
     Args:
-        gamma: Gamma distribution
+        distribution: Gamma distribution
         n: Number of trials for each sample, defaults to 1.
             Can be used to scale the distributions to a different unit of time.
 
@@ -544,8 +576,8 @@ def poisson_gamma_predictive(gamma: Gamma, n: NUMERIC = 1) -> NegativeBinomial:
         NegativeBinomial distribution related to predictive
 
     """
-    n = n * gamma.alpha
-    p = gamma.beta / (1 + gamma.beta)
+    n = n * distribution.alpha
+    p = distribution.beta / (1 + distribution.beta)
 
     return NegativeBinomial(n=n, p=p)
 
@@ -575,11 +607,13 @@ def exponential_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-def exponential_gamma_predictive(gamma: Gamma) -> Lomax:
-    """Predictive distribution for an exponential likelihood with a gamma prior
+@deprecate_distribution_parameter("gamma")
+@validate_distribution_type
+def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
+    """Predictive distribution for an exponential likelihood with a gamma distribution
 
     Args:
-        gamma: Gamma distribution
+        distribution: Gamma distribution
 
     Returns:
         Lomax distribution related to predictive
@@ -608,8 +642,8 @@ def exponential_gamma_predictive(gamma: Gamma) -> Lomax:
             prior=prior
         )
 
-        prior_predictive = expotential_gamma_predictive(prior)
-        posterior_predictive = expotential_gamma_predictive(posterior)
+        prior_predictive = expotential_gamma_predictive(distribution=prior)
+        posterior_predictive = expotential_gamma_predictive(distribution=posterior)
 
         ax = plt.subplot(111)
         prior_predictive.set_bounds(0, 2.5).plot_pdf(ax=ax, label="prior predictive")
@@ -619,7 +653,7 @@ def exponential_gamma_predictive(gamma: Gamma) -> Lomax:
         plt.show()
         ```
     """
-    return Lomax(alpha=gamma.beta, lam=gamma.alpha)
+    return Lomax(alpha=distribution.beta, lam=distribution.alpha)
 
 
 @deprecate_prior_parameter("gamma_prior")
@@ -683,18 +717,20 @@ def gamma_known_shape(
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-def gamma_known_shape_predictive(gamma: Gamma, alpha: NUMERIC) -> CompoundGamma:
-    """Predictive distribution for a gamma likelihood with a gamma prior
+@deprecate_distribution_parameter("gamma")
+@validate_distribution_type
+def gamma_known_shape_predictive(distribution: Gamma, alpha: NUMERIC) -> CompoundGamma:
+    """Predictive distribution for a gamma likelihood with a gamma distribution
 
     Args:
-        gamma: Gamma distribution
+        distribution: Gamma distribution
         alpha: known shape parameter
 
     Returns:
         CompoundGamma distribution related to predictive
 
     """
-    return CompoundGamma(alpha=alpha, beta=gamma.alpha, lam=gamma.beta)
+    return CompoundGamma(alpha=alpha, beta=distribution.alpha, lam=distribution.beta)
 
 
 @deprecate_prior_parameter("normal_prior")
@@ -762,12 +798,14 @@ def normal_known_variance(
     return Normal(mu=mu_post, sigma=var_post**0.5)
 
 
-def normal_known_variance_predictive(var: NUMERIC, normal: Normal) -> Normal:
-    """Predictive distribution for a normal likelihood with known variance and a normal prior on mean.
+@deprecate_distribution_parameter("normal")
+@validate_distribution_type
+def normal_known_variance_predictive(var: NUMERIC, distribution: Normal) -> Normal:
+    """Predictive distribution for a normal likelihood with known variance and a normal distribution on mean.
 
     Args:
         var: known variance
-        normal: Normal posterior distribution for the mean
+        distribution: Normal distribution for the mean
 
     Returns:
         Normal predictive distribution
@@ -801,11 +839,11 @@ def normal_known_variance_predictive(var: NUMERIC, normal: Normal) -> Normal:
 
         prior_predictive = normal_known_variance_predictive(
             var=known_var,
-            normal=prior
+            distribution=prior
         )
         posterior_predictive = normal_known_variance_predictive(
             var=known_var,
-            normal=posterior
+            distribution=posterior
         )
 
         bound = 5
@@ -818,8 +856,8 @@ def normal_known_variance_predictive(var: NUMERIC, normal: Normal) -> Normal:
         ```
 
     """
-    var_posterior_predictive = var + normal.sigma**2
-    return Normal(mu=normal.mu, sigma=var_posterior_predictive**0.5)
+    var_posterior_predictive = var + distribution.sigma**2
+    return Normal(mu=distribution.mu, sigma=var_posterior_predictive**0.5)
 
 
 @deprecate_prior_parameter("normal_prior")
@@ -978,12 +1016,14 @@ def normal_known_mean(
     return InverseGamma(alpha=alpha_post, beta=beta_post)
 
 
-def normal_known_mean_predictive(mu: NUMERIC, inverse_gamma: InverseGamma) -> StudentT:
+@deprecate_distribution_parameter("inverse_gamma")
+@validate_distribution_type
+def normal_known_mean_predictive(mu: NUMERIC, distribution: InverseGamma) -> StudentT:
     """Predictive distribution for a normal likelihood with a known mean and a variance prior.
 
     Args:
         mu: known mean
-        inverse_gamma: InverseGamma prior
+        distribution: InverseGamma prior
 
     Returns:
         StudentT predictive distribution
@@ -1020,13 +1060,13 @@ def normal_known_mean_predictive(mu: NUMERIC, inverse_gamma: InverseGamma) -> St
         ax = plt.subplot(111)
         prior_predictive = normal_known_mean_predictive(
             mu=known_mu,
-            inverse_gamma=prior
+            distribution=prior
         )
         prior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior predictive")
         true.set_bounds(-bound, bound).plot_pdf(ax=ax, label="true distribution")
         posterior_predictive = normal_known_mean_predictive(
             mu=known_mu,
-            inverse_gamma=posterior
+            distribution=posterior
         )
         posterior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior predictive")
         ax.legend()
@@ -1036,8 +1076,8 @@ def normal_known_mean_predictive(mu: NUMERIC, inverse_gamma: InverseGamma) -> St
     """
     return StudentT(
         mu=mu,
-        sigma=(inverse_gamma.beta / inverse_gamma.alpha) ** 0.5,
-        nu=2 * inverse_gamma.alpha,
+        sigma=(distribution.beta / distribution.alpha) ** 0.5,
+        nu=2 * distribution.alpha,
     )
 
 
@@ -1083,27 +1123,29 @@ def normal_normal_inverse_gamma(
     )
 
 
+@deprecate_distribution_parameter("normal_inverse_gamma")
+@validate_distribution_type
 def normal_normal_inverse_gamma_predictive(
-    normal_inverse_gamma: NormalInverseGamma,
+    distribution: NormalInverseGamma,
 ) -> StudentT:
     """Predictive distribution for a normal likelihood with a normal inverse gamma prior.
 
     Args:
-        normal_inverse_gamma: NormalInverseGamma posterior
+        distribution: NormalInverseGamma posterior
 
     Returns:
         StudentT predictive distribution
 
     """
     var = (
-        normal_inverse_gamma.beta
-        * (normal_inverse_gamma.nu + 1)
-        / (normal_inverse_gamma.nu * normal_inverse_gamma.alpha)
+        distribution.beta
+        * (distribution.nu + 1)
+        / (distribution.nu * distribution.alpha)
     )
     return StudentT(
-        mu=normal_inverse_gamma.mu,
+        mu=distribution.mu,
         sigma=var**0.5,
-        nu=2 * normal_inverse_gamma.alpha,
+        nu=2 * distribution.alpha,
     )
 
 
@@ -1161,13 +1203,15 @@ def linear_regression(
     )
 
 
+@deprecate_distribution_parameter("normal_inverse_gamma")
+@validate_distribution_type
 def linear_regression_predictive(
-    normal_inverse_gamma: NormalInverseGamma, X: NUMERIC, eye=np.eye
+    distribution: NormalInverseGamma, X: NUMERIC, eye=np.eye
 ) -> MultivariateStudentT:
     """Predictive distribution for a linear regression model with a normal inverse gamma prior.
 
     Args:
-        normal_inverse_gamma: NormalInverseGamma posterior
+        distribution: NormalInverseGamma posterior
         X: design matrix
         eye: function to get identity matrix, defaults to np.eye
 
@@ -1175,11 +1219,11 @@ def linear_regression_predictive(
         MultivariateStudentT predictive distribution
 
     """
-    mu = X @ normal_inverse_gamma.mu
-    sigma = (normal_inverse_gamma.beta / normal_inverse_gamma.alpha) * (
-        eye(X.shape[0]) + (X @ normal_inverse_gamma.delta_inverse @ X.T)
+    mu = X @ distribution.mu
+    sigma = (distribution.beta / distribution.alpha) * (
+        eye(X.shape[0]) + (X @ distribution.delta_inverse @ X.T)
     )
-    nu = 2 * normal_inverse_gamma.alpha
+    nu = 2 * distribution.alpha
 
     return MultivariateStudentT(
         mu=mu,
@@ -1236,7 +1280,11 @@ def uniform_pareto(
 @deprecate_prior_parameter("gamma_prior")
 @validate_prior_type
 def pareto_gamma(
-    n: NUMERIC, ln_x_total: NUMERIC, x_m: NUMERIC, prior: Gamma, ln=np.log
+    n: NUMERIC,
+    ln_x_total: NUMERIC,
+    x_m: NUMERIC,
+    prior: Gamma,
+    ln=np.log,
 ) -> Gamma:
     """Posterior distribution for a pareto likelihood with a gamma prior.
 
@@ -1550,15 +1598,15 @@ def multivariate_normal(
     )
 
 
-@deprecate_prior_parameter("normal_inverse_wishart_prior")
-@validate_prior_type
+@deprecate_distribution_parameter("normal_inverse_wishart")
+@validate_distribution_type
 def multivariate_normal_predictive(
-    normal_inverse_wishart: NormalInverseWishart,
+    distribution: NormalInverseWishart,
 ) -> MultivariateStudentT:
-    """Multivariate normal likelihood with normal inverse wishart prior.
+    """Multivariate normal likelihood with normal inverse wishart distribution.
 
     Args:
-        normal_inverse_wishart: NormalInverseWishart posterior
+        distribution: NormalInverseWishart distribution
 
     Returns:
         MultivariateStudentT predictive distribution
@@ -1604,8 +1652,8 @@ def multivariate_normal_predictive(
             X=data,
             prior=prior,
         )
-        prior_predictive = multivariate_normal_predictive(prior)
-        posterior_predictive = multivariate_normal_predictive(posterior)
+        prior_predictive = multivariate_normal_predictive(distribution=prior)
+        posterior_predictive = multivariate_normal_predictive(distribution=posterior)
 
         ax = plt.subplot(111)
 
@@ -1638,13 +1686,13 @@ def multivariate_normal_predictive(
         ```
     """
 
-    p = normal_inverse_wishart.psi.shape[0]
-    mu = normal_inverse_wishart.mu
-    nu = normal_inverse_wishart.nu - p + 1
+    p = distribution.psi.shape[0]
+    mu = distribution.mu
+    nu = distribution.nu - p + 1
     sigma = (
-        (normal_inverse_wishart.kappa + 1)
-        * normal_inverse_wishart.psi
-        / (normal_inverse_wishart.kappa * (normal_inverse_wishart.nu - p + 1))
+        (distribution.kappa + 1)
+        * distribution.psi
+        / (distribution.kappa * (distribution.nu - p + 1))
     )
 
     return MultivariateStudentT(mu=mu, sigma=sigma, nu=nu)
