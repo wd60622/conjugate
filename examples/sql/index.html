@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.37">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
     
     
       
@@ -1049,7 +1049,7 @@ the columns. </p>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">)</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">posterior_predictive</span> <span class="o">=</span> <span class="n">normal_normal_inverse_gamma_predictive</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">posterior_predictive</span> <span class="o">=</span> <span class="n">normal_normal_inverse_gamma_predictive</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="n">posterior</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Then add the columns we want from the inference</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Add the posterior predictive estimate
