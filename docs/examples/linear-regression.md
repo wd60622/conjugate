@@ -64,7 +64,7 @@ The multivariate student-t distribution is used for the posterior predictive dis
 x_lim_new = 1.5 * x_lim
 x_new = np.linspace(-x_lim_new, x_lim_new, 20)
 X_new = create_X(x_new)
-pp: MultivariateStudentT = linear_regression_predictive(normal_inverse_gamma=posterior, X=X_new)
+pp: MultivariateStudentT = linear_regression_predictive(distribution=posterior, X=X_new)
 
 samples = pp.dist.rvs(5_000).T
 df_samples = pd.DataFrame(samples, index=x_new)

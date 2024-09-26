@@ -47,11 +47,11 @@ posterior: Beta = binomial_beta(n=N, x=X, prior=prior)
 # Comparison
 prior_predictive: BetaBinomial = binomial_beta_predictive(
     n=N, 
-    beta=prior, 
+    distribution=prior, 
 )
 posterior_predictive: BetaBinomial = binomial_beta_predictive(
     n=N, 
-    beta=posterior, 
+    distribution=posterior, 
 )
 ```
 
