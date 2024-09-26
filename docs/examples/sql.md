@@ -55,7 +55,7 @@ posterior = normal_normal_inverse_gamma(
     n=n,
     prior=prior,
 )
-posterior_predictive = normal_normal_inverse_gamma_predictive(posterior)
+posterior_predictive = normal_normal_inverse_gamma_predictive(distribution=posterior)
 ```
 
 Then add the columns we want from the inference

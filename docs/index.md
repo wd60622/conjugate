@@ -55,10 +55,10 @@ N = 10
 
 # Analytics
 prior = Beta(1, 1)
-prior_predictive: BetaBinomial = binomial_beta_predictive(n=N, beta=prior)
+prior_predictive: BetaBinomial = binomial_beta_predictive(n=N, distribution=prior)
 
 posterior: Beta = binomial_beta(n=N, x=X, prior=prior)
-posterior_predictive: BetaBinomial = binomial_beta_predictive(n=N, beta=posterior) 
+posterior_predictive: BetaBinomial = binomial_beta_predictive(n=N, distribution=posterior) 
 ```
 
 From here, do any analysis you'd like!
