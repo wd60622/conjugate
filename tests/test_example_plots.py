@@ -83,11 +83,11 @@ def test_analysis() -> None:
 
     prior_predictive = binomial_beta_predictive(
         n=5,
-        beta=prior,
+        distribution=prior,
     )
     posterior_predictive = binomial_beta_predictive(
         n=5,
-        beta=posterior,
+        distribution=posterior,
     )
 
     fig, axes = plt.subplots(1, 2, figsize=(15, 7))

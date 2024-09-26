@@ -198,10 +198,10 @@ def test_poisson_gamma_analysis() -> None:
 
     assert isinstance(posterior, Gamma)
 
-    pp = poisson_gamma_predictive(gamma=posterior)
+    pp = poisson_gamma_predictive(distribution=posterior)
     assert isinstance(pp, NegativeBinomial)
 
-    pp_7days = poisson_gamma_predictive(gamma=posterior, n=7)
+    pp_7days = poisson_gamma_predictive(distribution=posterior, n=7)
     assert isinstance(pp_7days, NegativeBinomial)
 
 
@@ -276,9 +276,7 @@ def test_linear_regression(intercept, slope, sigma) -> None:
     assert between(slope, *np.quantile(beta_samples[:, 1], q=q))
     assert between(sigma, *np.quantile(sigma_samples, q=q))
 
-    posterior_predictive = linear_regression_predictive(
-        normal_inverse_gamma=posterior, X=X
-    )
+    posterior_predictive = linear_regression_predictive(distribution=posterior, X=X)
     assert isinstance(posterior_predictive, MultivariateStudentT)
 
 
@@ -335,7 +333,7 @@ def test_exponential_gamma() -> None:
 
     assert isinstance(posterior, Gamma)
 
-    posterior_predictive = exponential_gamma_predictive(gamma=posterior)
+    posterior_predictive = exponential_gamma_predictive(distribution=posterior)
 
     assert isinstance(posterior_predictive, Lomax)
 
@@ -353,7 +351,7 @@ def test_normal_known_variance() -> None:
     assert isinstance(posterior, Normal)
 
     posterior_predictive = normal_known_variance_predictive(
-        var=known_var, normal=posterior
+        var=known_var, distribution=posterior
     )
     assert isinstance(posterior_predictive, Normal)
 
@@ -375,7 +373,8 @@ def test_normal_known_mean() -> None:
     assert isinstance(posterior, InverseGamma)
 
     posterior_predictive = normal_known_mean_predictive(
-        mu=known_mu, inverse_gamma=posterior
+        mu=known_mu,
+        distribution=posterior,
     )
     assert isinstance(posterior_predictive, StudentT)
 
@@ -399,12 +398,12 @@ def test_normal_normal_inverse_gamma() -> None:
     assert isinstance(posterior, NormalInverseGamma)
 
     posterior_predictive = normal_normal_inverse_gamma_predictive(
-        normal_inverse_gamma=posterior,
+        distribution=posterior,
     )
     assert isinstance(posterior_predictive, StudentT)
 
     prior_predictive = normal_normal_inverse_gamma_predictive(
-        normal_inverse_gamma=prior,
+        distribution=prior,
     )
 
     assert (
@@ -434,7 +433,10 @@ def test_gamma_known_shape(shape) -> None:
 
     assert isinstance(posterior, Gamma)
 
-    posterior_predictive = gamma_known_shape_predictive(alpha=shape, gamma=posterior)
+    posterior_predictive = gamma_known_shape_predictive(
+        alpha=shape,
+        distribution=posterior,
+    )
     assert isinstance(posterior_predictive, CompoundGamma)
 
 
@@ -521,8 +523,8 @@ def test_multivariate_normal() -> None:
     )
     assert isinstance(posterior, NormalInverseWishart)
 
-    prior_predictive = multivariate_normal_predictive(normal_inverse_wishart=prior)
-    posterior_predictive = multivariate_normal_predictive(posterior)
+    prior_predictive = multivariate_normal_predictive(distribution=prior)
+    posterior_predictive = multivariate_normal_predictive(distribution=posterior)
     assert isinstance(posterior_predictive, MultivariateStudentT)
     assert prior_predictive.dist.logpdf(mu) < posterior_predictive.dist.logpdf(mu)
     assert (
@@ -565,7 +567,7 @@ def test_bernoulli_beta() -> None:
 
 def test_bernoulli_beta_predictive() -> None:
     prior = Beta(alpha=1, beta=1)
-    pp = bernoulli_beta_predictive(beta=prior)
+    pp = bernoulli_beta_predictive(distribution=prior)
 
     assert pp == BetaBinomial(n=1, alpha=1, beta=1)
 
@@ -587,7 +589,7 @@ def test_negative_binomial_beta() -> None:
 
 def test_negative_binomial_beta_predictive() -> None:
     prior = Beta(alpha=1, beta=1)
-    pp = negative_binomial_beta_predictive(r=10, beta=prior)
+    pp = negative_binomial_beta_predictive(r=10, distribution=prior)
 
     assert pp == BetaNegativeBinomial(n=10, alpha=1, beta=1)
 
@@ -613,7 +615,7 @@ def test_old_model_raises_deprecation_warning() -> None:
     with pytest.warns(DeprecationWarning, match=match):
         predictive = binomial_beta_posterior_predictive(
             n=10,
-            beta=beta,
+            distribution=beta,
         )
 
     assert isinstance(predictive, BetaBinomial)
