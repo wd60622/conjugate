@@ -21,6 +21,7 @@
 - Exponential
 - Pareto
 - Gamma
+- Inverse Gamma
 - Beta
 - Von Mises
 
