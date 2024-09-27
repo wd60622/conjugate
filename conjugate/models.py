@@ -331,7 +331,9 @@ def negative_binomial_beta_predictive(
 @deprecate_prior_parameter("beta_binomial_prior")
 @validate_prior_type
 def hypergeometric_beta_binomial(
-    x_total: NUMERIC, n: NUMERIC, prior: BetaBinomial
+    x_total: NUMERIC,
+    n: NUMERIC,
+    prior: BetaBinomial,
 ) -> BetaBinomial:
     """Hypergeometric likelihood with a BetaBinomial prior.
 
@@ -415,7 +417,8 @@ def get_dirichlet_posterior_params(alpha_prior: NUMERIC, x: NUMERIC) -> NUMERIC:
 
 
 def get_categorical_dirichlet_posterior_params(
-    alpha_prior: NUMERIC, x: NUMERIC
+    alpha_prior: NUMERIC,
+    x: NUMERIC,
 ) -> NUMERIC:
     return get_dirichlet_posterior_params(alpha_prior, x)
 
@@ -459,7 +462,8 @@ def categorical_dirichlet_predictive(
 
 
 def get_multi_categorical_dirichlet_posterior_params(
-    alpha_prior: NUMERIC, x: NUMERIC
+    alpha_prior: NUMERIC,
+    x: NUMERIC,
 ) -> NUMERIC:
     return get_dirichlet_posterior_params(alpha_prior, x)
 
@@ -534,7 +538,10 @@ def multinomial_dirichlet_predictive(
 
 
 def get_poisson_gamma_posterior_params(
-    alpha: NUMERIC, beta: NUMERIC, x_total: NUMERIC, n: NUMERIC
+    alpha: NUMERIC,
+    beta: NUMERIC,
+    x_total: NUMERIC,
+    n: NUMERIC,
 ) -> Tuple[NUMERIC, NUMERIC]:
     alpha_post = alpha + x_total
     beta_post = beta + n
@@ -660,7 +667,10 @@ def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
 @deprecate_prior_parameter("gamma_prior")
 @validate_prior_type
 def gamma_known_shape(
-    x_total: NUMERIC, n: NUMERIC, alpha: NUMERIC, prior: Gamma
+    x_total: NUMERIC,
+    n: NUMERIC,
+    alpha: NUMERIC,
+    prior: Gamma,
 ) -> Gamma:
     """Gamma likelihood with a gamma prior.
 
@@ -1241,7 +1251,10 @@ def linear_regression_predictive(
 @deprecate_prior_parameter("pareto_prior")
 @validate_prior_type
 def uniform_pareto(
-    x_max: NUMERIC, n: NUMERIC, prior: Pareto, max_fn=np.maximum
+    x_max: NUMERIC,
+    n: NUMERIC,
+    prior: Pareto,
+    max_fn=np.maximum,
 ) -> Pareto:
     """Posterior distribution for a uniform likelihood with a pareto prior.
 
