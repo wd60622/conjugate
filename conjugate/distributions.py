@@ -942,7 +942,8 @@ class ScaledInverseChiSquared(ContinuousPlotDistMixin, SliceMixin):
 
     @classmethod
     def from_inverse_gamma(
-        cls, inverse_gamma: InverseGamma
+        cls,
+        inverse_gamma: InverseGamma,
     ) -> "ScaledInverseChiSquared":
         """Alternative constructor from inverse gamma distribution.
 

@@ -185,6 +185,32 @@ def normal_known_mean():
     return sample_data, get_posterior, true_sigma**2
 
 
+def normal_known_mean_alternative():
+    from conjugate.distributions import Normal, ScaledInverseChiSquared
+    from conjugate.models import normal_known_mean
+
+    known_mu = 5
+    true_sigma = 2
+
+    true_distribution = Normal(mu=known_mu, sigma=true_sigma)
+
+    def sample_data(n, rng):
+        return true_distribution.dist.rvs(size=n, random_state=rng)
+
+    prior = ScaledInverseChiSquared(nu=2, sigma2=1)
+
+    def get_posterior(data):
+        return normal_known_mean(
+            n=len(data),
+            x_total=data.sum(),
+            x2_total=(data**2).sum(),
+            mu=known_mu,
+            prior=prior,
+        )
+
+    return sample_data, get_posterior, true_sigma**2
+
+
 def uniform():
     from conjugate.distributions import Uniform, Pareto
     from conjugate.models import uniform_pareto
@@ -308,4 +334,5 @@ if __name__ == "__main__":
     setup = uniform
     setup = exponential
     setup = inverse_gamma_known_rate
+    setup = normal_known_mean_alternative
     main(setup, ns=ns, rng=rng)

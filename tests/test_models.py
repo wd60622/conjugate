@@ -16,6 +16,7 @@ from conjugate.distributions import (
     CompoundGamma,
     Dirichlet,
     Gamma,
+    ScaledInverseChiSquared,
     GammaKnownRateProportional,
     GammaProportional,
     InverseGamma,
@@ -669,3 +670,16 @@ def test_inverse_gamma_known_rate() -> None:
         prior=prior,
     )
     assert isinstance(posterior, Gamma)
+
+
+def test_normal_known_mean_alternative_prior() -> None:
+    prior = ScaledInverseChiSquared(1, 1)
+    posterior = normal_known_mean(
+        x_total=0,
+        x2_total=1,
+        n=1,
+        mu=0,
+        prior=prior,
+    )
+
+    assert isinstance(posterior, ScaledInverseChiSquared)
