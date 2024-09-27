@@ -5,29 +5,30 @@
 ## Discrete
 
 - Bernoulli / Binomial
-- Negative Binomial
+- Categorical / Multinomial
 - Geometric
 - Hypergeometric
+- Negative Binomial
 - Poisson
-- Categorical / Multinomial
 
 ## Continuous
 
-- Normal
-- Multivariate Normal
-- Linear Regression (Normal)
-- Log Normal
-- Uniform
+- Beta
 - Exponential
-- Pareto
 - Gamma
 - Inverse Gamma
-- Beta
+- Linear Regression (Normal)
+- Log Normal
+- Multivariate Normal
+- Normal
+- Pareto
+- Uniform
 - Von Mises
+- Weibull
 
 # Model Functions
 
-Below are the supported models
+Below are the supported models:
 
 """
 
