@@ -1185,3 +1185,21 @@ class LogNormal(ContinuousPlotDistMixin, SliceMixin):
     @property
     def dist(self):
         return stats.lognorm(s=self.sigma, loc=self.mu)
+
+
+@dataclass
+class Weibull(ContinuousPlotDistMixin, SliceMixin):
+    """Weibull distribution.
+
+    Args:
+        beta: shape parameter
+        lam: scale parameter
+
+    """
+
+    beta: NUMERIC
+    lam: NUMERIC
+
+    @property
+    def dist(self):
+        return stats.weibull_min(c=self.lam, scale=self.beta)

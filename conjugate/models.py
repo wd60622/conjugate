@@ -1777,6 +1777,29 @@ def log_normal_normal_inverse_gamma(
     )
 
 
+@validate_prior_type
+def weibull_inverse_gamma_known_shape(
+    n: NUMERIC,
+    x_beta_total: NUMERIC,
+    prior: InverseGamma,
+) -> InverseGamma:
+    """Posterior distribution for a Weibull likelihood with an inverse gamma prior on shape.
+
+    Args:
+        n: total number of samples
+        x_beta_total: sum of all x^beta
+        prior: InverseGamma prior
+
+    Returns:
+        InverseGamma posterior distribution
+
+    """
+    alpha_post = prior.alpha + n
+    beta_post = prior.beta + x_beta_total
+
+    return InverseGamma(alpha=alpha_post, beta=beta_post)
+
+
 def _use_predictive_instead(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
