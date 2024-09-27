@@ -12,22 +12,22 @@ from conjugate.distributions import (
     Beta,
     BetaBinomial,
     BetaNegativeBinomial,
-    Geometric,
     Binomial,
     CompoundGamma,
     Dirichlet,
     Exponential,
     Gamma,
-    NormalGamma,
+    Geometric,
+    Hypergeometric,
     InverseGamma,
     InverseWishart,
-    Hypergeometric,
     LogNormal,
     Lomax,
     MultivariateNormal,
     MultivariateStudentT,
     NegativeBinomial,
     Normal,
+    NormalGamma,
     NormalInverseGamma,
     NormalInverseWishart,
     Pareto,
@@ -37,6 +37,7 @@ from conjugate.distributions import (
     Uniform,
     VectorizedDist,
     VonMises,
+    Weibull,
     get_beta_param_from_mean_and_alpha,
 )
 
@@ -376,12 +377,11 @@ def test_plot_pmf(dist) -> None:
         Uniform(low=10, high=20),
         Normal(mu=0, sigma=1),
         Exponential(lam=1),
+        Weibull(beta=1, theta=1),
     ],
 )
 def test_plot_pdf(dist) -> None:
-    dist.max_value = 10
-    dist.min_value = 0
-    ax = dist.plot_pdf()
+    ax = dist.set_bounds(0, 10).plot_pdf()
     assert isinstance(ax, plt.Axes)
 
 
