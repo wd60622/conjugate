@@ -276,9 +276,9 @@ def weibull_known_shape():
     from conjugate.distributions import Weibull, InverseGamma
     from conjugate.models import weibull_inverse_gamma_known_shape
 
-    beta = 1
-    lam = 2
-    true_distribution = Weibull(beta=beta, lam=lam)
+    beta = 2.5
+    theta = 5
+    true_distribution = Weibull(beta=beta, theta=theta)
 
     def sample_data(n, rng):
         return true_distribution.dist.rvs(size=n, random_state=rng)
@@ -292,7 +292,7 @@ def weibull_known_shape():
             prior=prior,
         )
 
-    return sample_data, get_posterior, lam
+    return sample_data, get_posterior, theta
 
 
 def parameter_recovery(
