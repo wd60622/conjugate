@@ -111,7 +111,6 @@ def test_dirichlet() -> None:
     fig, ax = plt.subplots(figsize=FIGSIZE)
     dirichlet = Dirichlet(np.array([1, 2, 3]))
     ax = dirichlet.plot_pdf(random_state=0, ax=ax)
-    ax.legend()
     return fig
 
 
