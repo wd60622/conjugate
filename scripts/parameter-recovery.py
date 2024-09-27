@@ -276,8 +276,8 @@ def weibull_known_shape():
     from conjugate.distributions import Weibull, InverseGamma
     from conjugate.models import weibull_inverse_gamma_known_shape
 
-    beta = 2.5
-    theta = 5
+    beta = 0.5
+    theta = 2.5
     true_distribution = Weibull(beta=beta, theta=theta)
 
     def sample_data(n, rng):
