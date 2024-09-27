@@ -272,6 +272,29 @@ def inverse_gamma_known_rate():
     return sample_data, get_posterior, beta
 
 
+def weibull_known_shape():
+    from conjugate.distributions import Weibull, InverseGamma
+    from conjugate.models import weibull_inverse_gamma_known_shape
+
+    beta = 0.5
+    theta = 2.5
+    true_distribution = Weibull(beta=beta, theta=theta)
+
+    def sample_data(n, rng):
+        return true_distribution.dist.rvs(size=n, random_state=rng)
+
+    prior = InverseGamma(alpha=1, beta=1)
+
+    def get_posterior(data):
+        return weibull_inverse_gamma_known_shape(
+            n=len(data),
+            x_beta_total=(data**beta).sum(),
+            prior=prior,
+        )
+
+    return sample_data, get_posterior, theta
+
+
 def parameter_recovery(
     ns: list[int],
     sample_data,
@@ -335,4 +358,5 @@ if __name__ == "__main__":
     setup = exponential
     setup = inverse_gamma_known_rate
     setup = normal_known_mean_alternative
+    setup = weibull_known_shape
     main(setup, ns=ns, rng=rng)
