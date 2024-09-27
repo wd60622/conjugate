@@ -21,6 +21,7 @@
 - Exponential
 - Pareto
 - Gamma
+- Inverse Gamma
 - Beta
 - Von Mises
 
@@ -49,6 +50,7 @@ from conjugate.distributions import (
     NegativeBinomial,
     BetaNegativeBinomial,
     BetaBinomial,
+    ScaledInverseChiSquared,
     Pareto,
     InverseGamma,
     Normal,
@@ -331,7 +333,9 @@ def negative_binomial_beta_predictive(
 @deprecate_prior_parameter("beta_binomial_prior")
 @validate_prior_type
 def hypergeometric_beta_binomial(
-    x_total: NUMERIC, n: NUMERIC, prior: BetaBinomial
+    x_total: NUMERIC,
+    n: NUMERIC,
+    prior: BetaBinomial,
 ) -> BetaBinomial:
     """Hypergeometric likelihood with a BetaBinomial prior.
 
@@ -415,7 +419,8 @@ def get_dirichlet_posterior_params(alpha_prior: NUMERIC, x: NUMERIC) -> NUMERIC:
 
 
 def get_categorical_dirichlet_posterior_params(
-    alpha_prior: NUMERIC, x: NUMERIC
+    alpha_prior: NUMERIC,
+    x: NUMERIC,
 ) -> NUMERIC:
     return get_dirichlet_posterior_params(alpha_prior, x)
 
@@ -459,7 +464,8 @@ def categorical_dirichlet_predictive(
 
 
 def get_multi_categorical_dirichlet_posterior_params(
-    alpha_prior: NUMERIC, x: NUMERIC
+    alpha_prior: NUMERIC,
+    x: NUMERIC,
 ) -> NUMERIC:
     return get_dirichlet_posterior_params(alpha_prior, x)
 
@@ -534,7 +540,10 @@ def multinomial_dirichlet_predictive(
 
 
 def get_poisson_gamma_posterior_params(
-    alpha: NUMERIC, beta: NUMERIC, x_total: NUMERIC, n: NUMERIC
+    alpha: NUMERIC,
+    beta: NUMERIC,
+    x_total: NUMERIC,
+    n: NUMERIC,
 ) -> Tuple[NUMERIC, NUMERIC]:
     alpha_post = alpha + x_total
     beta_post = beta + n
@@ -660,7 +669,10 @@ def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
 @deprecate_prior_parameter("gamma_prior")
 @validate_prior_type
 def gamma_known_shape(
-    x_total: NUMERIC, n: NUMERIC, alpha: NUMERIC, prior: Gamma
+    x_total: NUMERIC,
+    n: NUMERIC,
+    alpha: NUMERIC,
+    prior: Gamma,
 ) -> Gamma:
     """Gamma likelihood with a gamma prior.
 
@@ -732,6 +744,31 @@ def gamma_known_shape_predictive(distribution: Gamma, alpha: NUMERIC) -> Compoun
 
     """
     return CompoundGamma(alpha=alpha, beta=distribution.alpha, lam=distribution.beta)
+
+
+@validate_prior_type
+def inverse_gamma_known_rate(
+    reciprocal_x_total: NUMERIC,
+    n: NUMERIC,
+    alpha: NUMERIC,
+    prior: Gamma,
+) -> Gamma:
+    """Inverse Gamma likelihood with a known rate and unknown inverse scale.
+
+    Args:
+        reciprocal_x_total: sum of all outcomes reciprocals
+        n: total number of samples in x_total
+        alpha: known rate parameter
+        prior: Gamma prior
+
+    Returns:
+        Gamma posterior distribution
+
+    """
+    alpha_post = prior.alpha + n * alpha
+    beta_post = prior.beta + reciprocal_x_total
+
+    return Gamma(alpha=alpha_post, beta=beta_post)
 
 
 @deprecate_prior_parameter("normal_prior")
@@ -992,6 +1029,19 @@ def normal_known_precision_predictive(
     )
 
 
+def _normal_known_mean_inverse_gamma_prior(
+    x_total: NUMERIC,
+    x2_total: NUMERIC,
+    n: NUMERIC,
+    mu: NUMERIC,
+    prior: InverseGamma,
+) -> InverseGamma:
+    alpha_post = prior.alpha + (n / 2)
+    beta_post = prior.beta + (0.5 * (x2_total - (2 * mu * x_total) + (n * (mu**2))))
+
+    return InverseGamma(alpha=alpha_post, beta=beta_post)
+
+
 @deprecate_prior_parameter("inverse_gamma_prior")
 @validate_prior_type
 def normal_known_mean(
@@ -999,8 +1049,8 @@ def normal_known_mean(
     x2_total: NUMERIC,
     n: NUMERIC,
     mu: NUMERIC,
-    prior: InverseGamma,
-) -> InverseGamma:
+    prior: InverseGamma | ScaledInverseChiSquared,
+) -> InverseGamma | ScaledInverseChiSquared:
     """Posterior distribution for a normal likelihood with a known mean and a variance prior.
 
     Args:
@@ -1008,16 +1058,27 @@ def normal_known_mean(
         x2_total: sum of all outcomes squared
         n: total number of samples in x_total
         mu: known mean
-        prior: InverseGamma prior for variance
+        prior: InverseGamma or ScaledInverseChiSquared prior for variance
 
     Returns:
-        InverseGamma posterior distribution for the variance
+        InverseGamma or ScaledInverseChiSquared posterior for variance
 
     """
-    alpha_post = prior.alpha + (n / 2)
-    beta_post = prior.beta + (0.5 * (x2_total - (2 * mu * x_total) + (n * (mu**2))))
+    inverse_gamma_input = isinstance(prior, InverseGamma)
+    prior = prior if inverse_gamma_input else prior.to_inverse_gamma()
 
-    return InverseGamma(alpha=alpha_post, beta=beta_post)
+    posterior = _normal_known_mean_inverse_gamma_prior(
+        x_total=x_total,
+        x2_total=x2_total,
+        n=n,
+        mu=mu,
+        prior=prior,
+    )
+
+    if not inverse_gamma_input:
+        return ScaledInverseChiSquared.from_inverse_gamma(posterior)
+
+    return posterior
 
 
 @deprecate_distribution_parameter("inverse_gamma")
@@ -1241,7 +1302,10 @@ def linear_regression_predictive(
 @deprecate_prior_parameter("pareto_prior")
 @validate_prior_type
 def uniform_pareto(
-    x_max: NUMERIC, n: NUMERIC, prior: Pareto, max_fn=np.maximum
+    x_max: NUMERIC,
+    n: NUMERIC,
+    prior: Pareto,
+    max_fn=np.maximum,
 ) -> Pareto:
     """Posterior distribution for a uniform likelihood with a pareto prior.
 
