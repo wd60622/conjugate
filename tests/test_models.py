@@ -65,6 +65,7 @@ from conjugate.models import (
     poisson_gamma,
     poisson_gamma_predictive,
     uniform_pareto,
+    weibull_inverse_gamma_known_shape,
 )
 
 rng = np.random.default_rng(42)
@@ -683,3 +684,10 @@ def test_normal_known_mean_alternative_prior() -> None:
     )
 
     assert isinstance(posterior, ScaledInverseChiSquared)
+
+
+def test_weibull_known_shape() -> None:
+    prior = InverseGamma(1, 1)
+    posterior = weibull_inverse_gamma_known_shape(n=1, x_beta_total=1, prior=prior)
+
+    assert isinstance(posterior, InverseGamma)
