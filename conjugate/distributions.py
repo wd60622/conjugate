@@ -1194,13 +1194,33 @@ class Weibull(ContinuousPlotDistMixin, SliceMixin):
 
     Args:
         beta: shape parameter
-        lam: scale parameter
+        theta: scale parameter
+
+    Example:
+        Recreation of the plot on <a href=https://en.wikipedia.org/wiki/Weibull_distribution>Wikipedia</a>.
+
+        ```python
+        import matplotlib.pyplot as plt
+
+        from conjugate.distributions import Weibull
+
+        distribution = Weibull(beta=1, theta=[0.5, 1.0, 1.5, 5.0])
+        ax = distribution.set_bounds(0, 2.5).plot_pdf(
+            label=["k=0.5", "k=1.0", "k=1.5", "k=5.0"],
+            color=["blue", "red", "pink", "green"],
+        )
+        ax.legend()
+        ```
+        <!--
+        plt.savefig("plot-check.png")
+        plt.close()
+        -->
 
     """
 
     beta: NUMERIC
-    lam: NUMERIC
+    theta: NUMERIC
 
     @property
     def dist(self):
-        return stats.weibull_min(c=self.lam, scale=self.beta)
+        return stats.weibull_min(c=self.theta, scale=self.beta)
