@@ -1192,6 +1192,8 @@ class LogNormal(ContinuousPlotDistMixin, SliceMixin):
 class Weibull(ContinuousPlotDistMixin, SliceMixin):
     """Weibull distribution.
 
+    Parameterization from Section 2.11 of <a href="https://web.archive.org/web/20090529203101/http://www.people.cornell.edu/pages/df36/CONJINTRnew%20TEX.pdf">paper</a>.
+
     Args:
         beta: shape parameter
         theta: scale parameter
@@ -1201,10 +1203,17 @@ class Weibull(ContinuousPlotDistMixin, SliceMixin):
 
         ```python
         import matplotlib.pyplot as plt
+        import numpy as np
 
         from conjugate.distributions import Weibull
 
-        distribution = Weibull(beta=1, theta=[0.5, 1.0, 1.5, 5.0])
+        lam = 1
+        k = np.array([0.5, 1.0, 1.5, 5.0])
+
+        beta = k
+        theta = lam ** beta
+
+        distribution = Weibull(beta=beta, theta=theta)
         ax = distribution.set_bounds(0, 2.5).plot_pdf(
             label=["k=0.5", "k=1.0", "k=1.5", "k=5.0"],
             color=["blue", "red", "pink", "green"],
@@ -1223,4 +1232,6 @@ class Weibull(ContinuousPlotDistMixin, SliceMixin):
 
     @property
     def dist(self):
-        return stats.weibull_min(c=self.theta, scale=self.beta)
+        k = self.beta
+        lam = self.theta ** (1 / self.beta)
+        return stats.weibull_min(c=k, scale=lam)
