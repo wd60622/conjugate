@@ -50,6 +50,7 @@ from conjugate.distributions import (
     NegativeBinomial,
     BetaNegativeBinomial,
     BetaBinomial,
+    ScaledInverseChiSquared,
     Pareto,
     InverseGamma,
     Normal,
@@ -1028,6 +1029,19 @@ def normal_known_precision_predictive(
     )
 
 
+def _normal_known_mean_inverse_gamma_prior(
+    x_total: NUMERIC,
+    x2_total: NUMERIC,
+    n: NUMERIC,
+    mu: NUMERIC,
+    prior: InverseGamma,
+) -> InverseGamma:
+    alpha_post = prior.alpha + (n / 2)
+    beta_post = prior.beta + (0.5 * (x2_total - (2 * mu * x_total) + (n * (mu**2))))
+
+    return InverseGamma(alpha=alpha_post, beta=beta_post)
+
+
 @deprecate_prior_parameter("inverse_gamma_prior")
 @validate_prior_type
 def normal_known_mean(
@@ -1035,8 +1049,8 @@ def normal_known_mean(
     x2_total: NUMERIC,
     n: NUMERIC,
     mu: NUMERIC,
-    prior: InverseGamma,
-) -> InverseGamma:
+    prior: InverseGamma | ScaledInverseChiSquared,
+) -> InverseGamma | ScaledInverseChiSquared:
     """Posterior distribution for a normal likelihood with a known mean and a variance prior.
 
     Args:
@@ -1044,16 +1058,27 @@ def normal_known_mean(
         x2_total: sum of all outcomes squared
         n: total number of samples in x_total
         mu: known mean
-        prior: InverseGamma prior for variance
+        prior: InverseGamma or ScaledInverseChiSquared prior for variance
 
     Returns:
-        InverseGamma posterior distribution for the variance
+        InverseGamma or ScaledInverseChiSquared posterior for variance
 
     """
-    alpha_post = prior.alpha + (n / 2)
-    beta_post = prior.beta + (0.5 * (x2_total - (2 * mu * x_total) + (n * (mu**2))))
+    inverse_gamma_input = isinstance(prior, InverseGamma)
+    prior = prior if inverse_gamma_input else prior.to_inverse_gamma()
 
-    return InverseGamma(alpha=alpha_post, beta=beta_post)
+    posterior = _normal_known_mean_inverse_gamma_prior(
+        x_total=x_total,
+        x2_total=x2_total,
+        n=n,
+        mu=mu,
+        prior=prior,
+    )
+
+    if not inverse_gamma_input:
+        return ScaledInverseChiSquared.from_inverse_gamma(posterior)
+
+    return posterior
 
 
 @deprecate_distribution_parameter("inverse_gamma")
