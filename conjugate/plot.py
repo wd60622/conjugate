@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from dataclasses import asdict
 from itertools import zip_longest
-from typing import Callable, Optional, Protocol, Union
+from typing import Callable, Protocol
 
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
@@ -16,10 +16,12 @@ class Distribution(Protocol):
 
     def pmf(self, *args, **kwargs) -> np.ndarray: ...  # pragma: no cover
 
+    def cdf(self, *args, **kwargs) -> np.ndarray: ...  # pragma: no cover
+
     def rvs(self, size, *args, **kwargs) -> np.ndarray: ...  # pragma: no cover
 
 
-LABEL_INPUT = Optional[Union[str, Iterable[str], Callable[[int], str]]]
+LABEL_INPUT = str | Iterable[str] | Callable[[int], str] | None
 
 
 def label_to_iterable(label: LABEL_INPUT, ncols: int) -> Iterable[str]:
@@ -105,15 +107,15 @@ class PlotDistMixin:
 
         return x
 
-    def _settle_axis(self, ax: Optional[Axes] = None) -> Axes:
+    def _settle_axis(self, ax: Axes | None = None) -> Axes:
         return ax if ax is not None else plt.gca()
 
 
 class ContinuousPlotDistMixin(PlotDistMixin):
     """Functionality for plot_pdf method of continuous distributions."""
 
-    def plot_pdf(self, ax: Optional[Axes] = None, **kwargs) -> Axes:
-        """Plot the pdf of distribution
+    def plot_pdf(self, ax: Axes | None = None, **kwargs) -> Axes:
+        """Plot the PDF of distribution
 
         Args:
             ax: matplotlib Axes, optional
@@ -131,7 +133,28 @@ class ContinuousPlotDistMixin(PlotDistMixin):
 
         ax = self._settle_axis(ax=ax)
 
-        return self._create_plot_on_axis(x, ax, **kwargs)
+        return self._create_plot_on_axis(x=x, func=self.dist.pdf, ax=ax, **kwargs)
+
+    def plot_cdf(self, ax: Axes | None = None, **kwargs) -> Axes:
+        """Plot the CDF of distribution
+
+        Args:
+            ax: matplotlib Axes, optional
+            **kwargs: Additonal kwargs to pass to matplotlib
+
+        Returns:
+            new or modified Axes
+
+        Raises:
+            ValueError: If the max_value is not set.
+
+        """
+        x = self._create_x_values()
+        x = self._reshape_x_values(x)
+
+        ax = self._settle_axis(ax=ax)
+
+        return self._create_plot_on_axis(x=x, func=self.dist.cdf, ax=ax, **kwargs)
 
     def _create_x_values(self) -> np.ndarray:
         return np.linspace(self.min_value, self.max_value, 100)
@@ -143,8 +166,8 @@ class ContinuousPlotDistMixin(PlotDistMixin):
         ax.set_xlabel("Domain")
         ax.set_ylabel("Density $f(x)$")
 
-    def _create_plot_on_axis(self, x, ax: Axes, **kwargs) -> Axes:
-        yy = self.dist.pdf(x)
+    def _create_plot_on_axis(self, x, func, ax: Axes, **kwargs) -> Axes:
+        yy = func(x)
         if "label" in kwargs:
             label = kwargs.pop("label")
             label = resolve_label(label, yy)
@@ -165,7 +188,7 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
 
     def plot_pdf(
         self,
-        ax: Optional[Axes] = None,
+        ax: Axes | None = None,
         samples: int = 1_000,
         random_state=None,
         **kwargs,
@@ -204,8 +227,8 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
 class DiscretePlotMixin(PlotDistMixin):
     """Adding the plot_pmf method to class."""
 
-    def plot_pmf(self, ax: Optional[Axes] = None, mark: str = "o-", **kwargs) -> Axes:
-        """Plot the pmf of distribution
+    def plot_pmf(self, ax: Axes | None = None, mark: str = "o-", **kwargs) -> Axes:
+        """Plot the PMF of distribution
 
         Args:
             ax: matplotlib Axes, optional
@@ -223,15 +246,42 @@ class DiscretePlotMixin(PlotDistMixin):
         x = self._reshape_x_values(x)
 
         ax = self._settle_axis(ax=ax)
-        return self._create_plot_on_axis(x, ax, mark, **kwargs)
+        return self._create_plot_on_axis(x, ax, self.dist.pmf, mark, **kwargs)
+
+    def plot_cdf(self, ax: Axes | None = None, mark: str = "o-", **kwargs) -> Axes:
+        """Plot the CDF of distribution
+
+        Args:
+            ax: matplotlib Axes, optional
+            mark: matplotlib line style
+            **kwargs: Additonal kwargs to pass to matplotlib
+
+        Returns:
+            new or modified Axes
+
+        Raises:
+            ValueError: If the max_value is not set.
+
+        """
+        x = self._create_x_values()
+        x = self._reshape_x_values(x)
+
+        ax = self._settle_axis(ax=ax)
+        return self._create_plot_on_axis(x, ax, self.dist.cdf, mark, **kwargs)
 
     def _create_x_values(self) -> np.ndarray:
         return np.arange(self.min_value, self.max_value + 1, 1)
 
     def _create_plot_on_axis(
-        self, x, ax, mark, conditional: bool = False, **kwargs
+        self,
+        x,
+        ax,
+        func,
+        mark,
+        conditional: bool = False,
+        **kwargs,
     ) -> Axes:
-        yy = self.dist.pmf(x)
+        yy = func(x)
         if conditional:
             yy = yy / np.sum(yy)
             ylabel = f"Conditional Probability $f(x|{self.min_value} \\leq x \\leq {self.max_value})$"
