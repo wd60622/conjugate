@@ -21,6 +21,7 @@
 - Exponential
 - Pareto
 - Gamma
+- Inverse Gamma
 - Beta
 - Von Mises
 
@@ -742,6 +743,31 @@ def gamma_known_shape_predictive(distribution: Gamma, alpha: NUMERIC) -> Compoun
 
     """
     return CompoundGamma(alpha=alpha, beta=distribution.alpha, lam=distribution.beta)
+
+
+@validate_prior_type
+def inverse_gamma_known_rate(
+    reciprocal_x_total: NUMERIC,
+    n: NUMERIC,
+    alpha: NUMERIC,
+    prior: Gamma,
+) -> Gamma:
+    """Inverse Gamma likelihood with a known rate and unknown inverse scale.
+
+    Args:
+        reciprocal_x_total: sum of all outcomes reciprocals
+        n: total number of samples in x_total
+        alpha: known rate parameter
+        prior: Gamma prior
+
+    Returns:
+        Gamma posterior distribution
+
+    """
+    alpha_post = prior.alpha + n * alpha
+    beta_post = prior.beta + reciprocal_x_total
+
+    return Gamma(alpha=alpha_post, beta=beta_post)
 
 
 @deprecate_prior_parameter("normal_prior")

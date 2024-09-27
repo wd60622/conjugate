@@ -31,6 +31,7 @@ from conjugate.distributions import (
     StudentT,
 )
 from conjugate.models import (
+    inverse_gamma_known_rate,
     bernoulli_beta,
     bernoulli_beta_predictive,
     beta,
@@ -657,3 +658,14 @@ def test_wrong_distribution_type_raises(distribution_name: str) -> None:
     match = "Expected distribution to be of type 'Beta', got 'Gamma' instead."
     with pytest.raises(ValueError, match=match):
         bernoulli_beta_predictive(**kwargs)
+
+
+def test_inverse_gamma_known_rate() -> None:
+    prior = Gamma(1, 1)
+    posterior = inverse_gamma_known_rate(
+        reciprocal_x_total=1,
+        n=1,
+        alpha=1,
+        prior=prior,
+    )
+    assert isinstance(posterior, Gamma)

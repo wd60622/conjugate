@@ -221,6 +221,31 @@ def exponential():
     return sample_data, get_posterior, true_lam
 
 
+def inverse_gamma_known_rate():
+    from conjugate.distributions import InverseGamma, Gamma
+    from conjugate.models import inverse_gamma_known_rate
+
+    alpha = 1
+    beta = 2.5
+
+    true_distribution = InverseGamma(alpha=alpha, beta=beta)
+
+    def sample_data(n, rng):
+        return true_distribution.dist.rvs(size=n, random_state=rng)
+
+    prior = Gamma(1, 1)
+
+    def get_posterior(data):
+        return inverse_gamma_known_rate(
+            reciprocal_x_total=(1 / data).sum(),
+            n=len(data),
+            alpha=alpha,
+            prior=prior,
+        )
+
+    return sample_data, get_posterior, beta
+
+
 def parameter_recovery(
     ns: list[int],
     sample_data,
@@ -282,4 +307,5 @@ if __name__ == "__main__":
     setup = normal_known_mean
     setup = uniform
     setup = exponential
+    setup = inverse_gamma_known_rate
     main(setup, ns=ns, rng=rng)
