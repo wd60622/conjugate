@@ -401,6 +401,14 @@ class Geometric(DiscretePlotMixin, SliceMixin):
 
 @dataclass
 class BetaGeometric(DiscretePlotMixin, SliceMixin):
+    """Beta geometric distribution.
+
+    Args:
+        alpha: shape parameter
+        beta: shape parameter
+
+    """
+
     alpha: NUMERIC
     beta: NUMERIC
 
