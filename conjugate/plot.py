@@ -293,7 +293,7 @@ class DiscretePlotMixin(PlotDistMixin):
             yy = yy / np.sum(yy)
 
             prefix = (
-                "Cumulative Probability $F(X \\leq x)"
+                "Cumulative Probability $F(X \\leq x"
                 if cdf
                 else "Conditional Probability $f(x|"
             )
