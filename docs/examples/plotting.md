@@ -3,9 +3,15 @@ comments: true
 ---
 # Plotting Distributions
 
-All the distributions can be plotted using the `plot_pdf` and `plot_pmf` methods. The `plot_pdf` method is used for continuous distributions and the `plot_pmf` method is used for discrete distributions.
+All the distributions can be plotted using the `plot_pdf` and `plot_pmf`
+methods. The `plot_pdf` method is used for continuous distributions and the
+`plot_pmf` method is used for discrete distributions.
 
-There is limited support for some distributions like the `Dirichlet` or those without a `dist` scipy.
+Similarly, all distributions have a `plot_cdf` method for plotting the
+cumulative distribution function.   
+
+There is limited support for some distributions like the `Dirichlet` or those
+without a `dist` scipy.
 
 
 ```python 
