@@ -32,7 +32,6 @@ Below are the supported models:
 
 """
 
-from typing import Tuple
 from functools import wraps
 
 import numpy as np
@@ -128,7 +127,7 @@ def deprecate_distribution_parameter(old_name: str):
 
 def get_binomial_beta_posterior_params(
     alpha_prior: NUMERIC, beta_prior: NUMERIC, n: NUMERIC, x: NUMERIC
-) -> Tuple[NUMERIC, NUMERIC]:
+) -> tuple[NUMERIC, NUMERIC]:
     alpha_post = alpha_prior + x
     beta_post = beta_prior + (n - x)
 
@@ -573,7 +572,7 @@ def get_poisson_gamma_posterior_params(
     beta: NUMERIC,
     x_total: NUMERIC,
     n: NUMERIC,
-) -> Tuple[NUMERIC, NUMERIC]:
+) -> tuple[NUMERIC, NUMERIC]:
     alpha_post = alpha + x_total
     beta_post = beta + n
 

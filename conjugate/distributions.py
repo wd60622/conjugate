@@ -36,7 +36,7 @@ Below are the currently supported distributions
 """
 
 from dataclasses import dataclass
-from typing import Any, Tuple, Union
+from typing import Any
 
 from packaging import version
 
@@ -624,7 +624,7 @@ class NormalInverseGamma:
         size: int,
         return_variance: bool = False,
         random_state=None,
-    ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
+    ) -> NUMERIC | tuple[NUMERIC, NUMERIC]:
         """Sample the mean from the normal distribution.
 
         Args:
@@ -642,7 +642,7 @@ class NormalInverseGamma:
 
     def sample_beta(
         self, size: int, return_variance: bool = False, random_state=None
-    ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
+    ) -> NUMERIC | tuple[NUMERIC, NUMERIC]:
         """Sample beta from the normal distribution.
 
         Args:
@@ -1038,7 +1038,7 @@ class NormalGamma:
         size: int,
         return_variance: bool = False,
         random_state=None,
-    ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
+    ) -> NUMERIC | tuple[NUMERIC, NUMERIC]:
         """Sample mean from the normal distribution.
 
         Args:
@@ -1056,7 +1056,7 @@ class NormalGamma:
 
     def sample_beta(
         self, size: int, return_variance: bool = False, random_state=None
-    ) -> Union[NUMERIC, Tuple[NUMERIC, NUMERIC]]:
+    ) -> NUMERIC | tuple[NUMERIC, NUMERIC]:
         """Sample beta from the normal distribution.
 
         Args:
