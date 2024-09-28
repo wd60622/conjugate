@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 from conjugate.distributions import (
     Beta,
+    Binomial,
     Dirichlet,
     Gamma,
     Normal,
@@ -205,4 +206,23 @@ def test_polar_plot() -> None:
 
     ax = fig.add_subplot(122)
     dist.plot_pdf(ax=ax)
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_cdf_continuous() -> None:
+    dist = Normal(0, 1)
+    dist.set_bounds(-5, 5)
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+
+    dist.plot_cdf(ax=ax)
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_cdf_discrete() -> None:
+    dist = Binomial(n=10, p=0.25)
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+
+    dist.plot_cdf(ax=ax)
     return fig
