@@ -6478,7 +6478,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 </span><span id="__span-0-1038"><a id="__codelineno-0-1038" name="__codelineno-0-1038"></a>        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-0-1039"><a id="__codelineno-0-1039" name="__codelineno-0-1039"></a>        <span class="n">return_variance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-0-1040"><a id="__codelineno-0-1040" name="__codelineno-0-1040"></a>        <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-1041"><a id="__codelineno-0-1041" name="__codelineno-0-1041"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]]:</span>
+</span><span id="__span-0-1041"><a id="__codelineno-0-1041" name="__codelineno-0-1041"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NUMERIC</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]:</span>
 </span><span id="__span-0-1042"><a id="__codelineno-0-1042" name="__codelineno-0-1042"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample mean from the normal distribution.</span>
 </span><span id="__span-0-1043"><a id="__codelineno-0-1043" name="__codelineno-0-1043"></a>
 </span><span id="__span-0-1044"><a id="__codelineno-0-1044" name="__codelineno-0-1044"></a><span class="sd">        Args:</span>
@@ -6496,7 +6496,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 </span><span id="__span-0-1056"><a id="__codelineno-0-1056" name="__codelineno-0-1056"></a>
 </span><span id="__span-0-1057"><a id="__codelineno-0-1057" name="__codelineno-0-1057"></a>    <span class="k">def</span> <span class="nf">sample_beta</span><span class="p">(</span>
 </span><span id="__span-0-1058"><a id="__codelineno-0-1058" name="__codelineno-0-1058"></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">return_variance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span>
-</span><span id="__span-0-1059"><a id="__codelineno-0-1059" name="__codelineno-0-1059"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]]:</span>
+</span><span id="__span-0-1059"><a id="__codelineno-0-1059" name="__codelineno-0-1059"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NUMERIC</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]:</span>
 </span><span id="__span-0-1060"><a id="__codelineno-0-1060" name="__codelineno-0-1060"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample beta from the normal distribution.</span>
 </span><span id="__span-0-1061"><a id="__codelineno-0-1061" name="__codelineno-0-1061"></a>
 </span><span id="__span-0-1062"><a id="__codelineno-0-1062" name="__codelineno-0-1062"></a><span class="sd">        Args:</span>
@@ -6614,7 +6614,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="typing.Tuple">Tuple</span>[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="conjugate._typing.NUMERIC">NUMERIC</span>]]</code>
+                  <code><span title="conjugate._typing.NUMERIC">NUMERIC</span> | tuple[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="conjugate._typing.NUMERIC">NUMERIC</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6652,7 +6652,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 <span class="normal"><a href="#__codelineno-0-1079">1079</a></span>
 <span class="normal"><a href="#__codelineno-0-1080">1080</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1057"><a id="__codelineno-0-1057" name="__codelineno-0-1057"></a><span class="k">def</span> <span class="nf">sample_beta</span><span class="p">(</span>
 </span><span id="__span-0-1058"><a id="__codelineno-0-1058" name="__codelineno-0-1058"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">return_variance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span>
-</span><span id="__span-0-1059"><a id="__codelineno-0-1059" name="__codelineno-0-1059"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]]:</span>
+</span><span id="__span-0-1059"><a id="__codelineno-0-1059" name="__codelineno-0-1059"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NUMERIC</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]:</span>
 </span><span id="__span-0-1060"><a id="__codelineno-0-1060" name="__codelineno-0-1060"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample beta from the normal distribution.</span>
 </span><span id="__span-0-1061"><a id="__codelineno-0-1061" name="__codelineno-0-1061"></a>
 </span><span id="__span-0-1062"><a id="__codelineno-0-1062" name="__codelineno-0-1062"></a><span class="sd">    Args:</span>
@@ -6761,7 +6761,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="typing.Tuple">Tuple</span>[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="conjugate._typing.NUMERIC">NUMERIC</span>]]</code>
+                  <code><span title="conjugate._typing.NUMERIC">NUMERIC</span> | tuple[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="conjugate._typing.NUMERIC">NUMERIC</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6798,7 +6798,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 </span><span id="__span-0-1038"><a id="__codelineno-0-1038" name="__codelineno-0-1038"></a>    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-0-1039"><a id="__codelineno-0-1039" name="__codelineno-0-1039"></a>    <span class="n">return_variance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-0-1040"><a id="__codelineno-0-1040" name="__codelineno-0-1040"></a>    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-1041"><a id="__codelineno-0-1041" name="__codelineno-0-1041"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]]:</span>
+</span><span id="__span-0-1041"><a id="__codelineno-0-1041" name="__codelineno-0-1041"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NUMERIC</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]:</span>
 </span><span id="__span-0-1042"><a id="__codelineno-0-1042" name="__codelineno-0-1042"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample mean from the normal distribution.</span>
 </span><span id="__span-0-1043"><a id="__codelineno-0-1043" name="__codelineno-0-1043"></a>
 </span><span id="__span-0-1044"><a id="__codelineno-0-1044" name="__codelineno-0-1044"></a><span class="sd">    Args:</span>
@@ -7250,7 +7250,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 </span><span id="__span-0-624"><a id="__codelineno-0-624" name="__codelineno-0-624"></a>        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-0-625"><a id="__codelineno-0-625" name="__codelineno-0-625"></a>        <span class="n">return_variance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-0-626"><a id="__codelineno-0-626" name="__codelineno-0-626"></a>        <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-627"><a id="__codelineno-0-627" name="__codelineno-0-627"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]]:</span>
+</span><span id="__span-0-627"><a id="__codelineno-0-627" name="__codelineno-0-627"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NUMERIC</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]:</span>
 </span><span id="__span-0-628"><a id="__codelineno-0-628" name="__codelineno-0-628"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample the mean from the normal distribution.</span>
 </span><span id="__span-0-629"><a id="__codelineno-0-629" name="__codelineno-0-629"></a>
 </span><span id="__span-0-630"><a id="__codelineno-0-630" name="__codelineno-0-630"></a><span class="sd">        Args:</span>
@@ -7268,7 +7268,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 </span><span id="__span-0-642"><a id="__codelineno-0-642" name="__codelineno-0-642"></a>
 </span><span id="__span-0-643"><a id="__codelineno-0-643" name="__codelineno-0-643"></a>    <span class="k">def</span> <span class="nf">sample_beta</span><span class="p">(</span>
 </span><span id="__span-0-644"><a id="__codelineno-0-644" name="__codelineno-0-644"></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">return_variance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span>
-</span><span id="__span-0-645"><a id="__codelineno-0-645" name="__codelineno-0-645"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]]:</span>
+</span><span id="__span-0-645"><a id="__codelineno-0-645" name="__codelineno-0-645"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NUMERIC</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]:</span>
 </span><span id="__span-0-646"><a id="__codelineno-0-646" name="__codelineno-0-646"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample beta from the normal distribution.</span>
 </span><span id="__span-0-647"><a id="__codelineno-0-647" name="__codelineno-0-647"></a>
 </span><span id="__span-0-648"><a id="__codelineno-0-648" name="__codelineno-0-648"></a><span class="sd">        Args:</span>
@@ -7387,7 +7387,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="typing.Tuple">Tuple</span>[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="conjugate._typing.NUMERIC">NUMERIC</span>]]</code>
+                  <code><span title="conjugate._typing.NUMERIC">NUMERIC</span> | tuple[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="conjugate._typing.NUMERIC">NUMERIC</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7426,7 +7426,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 <span class="normal"><a href="#__codelineno-0-666">666</a></span>
 <span class="normal"><a href="#__codelineno-0-667">667</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-643"><a id="__codelineno-0-643" name="__codelineno-0-643"></a><span class="k">def</span> <span class="nf">sample_beta</span><span class="p">(</span>
 </span><span id="__span-0-644"><a id="__codelineno-0-644" name="__codelineno-0-644"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">return_variance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span>
-</span><span id="__span-0-645"><a id="__codelineno-0-645" name="__codelineno-0-645"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]]:</span>
+</span><span id="__span-0-645"><a id="__codelineno-0-645" name="__codelineno-0-645"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NUMERIC</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]:</span>
 </span><span id="__span-0-646"><a id="__codelineno-0-646" name="__codelineno-0-646"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample beta from the normal distribution.</span>
 </span><span id="__span-0-647"><a id="__codelineno-0-647" name="__codelineno-0-647"></a>
 </span><span id="__span-0-648"><a id="__codelineno-0-648" name="__codelineno-0-648"></a><span class="sd">    Args:</span>
@@ -7536,7 +7536,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="typing.Tuple">Tuple</span>[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="conjugate._typing.NUMERIC">NUMERIC</span>]]</code>
+                  <code><span title="conjugate._typing.NUMERIC">NUMERIC</span> | tuple[<span title="conjugate._typing.NUMERIC">NUMERIC</span>, <span title="conjugate._typing.NUMERIC">NUMERIC</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7573,7 +7573,7 @@ you can use the methods from scipy.stats to get the pdf, cdf, etc.</p>
 </span><span id="__span-0-624"><a id="__codelineno-0-624" name="__codelineno-0-624"></a>    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-0-625"><a id="__codelineno-0-625" name="__codelineno-0-625"></a>    <span class="n">return_variance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-0-626"><a id="__codelineno-0-626" name="__codelineno-0-626"></a>    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-627"><a id="__codelineno-0-627" name="__codelineno-0-627"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]]:</span>
+</span><span id="__span-0-627"><a id="__codelineno-0-627" name="__codelineno-0-627"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NUMERIC</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NUMERIC</span><span class="p">,</span> <span class="n">NUMERIC</span><span class="p">]:</span>
 </span><span id="__span-0-628"><a id="__codelineno-0-628" name="__codelineno-0-628"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample the mean from the normal distribution.</span>
 </span><span id="__span-0-629"><a id="__codelineno-0-629" name="__codelineno-0-629"></a>
 </span><span id="__span-0-630"><a id="__codelineno-0-630" name="__codelineno-0-630"></a><span class="sd">    Args:</span>
