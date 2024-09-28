@@ -114,6 +114,14 @@ class PlotDistMixin:
 class ContinuousPlotDistMixin(PlotDistMixin):
     """Functionality for plot_pdf method of continuous distributions."""
 
+    def _plot(self, ax: Axes | None = None, cdf: bool = False, **kwargs) -> Axes:
+        x = self._create_x_values()
+        x = self._reshape_x_values(x)
+
+        ax = self._settle_axis(ax=ax)
+
+        return self._create_plot_on_axis(x=x, cdf=cdf, ax=ax, **kwargs)
+
     def plot_pdf(self, ax: Axes | None = None, **kwargs) -> Axes:
         """Plot the PDF of distribution
 
@@ -128,12 +136,7 @@ class ContinuousPlotDistMixin(PlotDistMixin):
             ValueError: If the max_value is not set.
 
         """
-        x = self._create_x_values()
-        x = self._reshape_x_values(x)
-
-        ax = self._settle_axis(ax=ax)
-
-        return self._create_plot_on_axis(x=x, func=self.dist.pdf, ax=ax, **kwargs)
+        return self._plot(ax=ax, cdf=False, **kwargs)
 
     def plot_cdf(self, ax: Axes | None = None, **kwargs) -> Axes:
         """Plot the CDF of distribution
@@ -149,25 +152,22 @@ class ContinuousPlotDistMixin(PlotDistMixin):
             ValueError: If the max_value is not set.
 
         """
-        x = self._create_x_values()
-        x = self._reshape_x_values(x)
-
-        ax = self._settle_axis(ax=ax)
-
-        return self._create_plot_on_axis(x=x, func=self.dist.cdf, ax=ax, **kwargs)
+        return self._plot(ax=ax, cdf=True, **kwargs)
 
     def _create_x_values(self) -> np.ndarray:
         return np.linspace(self.min_value, self.max_value, 100)
 
-    def _setup_labels(self, ax) -> None:
+    def _setup_labels(self, ax, cdf: bool = False) -> None:
         if isinstance(ax, PolarAxes):
             return
 
-        ax.set_xlabel("Domain")
-        ax.set_ylabel("Density $f(x)$")
+        ylabel = "Density $f(x)$" if not cdf else "Cumulative Density $F(x)$"
+        ax.set(xlabel="Domain", ylabel=ylabel)
 
-    def _create_plot_on_axis(self, x, func, ax: Axes, **kwargs) -> Axes:
+    def _create_plot_on_axis(self, x, cdf: bool, ax: Axes, **kwargs) -> Axes:
+        func = self.dist.cdf if cdf else self.dist.pdf
         yy = func(x)
+
         if "label" in kwargs:
             label = kwargs.pop("label")
             label = resolve_label(label, yy)
@@ -178,7 +178,7 @@ class ContinuousPlotDistMixin(PlotDistMixin):
             ax.set_prop_cycle(color=kwargs.pop("color"))
 
         ax.plot(x, yy, label=label, **kwargs)
-        self._setup_labels(ax=ax)
+        self._setup_labels(ax=ax, cdf=cdf)
         ax.set_ylim(0, None)
         return ax
 
@@ -227,6 +227,19 @@ class DirichletPlotDistMixin(ContinuousPlotDistMixin):
 class DiscretePlotMixin(PlotDistMixin):
     """Adding the plot_pmf method to class."""
 
+    def _plot(
+        self,
+        ax: Axes | None = None,
+        cdf: bool = False,
+        mark: str = "o-",
+        **kwargs,
+    ) -> Axes:
+        x = self._create_x_values()
+        x = self._reshape_x_values(x)
+
+        ax = self._settle_axis(ax=ax)
+        return self._create_plot_on_axis(x, ax=ax, cdf=cdf, mark=mark, **kwargs)
+
     def plot_pmf(self, ax: Axes | None = None, mark: str = "o-", **kwargs) -> Axes:
         """Plot the PMF of distribution
 
@@ -242,11 +255,7 @@ class DiscretePlotMixin(PlotDistMixin):
             ValueError: If the max_value is not set.
 
         """
-        x = self._create_x_values()
-        x = self._reshape_x_values(x)
-
-        ax = self._settle_axis(ax=ax)
-        return self._create_plot_on_axis(x, ax, self.dist.pmf, mark, **kwargs)
+        return self._plot(ax=ax, cdf=False, mark=mark, **kwargs)
 
     def plot_cdf(self, ax: Axes | None = None, mark: str = "o-", **kwargs) -> Axes:
         """Plot the CDF of distribution
@@ -263,11 +272,7 @@ class DiscretePlotMixin(PlotDistMixin):
             ValueError: If the max_value is not set.
 
         """
-        x = self._create_x_values()
-        x = self._reshape_x_values(x)
-
-        ax = self._settle_axis(ax=ax)
-        return self._create_plot_on_axis(x, ax, self.dist.cdf, mark, **kwargs)
+        return self._plot(ax=ax, cdf=True, mark=mark, **kwargs)
 
     def _create_x_values(self) -> np.ndarray:
         return np.arange(self.min_value, self.max_value + 1, 1)
@@ -276,17 +281,26 @@ class DiscretePlotMixin(PlotDistMixin):
         self,
         x,
         ax,
-        func,
+        cdf: bool,
         mark,
         conditional: bool = False,
         **kwargs,
     ) -> Axes:
+        func = self.dist.cdf if cdf else self.dist.pmf
         yy = func(x)
+
         if conditional:
             yy = yy / np.sum(yy)
-            ylabel = f"Conditional Probability $f(x|{self.min_value} \\leq x \\leq {self.max_value})$"
+
+            prefix = (
+                "Cumulative Probability $F(X<=x)"
+                if cdf
+                else "Conditional Probability $f(x|"
+            )
+
+            ylabel = f"Conditional {prefix}|{self.min_value} \\leq x \\leq {self.max_value})$"
         else:
-            ylabel = "Probability $f(x)$"
+            ylabel = "Cumulative Probability $F(X<=x)$" if cdf else "Probability $f(x)$"
 
         if "label" in kwargs:
             label = kwargs.pop("label")
