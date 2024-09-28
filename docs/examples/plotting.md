@@ -25,16 +25,38 @@ normal = Normal(0, 1)
 
 bound = 3
 
-dist = [beta, gamma, normal]
+dists = [beta, gamma, normal]
 labels = ["beta", "gamma", "normal"]
+
 ax = plt.gca()
-for label, dist in zip(labels, dist):
+for label, dist in zip(labels, dists):
     dist.set_bounds(-bound, bound).plot_pdf(label=label)
 
 ax.legend()
-plt.show()
 ```
 
+<!--
+plt.savefig("./docs/images/plotting-example.png")
+plt.close()
+-->
+
 ![Plotting Distributions](../images/plotting-example.png)
+
+Switch out `plot_pdf` for `plot_cdf` to plot the cumulative distribution function:
+
+```python
+ax = plt.gca()
+for label, dist in zip(labels, dists):
+    dist.set_bounds(-bound, bound).plot_cdf(label=label)
+
+ax.legend()
+```
+
+<!--
+plt.savefig("./docs/images/plotting-example-cdf.png")
+plt.close()
+-->
+
+![CDF Plotting Distributions](../images/plotting-example-cdf.png)
 
 The plotting is also supported for [vectorized inputs](vectorized-inputs.md).
