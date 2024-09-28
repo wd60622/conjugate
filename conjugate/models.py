@@ -1165,12 +1165,15 @@ def normal_known_mean(
 
 @deprecate_distribution_parameter("inverse_gamma")
 @validate_distribution_type
-def normal_known_mean_predictive(mu: NUMERIC, distribution: InverseGamma) -> StudentT:
+def normal_known_mean_predictive(
+    mu: NUMERIC,
+    distribution: InverseGamma | ScaledInverseChiSquared,
+) -> StudentT:
     """Predictive distribution for a normal likelihood with a known mean and a variance prior.
 
     Args:
         mu: known mean
-        distribution: InverseGamma prior
+        distribution: InverseGamma or ScaledInverseChiSquared prior
 
     Returns:
         StudentT predictive distribution
@@ -1226,6 +1229,9 @@ def normal_known_mean_predictive(mu: NUMERIC, distribution: InverseGamma) -> Stu
         ![normal_known_mean_predictive](./images/docstrings/normal_known_mean_predictive.png)
 
     """
+    if isinstance(distribution, ScaledInverseChiSquared):
+        distribution = distribution.to_inverse_gamma()
+
     return StudentT(
         mu=mu,
         sigma=(distribution.beta / distribution.alpha) ** 0.5,
