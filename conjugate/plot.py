@@ -1,7 +1,7 @@
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import asdict
 from itertools import zip_longest
-from typing import Callable, Protocol
+from typing import Protocol
 
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
