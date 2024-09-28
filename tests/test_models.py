@@ -688,6 +688,16 @@ def test_normal_known_mean_alternative_prior() -> None:
     assert isinstance(posterior, ScaledInverseChiSquared)
 
 
+def test_normal_known_mean_alternative_prior_predictive() -> None:
+    distribution = ScaledInverseChiSquared(1, 1)
+    predictive = normal_known_mean_predictive(
+        mu=0,
+        distribution=distribution,
+    )
+
+    assert isinstance(predictive, StudentT)
+
+
 def test_weibull_known_shape() -> None:
     prior = InverseGamma(1, 1)
     posterior = weibull_inverse_gamma_known_shape(n=1, x_beta_total=1, prior=prior)
