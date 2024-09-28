@@ -34,7 +34,7 @@ class beta_geometric:
         random_state: np.random.Generator | None = None,
     ):
         a, b = np.broadcast_arrays(self.a, self.b)
-        size = np.broadcast_shapes(a.shape, b.shape, size)
+        size = np.broadcast_shapes(a.shape, b.shape, size or ())
 
         p = stats.beta.rvs(a, b, size=size, random_state=random_state)
         result = stats.geom.rvs(p=p, size=size, random_state=random_state)

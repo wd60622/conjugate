@@ -449,3 +449,17 @@ def test_one_start_is_same_as_shifted(one_start, zero_start) -> None:
         one_start.dist.pmf(x),
         zero_start.dist.pmf(x - 1),
     )
+
+
+@pytest.mark.parametrize("size", [None, 1, 3])
+@pytest.mark.parametrize("one_start", [True, False])
+def test_beta_geometric_random_samples(size: int | None, one_start: bool) -> None:
+    dist = BetaGeometric(alpha=1, beta=1, one_start=one_start)
+
+    samples = dist.dist.rvs(size=size)
+
+    if size is None:
+        assert isinstance(samples, int)
+    else:
+        assert isinstance(samples, np.ndarray)
+        assert samples.shape == (size,)

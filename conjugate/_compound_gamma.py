@@ -20,9 +20,13 @@ class compound_gamma:
         self.b = b
         self.q = q
 
-    def rvs(self, size: int, random_state=None):
+    def rvs(
+        self,
+        size: int | None = None,
+        random_state: np.random.Generator | None = None,
+    ):
         a, b, q = np.broadcast_arrays(self.a, self.b, self.q)
-        size = np.broadcast_shapes(a.shape, b.shape, q.shape, size)
+        size = np.broadcast_shapes(a.shape, b.shape, q.shape, size or ())
 
         random_b = gamma.rvs(b, scale=1 / q, size=size, random_state=random_state)
         return gamma.rvs(a, scale=1 / random_b, random_state=random_state)
