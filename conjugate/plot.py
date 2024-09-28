@@ -293,14 +293,16 @@ class DiscretePlotMixin(PlotDistMixin):
             yy = yy / np.sum(yy)
 
             prefix = (
-                "Cumulative Probability $F(X<=x)"
+                "Cumulative Probability $F(X \\leq x)"
                 if cdf
                 else "Conditional Probability $f(x|"
             )
 
             ylabel = f"Conditional {prefix}|{self.min_value} \\leq x \\leq {self.max_value})$"
         else:
-            ylabel = "Cumulative Probability $F(X<=x)$" if cdf else "Probability $f(x)$"
+            ylabel = (
+                "Cumulative Probability $F(X \\leq x)$" if cdf else "Probability $f(x)$"
+            )
 
         if "label" in kwargs:
             label = kwargs.pop("label")
