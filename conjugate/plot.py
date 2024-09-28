@@ -37,7 +37,9 @@ def label_to_iterable(label: LABEL_INPUT, ncols: int) -> Iterable[str]:
     if isinstance(label, Iterable):
         return label
 
-    raise ValueError("Label must be None, a string, iterable, or callable.")
+    raise ValueError(
+        "Label must be None, a string, iterable, or callable.",
+    )  # pragma: no cover
 
 
 def resolve_label(label: LABEL_INPUT, yy: np.ndarray):
@@ -60,7 +62,9 @@ class PlotDistMixin:
 
     @property
     def dist(self) -> Distribution:
-        raise NotImplementedError("Implement this property in the subclass.")
+        raise NotImplementedError(
+            "Implement this property in the subclass.",
+        )  # pragma: no cover
 
     @property
     def max_value(self) -> float:
