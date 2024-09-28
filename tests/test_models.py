@@ -54,6 +54,10 @@ from conjugate.models import (
     log_normal_normal_inverse_gamma,
     multinomial_dirichlet,
     multivariate_normal,
+    multivariate_normal_known_covariance,
+    multivariate_normal_known_covariance_predictive,
+    multivariate_normal_known_precision,
+    multivariate_normal_known_precision_predictive,
     multivariate_normal_predictive,
     negative_binomial_beta,
     negative_binomial_beta_predictive,
@@ -709,3 +713,51 @@ def test_geometric_beta_predictive() -> None:
     distribution = Beta(1, 1)
     predictive = geometric_beta_predictive(distribution=distribution)
     assert isinstance(predictive, BetaGeometric)
+
+
+def test_multivarate_normal_known_covariance() -> None:
+    cov = np.eye(3)
+    prior = MultivariateNormal(mu=np.zeros(3), cov=np.eye(3))
+    posterior = multivariate_normal_known_covariance(
+        n=1,
+        x_bar=np.zeros(3),
+        cov=cov,
+        prior=prior,
+    )
+
+    assert isinstance(posterior, MultivariateNormal)
+
+
+def test_multivariate_normal_known_covariance_predictive() -> None:
+    cov = np.eye(3)
+    distribution = MultivariateNormal(mu=np.zeros(3), cov=np.eye(3))
+    predictive = multivariate_normal_known_covariance_predictive(
+        distribution=distribution,
+        cov=cov,
+    )
+
+    assert isinstance(predictive, MultivariateNormal)
+
+
+def test_multivariate_normal_known_precision() -> None:
+    precision = np.eye(3)
+    prior = MultivariateNormal(mu=np.zeros(3), cov=np.eye(3))
+    posterior = multivariate_normal_known_precision(
+        n=1,
+        x_bar=np.zeros(3),
+        precision=precision,
+        prior=prior,
+    )
+
+    assert isinstance(posterior, MultivariateNormal)
+
+
+def test_multivariate_normal_known_precision_predictive() -> None:
+    precision = np.eye(3)
+    distribution = MultivariateNormal(mu=np.zeros(3), cov=np.eye(3))
+    predictive = multivariate_normal_known_precision_predictive(
+        distribution=distribution,
+        precision=precision,
+    )
+
+    assert isinstance(predictive, MultivariateNormal)
