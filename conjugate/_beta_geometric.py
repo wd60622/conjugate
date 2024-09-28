@@ -10,7 +10,7 @@ def beta_geometric_pmf(x, a, b, one_start: bool = True):
     x, a, b = np.broadcast_arrays(x, a, b)
 
     if not one_start:
-        x += 1
+        x = x + 1
 
     return beta(a + 1, x + b) / beta(a, b)
 
