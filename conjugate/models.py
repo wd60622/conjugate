@@ -173,8 +173,14 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
         posterior.set_bounds(0, 0.5).plot_pdf(ax=ax, label=["A", "B"])
         prior.set_bounds(0, 0.5).plot_pdf(ax=ax, label="prior")
         ax.legend()
-        plt.show()
         ```
+
+        <!--
+        plt.savefig("./docs/images/docstrings/binomial_beta.png")
+        plt.close()
+        -->
+
+        ![binomial_beta](./images/docstrings/binomial_beta.png)
 
     """
     alpha_post, beta_post = get_binomial_beta_posterior_params(
@@ -228,8 +234,14 @@ def binomial_beta_predictive(n: NUMERIC, distribution: Beta) -> BetaBinomial:
             ax=ax,
             label=["A", "B"],
         )
-        plt.show()
         ```
+
+        <!--
+        plt.savefig("./docs/images/docstrings/binomial_beta_predictive.png")
+        plt.close()
+        -->
+
+        ![binomial_beta_predictive](./images/docstrings/binomial_beta_predictive.png)
     """
     return BetaBinomial(n=n, alpha=distribution.alpha, beta=distribution.beta)
 
@@ -401,8 +413,13 @@ def geometric_beta(x_total, n, prior: Beta, one_start: bool = True) -> Beta:
         prior.set_bounds(0, 1).plot_pdf(ax=ax, label="prior")
         ax.legend()
         ax.set(xlabel="chance of good experience")
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/geometric_beta.png")
+        plt.close()
+        -->
+
+        ![geometric_beta](./images/docstrings/geometric_beta.png)
 
     """
     alpha_post = prior.alpha + n
@@ -538,8 +555,14 @@ def multinomial_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
         posterior.plot_pdf(ax=ax, label=kinds)
         ax.legend()
         ax.set(xlabel="Flavor Preference")
-        plt.show()
         ```
+
+        <!--
+        plt.savefig("./docs/images/docstrings/multinomial_dirichlet.png")
+        plt.close()
+        -->
+
+        ![multinomial_dirichlet](./images/docstrings/multinomial_dirichlet.png)
 
     """
     alpha_post = get_dirichlet_posterior_params(prior.alpha, x)
@@ -665,7 +688,7 @@ def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
         import matplotlib.pyplot as plt
 
         from conjugate.distributions import Exponential, Gamma
-        from conjugate.models import exponential_gamma, expotential_gamma_predictive
+        from conjugate.models import exponential_gamma, exponential_gamma_predictive
 
         true = Exponential(1)
 
@@ -680,16 +703,22 @@ def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
             prior=prior
         )
 
-        prior_predictive = expotential_gamma_predictive(distribution=prior)
-        posterior_predictive = expotential_gamma_predictive(distribution=posterior)
+        prior_predictive = exponential_gamma_predictive(distribution=prior)
+        posterior_predictive = exponential_gamma_predictive(distribution=posterior)
 
         ax = plt.subplot(111)
         prior_predictive.set_bounds(0, 2.5).plot_pdf(ax=ax, label="prior predictive")
         true.set_bounds(0, 2.5).plot_pdf(ax=ax, label="true distribution")
         posterior_predictive.set_bounds(0, 2.5).plot_pdf(ax=ax, label="posterior predictive")
         ax.legend()
-        plt.show()
         ```
+
+        <!--
+        plt.savefig("./docs/images/docstrings/exponential_gamma_predictive.png")
+        plt.close()
+        -->
+
+        ![exponential_gamma_predictive](./images/docstrings/exponential_gamma_predictive.png)
     """
     return Lomax(alpha=distribution.beta, lam=distribution.alpha)
 
@@ -739,7 +768,7 @@ def gamma_known_shape(
             n=n_samples,
             x_total=data.sum(),
             alpha=known_shape,
-            prior=prior
+            prior=prior,
         )
 
         bound = 10
@@ -748,8 +777,13 @@ def gamma_known_shape(
         prior.set_bounds(0, bound).plot_pdf(ax=ax, label="prior")
         ax.axvline(unknown_rate, color="black", linestyle="--", label="true rate")
         ax.legend()
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/gamma_known_shape.png")
+        plt.close()
+        -->
+
+        ![gamma_known_shape](./images/docstrings/gamma_known_shape.png)
 
     """
     alpha_post = prior.alpha + n * alpha
@@ -842,7 +876,7 @@ def normal_known_variance(
             n=n_samples,
             x_total=data.sum(),
             var=known_var,
-            prior=prior
+            prior=prior,
         )
 
         bound = 5
@@ -851,8 +885,13 @@ def normal_known_variance(
         prior.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior")
         ax.axvline(unknown_mu, color="black", linestyle="--", label="true mu")
         ax.legend()
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/normal_known_variance.png")
+        plt.close()
+        -->
+
+        ![normal_known_variance](./images/docstrings/normal_known_variance.png)
 
     """
     mu_post = ((prior.mu / prior.sigma**2) + (x_total / var)) / (
@@ -918,8 +957,13 @@ def normal_known_variance_predictive(var: NUMERIC, distribution: Normal) -> Norm
         posterior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior predictive")
         prior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior predictive")
         ax.legend()
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/normal_known_variance_predictive.png")
+        plt.close()
+        -->
+
+        ![normal_known_variance_predictive](./images/docstrings/normal_known_variance_predictive.png)
 
     """
     var_posterior_predictive = var + distribution.sigma**2
@@ -978,8 +1022,13 @@ def normal_known_precision(
         prior.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior")
         ax.axvline(unknown_mu, color="black", linestyle="--", label="true mu")
         ax.legend()
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/normal_known_precision.png")
+        plt.close()
+        -->
+
+        ![normal_known_precision](./images/docstrings/normal_known_precision.png)
 
     """
     return normal_known_variance(
@@ -1047,8 +1096,13 @@ def normal_known_precision_predictive(
         posterior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior predictive")
         prior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="prior predictive")
         ax.legend()
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/normal_known_precision_predictive.png")
+        plt.close()
+        -->
+
+        ![normal_known_precision_predictive](./images/docstrings/normal_known_precision_predictive.png)
 
     """
     return normal_known_variance_predictive(
@@ -1163,8 +1217,13 @@ def normal_known_mean_predictive(mu: NUMERIC, distribution: InverseGamma) -> Stu
         )
         posterior_predictive.set_bounds(-bound, bound).plot_pdf(ax=ax, label="posterior predictive")
         ax.legend()
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/normal_known_mean_predictive.png")
+        plt.close()
+        -->
+
+        ![normal_known_mean_predictive](./images/docstrings/normal_known_mean_predictive.png)
 
     """
     return StudentT(
@@ -1421,7 +1480,7 @@ def pareto_gamma(
             n=n_samples,
             ln_x_total=np.log(data).sum(),
             x_m=x_m_known,
-            prior=prior
+            prior=prior,
         )
 
         ax = plt.subplot(111)
@@ -1429,8 +1488,13 @@ def pareto_gamma(
         prior.set_bounds(0, 2.5).plot_pdf(ax=ax, label="prior")
         ax.axvline(x_m_known, color="black", linestyle="--", label="true x_m")
         ax.legend()
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/pareto_gamma.png")
+        plt.close()
+        -->
+
+        ![pareto_gamma](./images/docstrings/pareto_gamma.png)
 
     """
     alpha_post = prior.alpha + n
@@ -1780,8 +1844,13 @@ def multivariate_normal_predictive(
             ylim=(-ymax, ymax),
         )
         ax.legend()
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/multivariate_normal_predictive.png")
+        plt.close()
+        -->
+
+        ![multivariate_normal_predictive](./images/docstrings/multivariate_normal_predictive.png)
     """
 
     p = distribution.psi.shape[0]
@@ -1857,8 +1926,13 @@ def log_normal_normal_inverse_gamma(
         ax = axes[1]
         ax.hist(variance, bins=20)
         ax.axvline(true_sigma**2, color="black", linestyle="--", label="true sigma^2")
-        plt.show()
         ```
+        <!--
+        plt.savefig("./docs/images/docstrings/log_normal_normal_inverse_gamma.png")
+        plt.close()
+        -->
+
+        ![log_normal_normal_inverse_gamma](./images/docstrings/log_normal_normal_inverse_gamma.png)
     """
 
     return normal_normal_inverse_gamma(
