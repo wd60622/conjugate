@@ -246,3 +246,19 @@ def test_conditional_plot_cdf() -> None:
     fig, ax = plt.subplots(figsize=FIGSIZE)
     dist.plot_cdf(ax=ax, conditional=True)
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_color_cycle_continuous() -> None:
+    dist = Normal(mu=0, sigma=[1, 2, 3]).set_bounds(-10, 10)
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+    dist.plot_pdf(ax=ax, color=["red", "green", "teal"])
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_color_cycle_discrete() -> None:
+    dist = Binomial(n=10, p=[0.15, 0.5, 0.85])
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+    dist.plot_pmf(ax=ax, color=["red", "green", "teal"])
+    return fig
