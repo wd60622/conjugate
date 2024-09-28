@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from conjugate.distributions import (
     Beta,
     BetaBinomial,
+    BetaGeometric,
     BetaNegativeBinomial,
     BetaProportional,
     CompoundGamma,
@@ -32,7 +33,6 @@ from conjugate.distributions import (
     StudentT,
 )
 from conjugate.models import (
-    inverse_gamma_known_rate,
     bernoulli_beta,
     bernoulli_beta_predictive,
     beta,
@@ -45,8 +45,10 @@ from conjugate.models import (
     gamma_known_shape,
     gamma_known_shape_predictive,
     geometric_beta,
+    geometric_beta_predictive,
     get_binomial_beta_posterior_params,
     hypergeometric_beta_binomial,
+    inverse_gamma_known_rate,
     linear_regression,
     linear_regression_predictive,
     log_normal_normal_inverse_gamma,
@@ -691,3 +693,9 @@ def test_weibull_known_shape() -> None:
     posterior = weibull_inverse_gamma_known_shape(n=1, x_beta_total=1, prior=prior)
 
     assert isinstance(posterior, InverseGamma)
+
+
+def test_geometric_beta_predictive() -> None:
+    distribution = Beta(1, 1)
+    predictive = geometric_beta_predictive(distribution=distribution)
+    assert isinstance(predictive, BetaGeometric)
