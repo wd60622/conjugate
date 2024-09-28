@@ -262,3 +262,11 @@ def test_color_cycle_discrete() -> None:
     fig, ax = plt.subplots(figsize=FIGSIZE)
     dist.plot_pmf(ax=ax, color=["red", "green", "teal"])
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_large_discrete_x_axis() -> None:
+    dist = Binomial(n=50, p=0.5)
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+    dist.plot_pmf(ax=ax)
+    return fig
