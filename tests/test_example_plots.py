@@ -226,3 +226,23 @@ def test_cdf_discrete() -> None:
 
     dist.plot_cdf(ax=ax)
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_conditional_plot() -> None:
+    dist = Binomial(n=10, p=0.25)
+    dist.set_bounds(3, 7)
+
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+    dist.plot_pmf(ax=ax, conditional=True)
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_conditional_plot_cdf() -> None:
+    dist = Binomial(n=10, p=0.25)
+    dist.set_bounds(3, 7)
+
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+    dist.plot_cdf(ax=ax, conditional=True)
+    return fig
