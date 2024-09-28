@@ -389,14 +389,17 @@ class Geometric(DiscretePlotMixin, SliceMixin):
 
     Args:
         p: probability of success
+        one_start: whether to start at 1 or 0. Default is 1.
 
     """
 
     p: NUMERIC
+    one_start: bool = True
 
     @property
     def dist(self):
-        return stats.geom(self.p)
+        loc = 0 if self.one_start else -1
+        return stats.geom(self.p, loc=loc)
 
 
 @dataclass
@@ -406,15 +409,17 @@ class BetaGeometric(DiscretePlotMixin, SliceMixin):
     Args:
         alpha: shape parameter
         beta: shape parameter
+        one_start: whether to start at 1 or 0. Default is 1.
 
     """
 
     alpha: NUMERIC
     beta: NUMERIC
+    one_start: bool = True
 
     @property
     def dist(self):
-        return beta_geometric(self.alpha, self.beta)
+        return beta_geometric(self.alpha, self.beta, one_start=self.one_start)
 
 
 @dataclass
