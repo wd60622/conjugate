@@ -11,6 +11,7 @@ from scipy import __version__ as scipy_version
 from conjugate.distributions import (
     Beta,
     BetaBinomial,
+    BetaGeometric,
     BetaNegativeBinomial,
     Binomial,
     CompoundGamma,
@@ -430,3 +431,35 @@ def test_normal_alternative_constructors() -> None:
     assert Normal.from_mean_and_precision(mean=0, precision=1 / 4) == Normal(
         mu=0, sigma=2
     )
+
+
+@pytest.mark.parametrize(
+    "one_start, zero_start",
+    [
+        (Geometric(p=0.5, one_start=True), Geometric(p=0.5, one_start=False)),
+        (
+            BetaGeometric(alpha=1, beta=1, one_start=True),
+            BetaGeometric(alpha=1, beta=1, one_start=False),
+        ),
+    ],
+)
+def test_one_start_is_same_as_shifted(one_start, zero_start) -> None:
+    x = np.arange(1, 25)
+    np.testing.assert_allclose(
+        one_start.dist.pmf(x),
+        zero_start.dist.pmf(x - 1),
+    )
+
+
+@pytest.mark.parametrize("size", [None, 1, 3])
+@pytest.mark.parametrize("one_start", [True, False])
+def test_beta_geometric_random_samples(size: int | None, one_start: bool) -> None:
+    dist = BetaGeometric(alpha=1, beta=1, one_start=one_start)
+
+    samples = dist.dist.rvs(size=size)
+
+    if size is None:
+        assert isinstance(samples, int)
+    else:
+        assert isinstance(samples, np.ndarray)
+        assert samples.shape == (size,)

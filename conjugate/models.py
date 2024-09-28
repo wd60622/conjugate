@@ -41,6 +41,7 @@ import warnings
 
 from conjugate.distributions import (
     Beta,
+    BetaGeometric,
     BetaProportional,
     CompoundGamma,
     Dirichlet,
@@ -370,6 +371,8 @@ def geometric_beta(x_total, n, prior: Beta, one_start: bool = True) -> Beta:
         n: total number of trials
         prior: Beta distribution prior
         one_start: whether to outcomes start at 1, defaults to True. False is 0 start.
+            one_start is equivalent to number of Bernoulli trails before
+            the first success.
 
     Returns:
         Beta distribution posterior
@@ -410,6 +413,31 @@ def geometric_beta(x_total, n, prior: Beta, one_start: bool = True) -> Beta:
         beta_post = beta_post - n
 
     return Beta(alpha=alpha_post, beta=beta_post)
+
+
+@validate_distribution_type
+def geometric_beta_predictive(
+    distribution: Beta,
+    one_start: bool = True,
+) -> BetaGeometric:
+    """Predictive distribution for a geometric likelihood with a beta prior.
+
+    Args:
+        distribution: Beta distribution
+        one_start: whether to outcomes start at 1, defaults to True. False is 0 start.
+            one_start is equivalent to number of Bernoulli trails before
+            the first success.
+
+    Returns:
+        BetaGeometric predictive distribution
+
+    """
+
+    return BetaGeometric(
+        alpha=distribution.alpha,
+        beta=distribution.beta,
+        one_start=one_start,
+    )
 
 
 def get_dirichlet_posterior_params(alpha_prior: NUMERIC, x: NUMERIC) -> NUMERIC:
