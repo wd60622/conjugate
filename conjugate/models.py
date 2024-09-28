@@ -33,6 +33,7 @@ Below are the supported models:
 """
 
 from functools import wraps
+from typing import Callable
 
 import numpy as np
 
@@ -40,7 +41,9 @@ import warnings
 
 from conjugate.distributions import (
     Beta,
+    BetaBinomial,
     BetaGeometric,
+    BetaNegativeBinomial,
     BetaProportional,
     CompoundGamma,
     Dirichlet,
@@ -48,21 +51,20 @@ from conjugate.distributions import (
     Gamma,
     GammaKnownRateProportional,
     GammaProportional,
-    NegativeBinomial,
-    BetaNegativeBinomial,
-    BetaBinomial,
-    ScaledInverseChiSquared,
-    Pareto,
     InverseGamma,
+    InverseWishart,
+    Lomax,
+    MultivariateNormal,
+    MultivariateStudentT,
+    NegativeBinomial,
     Normal,
     NormalInverseGamma,
+    NormalInverseWishart,
+    Pareto,
+    ScaledInverseChiSquared,
     StudentT,
-    MultivariateStudentT,
-    Lomax,
     VonMisesKnownConcentration,
     VonMisesKnownDirectionProportional,
-    InverseWishart,
-    NormalInverseWishart,
 )
 from conjugate._typing import NUMERIC
 
@@ -1653,6 +1655,136 @@ def von_mises_known_direction(
         c=prior.c + n,
         r=prior.r + centered_cos_total,
     )
+
+
+def _multivariate_normal_known_precision(
+    n: NUMERIC,
+    x_bar_0: NUMERIC,
+    precision_0: NUMERIC,
+    x_bar: NUMERIC,
+    precision: NUMERIC,
+    inv=np.linalg.inv,
+) -> tuple[NUMERIC, NUMERIC]:
+    mu_post = inv(precision_0 + n * precision) @ (
+        (precision_0 @ x_bar_0) + (n * (precision @ x_bar))
+    )
+    precision_post = precision_0 + (n * precision)
+
+    return mu_post, precision_post
+
+
+@validate_prior_type
+def multivariate_normal_known_covariance(
+    n: NUMERIC,
+    x_bar: NUMERIC,
+    cov: NUMERIC,
+    prior: MultivariateNormal,
+    inv=np.linalg.inv,
+) -> MultivariateNormal:
+    """Multivariate normal likelihood with known covariance and multivariate normal prior.
+
+    Args:
+        n: number of samples
+        x_bar: mean of samples
+        cov: known covariance
+        prior: MultivariateNormal prior for the mean
+        inv: function to invert matrix, defaults to np.linalg.inv
+
+    Returns:
+        MultivariateNormal posterior distribution
+
+    """
+    mu_bar_0 = prior.mu
+    precision_0 = inv(prior.cov)
+
+    precision = inv(cov)
+
+    mu_post, precision_post = _multivariate_normal_known_precision(
+        n=n,
+        x_bar_0=mu_bar_0,
+        precision_0=precision_0,
+        x_bar=x_bar,
+        precision=precision,
+    )
+
+    return MultivariateNormal(mu=mu_post, cov=inv(precision_post))
+
+
+@validate_distribution_type
+def multivariate_normal_known_covariance_predictive(
+    distribution: MultivariateNormal,
+    cov: NUMERIC,
+) -> MultivariateNormal:
+    """Predictive distribution for a multivariate normal likelihood with known covariance and a multivariate normal prior.
+
+    Args:
+        distribution: MultivariateNormal distribution
+        cov: known covariance
+
+    Returns:
+        MultivariateNormal predictive distribution
+
+    """
+    mu_pred = distribution.mu
+    cov_pred = distribution.cov + cov
+    return MultivariateNormal(mu=mu_pred, cov=cov_pred)
+
+
+@validate_prior_type
+def multivariate_normal_known_precision(
+    n: NUMERIC,
+    x_bar: NUMERIC,
+    precision: NUMERIC,
+    prior: MultivariateNormal,
+    inv=np.linalg.inv,
+) -> MultivariateNormal:
+    """Multivariate normal likelihood with known precision and multivariate normal prior.
+
+    Args:
+        n: number of samples
+        x_bar: mean of samples
+        precision: known precision
+        prior: MultivariateNormal prior for the mean
+        inv: function to invert matrix, defaults to np.linalg.inv
+
+    Returns:
+        MultivariateNormal posterior distribution
+
+    """
+    mu_0 = prior.mu
+    precision_0 = inv(prior.cov)
+
+    mu_post, precision_post = _multivariate_normal_known_precision(
+        n=n,
+        x_bar_0=mu_0,
+        precision_0=precision_0,
+        x_bar=x_bar,
+        precision=precision,
+    )
+
+    return MultivariateNormal(mu=mu_post, cov=inv(precision_post))
+
+
+@validate_distribution_type
+def multivariate_normal_known_precision_predictive(
+    distribution: MultivariateNormal,
+    precision: NUMERIC,
+    inv: Callable = np.linalg.inv,
+) -> MultivariateNormal:
+    """Predictive distribution for a multivariate normal likelihood with known precision and a multivariate normal prior.
+
+    Args:
+        distribution: MultivariateNormal distribution
+        precision: known precision
+        inv: function to invert matrix, defaults to np.linalg.inv
+
+    Returns:
+        MultivariateNormal predictive distribution
+
+    """
+    mu_pred = distribution.mu
+    cov_pred = distribution.cov + inv(precision)
+    return MultivariateNormal(mu=mu_pred, cov=cov_pred)
 
 
 @deprecate_prior_parameter("inverse_wishart_prior")

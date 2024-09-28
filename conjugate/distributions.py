@@ -467,22 +467,22 @@ class MultivariateNormal:
 
     Args:
         mu: mean
-        sigma: covariance matrix
+        cov: covariance matrix
 
     """
 
     mu: NUMERIC
-    sigma: NUMERIC
+    cov: NUMERIC
 
     @property
     def dist(self):
-        return stats.multivariate_normal(mean=self.mu, cov=self.sigma)
+        return stats.multivariate_normal(mean=self.mu, cov=self.cov)
 
     def __getitem__(self, key):
         if isinstance(key, int):
-            return Normal(mu=self.mu[key], sigma=self.sigma[key, key])
+            return Normal(mu=self.mu[key], sigma=self.cov[key, key] ** 0.5)
 
-        return MultivariateNormal(mu=self.mu[key], sigma=self.sigma[key][:, key])
+        return MultivariateNormal(mu=self.mu[key], cov=self.cov[key][:, key])
 
 
 @dataclass
@@ -1082,7 +1082,7 @@ class NormalGamma:
 
 @dataclass
 class InverseWishart:
-    """Inverse wishart distribution.
+    """Inverse Wishart distribution.
 
     Args:
         nu: degrees of freedom
