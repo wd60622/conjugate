@@ -232,20 +232,35 @@ class DiscretePlotMixin(PlotDistMixin):
         ax: Axes | None = None,
         cdf: bool = False,
         mark: str = "o-",
+        conditional: bool = False,
         **kwargs,
     ) -> Axes:
         x = self._create_x_values()
         x = self._reshape_x_values(x)
 
         ax = self._settle_axis(ax=ax)
-        return self._create_plot_on_axis(x, ax=ax, cdf=cdf, mark=mark, **kwargs)
+        return self._create_plot_on_axis(
+            x,
+            ax=ax,
+            cdf=cdf,
+            mark=mark,
+            conditional=conditional,
+            **kwargs,
+        )
 
-    def plot_pmf(self, ax: Axes | None = None, mark: str = "o-", **kwargs) -> Axes:
+    def plot_pmf(
+        self,
+        ax: Axes | None = None,
+        mark: str = "o-",
+        conditional: bool = False,
+        **kwargs,
+    ) -> Axes:
         """Plot the PMF of distribution
 
         Args:
             ax: matplotlib Axes, optional
             mark: matplotlib line style
+            conditional: If True, plot the conditional probability given the bounds.
             **kwargs: Additonal kwargs to pass to matplotlib
 
         Returns:
@@ -255,14 +270,27 @@ class DiscretePlotMixin(PlotDistMixin):
             ValueError: If the max_value is not set.
 
         """
-        return self._plot(ax=ax, cdf=False, mark=mark, **kwargs)
+        return self._plot(
+            ax=ax,
+            cdf=False,
+            mark=mark,
+            conditional=conditional,
+            **kwargs,
+        )
 
-    def plot_cdf(self, ax: Axes | None = None, mark: str = "o-", **kwargs) -> Axes:
+    def plot_cdf(
+        self,
+        ax: Axes | None = None,
+        mark: str = "o-",
+        conditional: bool = False,
+        **kwargs,
+    ) -> Axes:
         """Plot the CDF of distribution
 
         Args:
             ax: matplotlib Axes, optional
             mark: matplotlib line style
+            conditional: If True, plot the conditional probability given the bounds.
             **kwargs: Additonal kwargs to pass to matplotlib
 
         Returns:
@@ -272,7 +300,7 @@ class DiscretePlotMixin(PlotDistMixin):
             ValueError: If the max_value is not set.
 
         """
-        return self._plot(ax=ax, cdf=True, mark=mark, **kwargs)
+        return self._plot(ax=ax, cdf=True, mark=mark, conditional=conditional, **kwargs)
 
     def _create_x_values(self) -> np.ndarray:
         return np.arange(self.min_value, self.max_value + 1, 1)
@@ -293,9 +321,7 @@ class DiscretePlotMixin(PlotDistMixin):
             yy = yy / np.sum(yy)
 
             prefix = (
-                "Cumulative Probability $F(X \\leq x"
-                if cdf
-                else "Conditional Probability $f(x|"
+                "Cumulative Probability $F(X \\leq x" if cdf else "Probability $f(x"
             )
 
             ylabel = f"Conditional {prefix}|{self.min_value} \\leq x \\leq {self.max_value})$"
