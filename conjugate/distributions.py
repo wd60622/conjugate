@@ -46,6 +46,7 @@ from scipy import stats, __version__ as scipy_version
 from scipy.special import gammaln, i0
 
 from conjugate._compound_gamma import compound_gamma
+from conjugate._beta_geometric import beta_geometric
 from conjugate._typing import NUMERIC
 from conjugate.plot import (
     DirichletPlotDistMixin,
@@ -396,6 +397,16 @@ class Geometric(DiscretePlotMixin, SliceMixin):
     @property
     def dist(self):
         return stats.geom(self.p)
+
+
+@dataclass
+class BetaGeometric(DiscretePlotMixin, SliceMixin):
+    alpha: NUMERIC
+    beta: NUMERIC
+
+    @property
+    def dist(self):
+        return beta_geometric(self.alpha, self.beta)
 
 
 @dataclass
