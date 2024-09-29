@@ -31,6 +31,7 @@ from conjugate.distributions import (
     NormalGamma,
     NormalInverseGamma,
     NormalInverseWishart,
+    NormalWishart,
     Pareto,
     Poisson,
     ScaledInverseChiSquared,
@@ -39,6 +40,7 @@ from conjugate.distributions import (
     VectorizedDist,
     VonMises,
     Weibull,
+    Wishart,
     get_beta_param_from_mean_and_alpha,
 )
 
@@ -270,6 +272,26 @@ def test_normal_inverse_wishart() -> None:
     )
 
     assert isinstance(distribution.inverse_wishart, InverseWishart)
+
+    variance = distribution.sample_variance(size=1)
+    assert variance.shape == (1, 2, 2)
+
+    mean = distribution.sample_mean(size=1)
+    assert mean.shape == (1, 2)
+
+    _, variance = distribution.sample_mean(size=1, return_variance=True)
+    assert variance.shape == (1, 2, 2)
+
+
+def test_normal_wishart() -> None:
+    distribution = NormalWishart(
+        mu=np.array([0, 1]),
+        lam=1,
+        nu=2,
+        W=np.array([[1, 0], [0, 1]]),
+    )
+
+    assert isinstance(distribution.wishart, Wishart)
 
     variance = distribution.sample_variance(size=1)
     assert variance.shape == (1, 2, 2)
