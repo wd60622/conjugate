@@ -36,7 +36,7 @@ Below are the currently supported distributions
 """
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable
 
 from packaging import version
 
@@ -1117,8 +1117,94 @@ class Wishart:
 
 
 @dataclass
+class NormalWishart:
+    """Normal Wishart distribution.
+
+    Parameterization from <a href=https://en.wikipedia.org/wiki/Normal-Wishart_distribution>Wikipedia</a>.
+
+    Args:
+        mu: mean
+        lam: precision
+        W: scale matrix
+        nu: degrees of freedom
+
+    """
+
+    mu: NUMERIC
+    lam: NUMERIC
+    W: NUMERIC
+    nu: NUMERIC
+
+    @property
+    def wishart(self):
+        return Wishart(nu=self.nu, V=self.W)
+
+    def sample_variance(
+        self,
+        size: int = 1,
+        random_state: np.random.Generator | None = None,
+        inv: Callable = np.linalg.inv,
+    ) -> np.ndarray:
+        """Sample variance
+
+        Args:
+            size: number of samples
+            random_state: random state
+            inv: matrix inversion function
+
+        Returns:
+            samples from the inverse wishart distribution
+
+        """
+
+        variance = inv(
+            self.lam * self.wishart.dist.rvs(size=size, random_state=random_state)
+        )
+
+        if size == 1:
+            variance = variance[None, ...]
+
+        return variance
+
+    def sample_mean(
+        self,
+        size: int = 1,
+        return_variance: bool = False,
+        random_state: np.random.Generator | None = None,
+    ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
+        """Sample mean
+
+        Args:
+            size: number of samples
+            return_variance: whether to return variance as well
+            random_state: random state
+
+        Returns:
+            samples from the normal distribution and optionally variance
+
+        """
+
+        variance = self.sample_variance(size=size, random_state=random_state)
+
+        mean = np.stack(
+            [
+                stats.multivariate_normal(self.mu, cov=cov).rvs(
+                    size=1,
+                    random_state=random_state,
+                )
+                for cov in variance
+            ]
+        )
+
+        if return_variance:
+            return mean, variance
+
+        return mean
+
+
+@dataclass
 class NormalInverseWishart:
-    """Normal inverse wishart distribution.
+    """Normal inverse Wishart distribution.
 
     Args:
         mu: mean
@@ -1135,15 +1221,21 @@ class NormalInverseWishart:
 
     @property
     def inverse_wishart(self):
+        """Inverse wishart distribution."""
         return InverseWishart(nu=self.nu, psi=self.psi)
 
     @classmethod
     def from_inverse_wishart(
-        cls, mu: NUMERIC, kappa: NUMERIC, inverse_wishart: InverseWishart
+        cls,
+        mu: NUMERIC,
+        kappa: NUMERIC,
+        inverse_wishart: InverseWishart,
     ):
         return cls(mu=mu, kappa=kappa, nu=inverse_wishart.nu, psi=inverse_wishart.psi)
 
-    def sample_variance(self, size: int, random_state=None) -> NUMERIC:
+    def sample_variance(
+        self, size: int, random_state: np.random.Generator | None = None
+    ) -> NUMERIC:
         """Sample precision from gamma distribution and invert.
 
         Args:
@@ -1164,7 +1256,10 @@ class NormalInverseWishart:
         return variance
 
     def sample_mean(
-        self, size: int, return_variance: bool = False, random_state=None
+        self,
+        size: int,
+        return_variance: bool = False,
+        random_state: np.random.Generator | None = None,
     ) -> NUMERIC:
         """Sample the mean from the normal distribution.
 
