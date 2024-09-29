@@ -27,6 +27,7 @@ from conjugate.distributions import (
     MultivariateStudentT,
     NegativeBinomial,
     Normal,
+    NormalGamma,
     NormalInverseGamma,
     NormalInverseWishart,
     Pareto,
@@ -51,7 +52,7 @@ from conjugate.models import (
     inverse_gamma_known_rate,
     linear_regression,
     linear_regression_predictive,
-    log_normal_normal_inverse_gamma,
+    log_normal,
     multinomial_dirichlet,
     multivariate_normal,
     multivariate_normal_known_covariance,
@@ -61,6 +62,8 @@ from conjugate.models import (
     multivariate_normal_predictive,
     negative_binomial_beta,
     negative_binomial_beta_predictive,
+    normal,
+    normal_predictive,
     normal_known_mean,
     normal_known_mean_predictive,
     normal_known_variance,
@@ -397,7 +400,7 @@ def test_normal_normal_inverse_gamma() -> None:
     data = true.dist.rvs(size=n, random_state=rng)
 
     prior = NormalInverseGamma(0.0, alpha=1 / 5, beta=10, nu=1 / 25)
-    posterior = normal_normal_inverse_gamma(
+    posterior = normal(
         x_total=data.sum(),
         x2_total=(data**2).sum(),
         n=n,
@@ -406,12 +409,12 @@ def test_normal_normal_inverse_gamma() -> None:
 
     assert isinstance(posterior, NormalInverseGamma)
 
-    posterior_predictive = normal_normal_inverse_gamma_predictive(
+    posterior_predictive = normal_predictive(
         distribution=posterior,
     )
     assert isinstance(posterior_predictive, StudentT)
 
-    prior_predictive = normal_normal_inverse_gamma_predictive(
+    prior_predictive = normal_predictive(
         distribution=prior,
     )
 
@@ -542,7 +545,7 @@ def test_multivariate_normal() -> None:
     )
 
 
-def test_log_normal_normal_inverse_gamma() -> None:
+def test_log_normal() -> None:
     true_mu, true_sigma = 0.25, 2.5
 
     true = LogNormal(true_mu, true_sigma)
@@ -552,7 +555,7 @@ def test_log_normal_normal_inverse_gamma() -> None:
     ln_data = np.log(data)
 
     prior = NormalInverseGamma(0.0, alpha=1 / 5, beta=10, nu=1 / 25)
-    posterior = log_normal_normal_inverse_gamma(
+    posterior = log_normal(
         ln_x_total=ln_data.sum(),
         ln_x2_total=(ln_data**2).sum(),
         n=n,
@@ -761,3 +764,52 @@ def test_multivariate_normal_known_precision_predictive() -> None:
     )
 
     assert isinstance(predictive, MultivariateNormal)
+
+
+@pytest.mark.parametrize(
+    "prior",
+    [
+        NormalGamma(mu=0, lam=1, alpha=1, beta=1),
+        NormalInverseGamma(mu=0, nu=1, alpha=1, beta=1),
+    ],
+)
+def test_normal(prior) -> None:
+    mu = 1
+    sigma = 0.25
+    n = 100
+
+    data = rng.normal(loc=mu, scale=sigma, size=n)
+
+    posterior = normal(
+        x_total=data.sum(),
+        n=len(data),
+        x2_total=(data**2).sum(),
+        prior=prior,
+    )
+
+    assert isinstance(posterior, prior.__class__)
+
+
+def test_normal_normal_inverse_gamma_deprecation() -> None:
+    prior = NormalInverseGamma(mu=0, nu=1, alpha=1, beta=1)
+    match = "This function is deprecated"
+    with pytest.warns(DeprecationWarning, match=match):
+        posterior = normal_normal_inverse_gamma(
+            x_total=0,
+            x2_total=1,
+            n=1,
+            prior=prior,
+        )
+
+    assert isinstance(posterior, NormalInverseGamma)
+
+
+def test_normal_normal_inverse_gamma_predictive_deprecation() -> None:
+    distribution = NormalInverseGamma(mu=0, nu=1, alpha=1, beta=1)
+    match = "This function is deprecated"
+    with pytest.warns(DeprecationWarning, match=match):
+        predictive = normal_normal_inverse_gamma_predictive(
+            distribution=distribution,
+        )
+
+    assert isinstance(predictive, StudentT)

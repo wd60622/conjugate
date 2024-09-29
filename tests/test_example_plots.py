@@ -16,7 +16,7 @@ from conjugate.distributions import (
 from conjugate.models import (
     binomial_beta,
     binomial_beta_predictive,
-    normal_normal_inverse_gamma,
+    normal,
 )
 
 FIGSIZE = (10, 7)
@@ -163,7 +163,7 @@ def test_bayesian_update_example() -> None:
     for i, batch_size in enumerate(batch_sizes):
         x = sample(n=batch_size)
 
-        posterior = normal_normal_inverse_gamma(
+        posterior = normal(
             x_total=x.sum(),
             x2_total=(x**2).sum(),
             n=batch_size,

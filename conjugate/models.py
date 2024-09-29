@@ -58,6 +58,7 @@ from conjugate.distributions import (
     MultivariateStudentT,
     NegativeBinomial,
     Normal,
+    NormalGamma,
     NormalInverseGamma,
     NormalInverseWishart,
     Pareto,
@@ -1241,6 +1242,78 @@ def normal_known_mean_predictive(
     )
 
 
+def _normal(
+    x_total: NUMERIC,
+    x2_total: NUMERIC,
+    n: NUMERIC,
+    mu_0: NUMERIC,
+    nu: NUMERIC,
+    alpha: NUMERIC,
+    beta: NUMERIC,
+) -> tuple[NUMERIC, NUMERIC, NUMERIC, NUMERIC]:
+    x_mean = x_total / n
+
+    nu_post = nu + n
+    mu_post = ((nu * mu_0) + (n * x_mean)) / nu_post
+
+    alpha_post = alpha + (n / 2)
+    beta_post = beta + 0.5 * ((mu_0**2) * nu + x2_total - (mu_post**2) * nu_post)
+
+    return mu_post, nu_post, alpha_post, beta_post
+
+
+@validate_prior_type
+def normal(
+    x_total: NUMERIC,
+    x2_total: NUMERIC,
+    n: NUMERIC,
+    prior: NormalInverseGamma | NormalGamma,
+) -> NormalInverseGamma | NormalGamma:
+    """Posterior distribution for a normal likelihood.
+
+    Args:
+        x_total: sum of all outcomes
+        x2_total: sum of all outcomes squared
+        n: total number of samples in x_total and x2_total
+        prior: NormalInverseGamma or NormalGamma prior
+
+    Returns:
+        NormalInverseGamma or NormalGamma posterior distribution
+
+    """
+    if isinstance(prior, NormalInverseGamma) and prior.nu is None:
+        raise ValueError("nu must be provided for the prior")
+
+    mu_post, nu_post, alpha_post, beta_post = _normal(
+        x_total=x_total,
+        x2_total=x2_total,
+        n=n,
+        mu_0=prior.mu,
+        nu=prior.lam if isinstance(prior, NormalGamma) else prior.nu,  # type: ignore
+        alpha=prior.alpha,
+        beta=prior.beta,
+    )
+
+    kwargs = (
+        {
+            "mu": mu_post,
+            "lam": nu_post,
+            "alpha": alpha_post,
+            "beta": beta_post,
+        }
+        if isinstance(prior, NormalGamma)
+        else {
+            "mu": mu_post,
+            "nu": nu_post,
+            "alpha": alpha_post,
+            "beta": beta_post,
+        }
+    )
+    print(prior.__class__)
+
+    return prior.__class__(**kwargs)
+
+
 @deprecate_prior_parameter("normal_inverse_gamma_prior")
 @validate_prior_type
 def normal_normal_inverse_gamma(
@@ -1263,23 +1336,38 @@ def normal_normal_inverse_gamma(
         NormalInverseGamma posterior distribution
 
     """
-    x_mean = x_total / n
-
-    nu_0_inv = prior.nu
-
-    nu_post_inv = nu_0_inv + n
-    mu_post = ((nu_0_inv * prior.mu) + (n * x_mean)) / nu_post_inv
-
-    alpha_post = prior.alpha + (n / 2)
-    beta_post = prior.beta + 0.5 * (
-        (prior.mu**2) * nu_0_inv + x2_total - (mu_post**2) * nu_post_inv
+    warnings.warn(
+        "This function is deprecated. Use 'normal' instead.",
+        DeprecationWarning,
+        stacklevel=1,
     )
 
-    return NormalInverseGamma(
-        mu=mu_post,
-        nu=nu_post_inv,
-        alpha=alpha_post,
-        beta=beta_post,
+    return normal(x_total=x_total, x2_total=x2_total, n=n, prior=prior)  # type: ignore
+
+
+@validate_distribution_type
+def normal_predictive(
+    distribution: NormalInverseGamma | NormalGamma,
+) -> StudentT:
+    """Predictive distribution for Normal likelihood.
+
+    Args:
+        distribution: NormalInverseGamma or NormalGamma distribution
+
+    Returns:
+        StudentT predictive distribution
+
+    """
+    nu = (
+        distribution.nu
+        if isinstance(distribution, NormalInverseGamma)
+        else distribution.lam
+    )
+    var = distribution.beta * (nu + 1) / (nu * distribution.alpha)
+    return StudentT(
+        mu=distribution.mu,
+        sigma=var**0.5,
+        nu=2 * distribution.alpha,
     )
 
 
@@ -1288,25 +1376,21 @@ def normal_normal_inverse_gamma(
 def normal_normal_inverse_gamma_predictive(
     distribution: NormalInverseGamma,
 ) -> StudentT:
-    """Predictive distribution for a normal likelihood with a normal inverse gamma prior.
+    """Predictive distribution for Normal likelihood.
 
     Args:
-        distribution: NormalInverseGamma posterior
+        distribution: NormalInverseGamma distribution
 
     Returns:
         StudentT predictive distribution
 
     """
-    var = (
-        distribution.beta
-        * (distribution.nu + 1)
-        / (distribution.nu * distribution.alpha)
+    warnings.warn(
+        "This function is deprecated. Use 'normal_predictive' instead.",
+        DeprecationWarning,
+        stacklevel=1,
     )
-    return StudentT(
-        mu=distribution.mu,
-        sigma=var**0.5,
-        nu=2 * distribution.alpha,
-    )
+    return normal_predictive(distribution=distribution)
 
 
 @deprecate_prior_parameter("normal_inverse_gamma_prior")
@@ -2005,13 +2089,13 @@ def multivariate_normal_predictive(
 
 @deprecate_prior_parameter("normal_inverse_wishart_prior")
 @validate_prior_type
-def log_normal_normal_inverse_gamma(
+def log_normal(
     ln_x_total: NUMERIC,
     ln_x2_total: NUMERIC,
     n: NUMERIC,
-    prior: NormalInverseGamma,
-) -> NormalInverseGamma:
-    """Log normal likelihood with a normal inverse gamma prior.
+    prior: NormalInverseGamma | NormalGamma,
+) -> NormalInverseGamma | NormalGamma:
+    """Log normal likelihood.
 
     By taking the log of the data, we can use the normal inverse gamma posterior.
 
@@ -2021,10 +2105,10 @@ def log_normal_normal_inverse_gamma(
         ln_x_total: sum of the log of all outcomes
         ln_x2_total: sum of the log of all outcomes squared
         n: total number of samples in ln_x_total and ln_x2_total
-        prior: NormalInverseGamma prior
+        prior: NormalInverseGamma or NormalGamma prior
 
     Returns:
-        NormalInverseGamma posterior distribution
+        NormalInverseGamma or NormalGamma posterior distribution
 
     Example:
         Constructed example
@@ -2046,7 +2130,7 @@ def log_normal_normal_inverse_gamma(
 
         ln_data = np.log(data)
 
-        prior = NormalInverseGamma(1, 1, 1, nu=1)
+        prior = NormalInverseGamma(mu=1, nu=1, alpha=1, beta=1)
         posterior = log_normal_normal_inverse_gamma(
             ln_x_total=ln_data.sum(),
             ln_x2_total=(ln_data**2).sum(),
@@ -2073,7 +2157,7 @@ def log_normal_normal_inverse_gamma(
         ![log_normal_normal_inverse_gamma](./images/docstrings/log_normal_normal_inverse_gamma.png)
     """
 
-    return normal_normal_inverse_gamma(
+    return normal(
         x_total=ln_x_total,
         x2_total=ln_x2_total,
         n=n,

@@ -28,7 +28,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from conjugate.distributions import NormalInverseGamma
-from conjugate.models import normal_normal_inverse_gamma
+from conjugate.models import normal
 
 def create_sampler(mu, sigma, rng): 
     """Generate a sampler from a normal distribution with mean `mu` and standard deviation `sigma`."""
@@ -56,7 +56,7 @@ ax = plt.gca()
 for batch_size in batch_sizes:
     data = sample(n=batch_size)
 
-    posterior = normal_normal_inverse_gamma(
+    posterior = normal(
         x_total=data.sum(), 
         x2_total=(data ** 2).sum(), 
         n=batch_size, 
