@@ -1309,7 +1309,6 @@ def normal(
             "beta": beta_post,
         }
     )
-    print(prior.__class__)
 
     return prior.__class__(**kwargs)
 

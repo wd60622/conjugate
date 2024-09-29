@@ -295,6 +295,31 @@ def weibull_known_shape():
     return sample_data, get_posterior, theta
 
 
+def normal_normal_gamma():
+    from conjugate.distributions import Normal, NormalGamma
+    from conjugate.models import normal
+
+    true_mu = 1.5
+    true_precision = 0.25
+
+    true_distribution = Normal(mu=true_mu, sigma=(1 / true_precision) ** 0.5)
+
+    def sample_data(n, rng):
+        return true_distribution.dist.rvs(size=n, random_state=rng)
+
+    prior = NormalGamma(mu=0, lam=1, alpha=2, beta=1)
+
+    def get_posterior(data):
+        return normal(
+            n=len(data),
+            x_total=data.sum(),
+            x2_total=(data**2).sum(),
+            prior=prior,
+        ).gamma
+
+    return sample_data, get_posterior, true_precision
+
+
 def parameter_recovery(
     ns: list[int],
     sample_data,
@@ -359,4 +384,5 @@ if __name__ == "__main__":
     setup = inverse_gamma_known_rate
     setup = normal_known_mean_alternative
     setup = weibull_known_shape
+    setup = normal_normal_gamma
     main(setup, ns=ns, rng=rng)
