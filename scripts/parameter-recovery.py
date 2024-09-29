@@ -299,8 +299,8 @@ def normal_normal_gamma():
     from conjugate.distributions import Normal, NormalGamma
     from conjugate.models import normal
 
-    true_mu = 5
-    true_precision = 0.5
+    true_mu = 1.5
+    true_precision = 0.25
 
     true_distribution = Normal(mu=true_mu, sigma=(1 / true_precision) ** 0.5)
 
