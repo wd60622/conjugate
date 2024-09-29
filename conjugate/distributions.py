@@ -561,8 +561,8 @@ class NormalInverseGamma:
     mu: NUMERIC
     alpha: NUMERIC
     beta: NUMERIC
-    delta_inverse: NUMERIC = None
-    nu: NUMERIC = None
+    delta_inverse: NUMERIC | None = None
+    nu: NUMERIC | None = None
 
     def __post_init__(self) -> None:
         if self.delta_inverse is None and self.nu is None:
@@ -576,8 +576,8 @@ class NormalInverseGamma:
         cls,
         mu: NUMERIC,
         inverse_gamma: InverseGamma,
-        delta_inverse: NUMERIC = None,
-        nu: NUMERIC = None,
+        delta_inverse: NUMERIC | None = None,
+        nu: NUMERIC | None = None,
     ) -> "NormalInverseGamma":
         return cls(
             mu=mu,
