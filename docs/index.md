@@ -22,7 +22,7 @@ pip install conjugate-models
 ## Features
 
 - [Connection to Scipy Distributions](examples/scipy-connection.md) with `dist` attribute
-- [Built in Plotting](examples/plotting.md) with `plot_pdf` and `plot_pmf` methods
+- [Built in Plotting](examples/plotting.md) with `plot_pdf`, `plot_pmf`, and `plot_cdf` methods
 - [Vectorized Operations](examples/vectorized-inputs.md) for parameters and data
 - [Indexing Parameters](examples/indexing.md) for subsetting and slicing
 - [Generalized Numerical Inputs](examples/generalized-inputs.md) for any inputs that act like numbers
