@@ -6,6 +6,13 @@ comments: true
 Suppose we want to use the Pareto model with a Gamma prior which doesn't have a
 supported distribution for the posterior predictive. 
 
+We can get posterior predictive samples by: 
+
+1. Sample from the posterior distribution
+2. Sample from the model distribution using posterior samples
+
+## Setup
+
 ```python
 import numpy as np
 
@@ -32,14 +39,8 @@ posterior: Gamma = pareto_gamma(
 )
 ```
 
-We can get posterior predictive samples by: 
-
-1. Sample from the posterior distribution
-2. Sample from the model distribution using posterior samples
 
 ## 1. Using `conjugate-models`
-
-This is easy to do with this package. 
 
 Since the distributions are vectorized, just: 
 
