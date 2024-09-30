@@ -98,38 +98,11 @@ def validate_distribution_type(func):
     return validate_type(func, "distribution")
 
 
-def deprecate_parameter(old_name: str, new_name: str):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            if old_name in kwargs:
-                msg = (
-                    f"Parameter {old_name!r} is deprecated, use {new_name!r} instead. "
-                    "It will be removed in a future version."
-                )
-                warnings.warn(
-                    msg,
-                    DeprecationWarning,
-                    stacklevel=2,
-                )
-                kwargs[new_name] = kwargs.pop(old_name)
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
-
-
-def deprecate_prior_parameter(old_name: str):
-    return deprecate_parameter(old_name, "prior")
-
-
-def deprecate_distribution_parameter(old_name: str):
-    return deprecate_parameter(old_name, "distribution")
-
-
 def get_binomial_beta_posterior_params(
-    alpha_prior: NUMERIC, beta_prior: NUMERIC, n: NUMERIC, x: NUMERIC
+    alpha_prior: NUMERIC,
+    beta_prior: NUMERIC,
+    n: NUMERIC,
+    x: NUMERIC,
 ) -> tuple[NUMERIC, NUMERIC]:
     alpha_post = alpha_prior + x
     beta_post = beta_prior + (n - x)
@@ -137,7 +110,6 @@ def get_binomial_beta_posterior_params(
     return alpha_post, beta_post
 
 
-@deprecate_prior_parameter("beta_prior")
 @validate_prior_type
 def binomial_beta(n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a binomial likelihood with a beta prior.
@@ -193,7 +165,6 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     return Beta(alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_distribution_parameter("beta")
 @validate_distribution_type
 def binomial_beta_predictive(n: NUMERIC, distribution: Beta) -> BetaBinomial:
     """Posterior predictive distribution for a binomial likelihood with a beta prior.
@@ -249,7 +220,6 @@ def binomial_beta_predictive(n: NUMERIC, distribution: Beta) -> BetaBinomial:
     return BetaBinomial(n=n, alpha=distribution.alpha, beta=distribution.beta)
 
 
-@deprecate_prior_parameter("beta_prior")
 @validate_prior_type
 def bernoulli_beta(x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a bernoulli likelihood with a beta prior.
@@ -285,7 +255,6 @@ def bernoulli_beta(x: NUMERIC, prior: Beta) -> Beta:
     return binomial_beta(n=1, x=x, prior=prior)
 
 
-@deprecate_distribution_parameter("beta")
 @validate_distribution_type
 def bernoulli_beta_predictive(distribution: Beta) -> BetaBinomial:
     """Predictive distribution for a bernoulli likelihood with a beta prior.
@@ -302,7 +271,6 @@ def bernoulli_beta_predictive(distribution: Beta) -> BetaBinomial:
     return binomial_beta_predictive(n=1, distribution=distribution)
 
 
-@deprecate_prior_parameter("beta_prior")
 @validate_prior_type
 def negative_binomial_beta(r: NUMERIC, n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a negative binomial likelihood with a beta prior.
@@ -325,7 +293,6 @@ def negative_binomial_beta(r: NUMERIC, n: NUMERIC, x: NUMERIC, prior: Beta) -> B
     return Beta(alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_distribution_parameter("beta")
 @validate_distribution_type
 def negative_binomial_beta_predictive(
     r: NUMERIC,
@@ -346,7 +313,6 @@ def negative_binomial_beta_predictive(
     return BetaNegativeBinomial(n=r, alpha=distribution.alpha, beta=distribution.beta)
 
 
-@deprecate_prior_parameter("beta_binomial_prior")
 @validate_prior_type
 def hypergeometric_beta_binomial(
     x_total: NUMERIC,
@@ -375,7 +341,6 @@ def hypergeometric_beta_binomial(
     return BetaBinomial(n=n, alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_prior_parameter("beta_prior")
 @validate_prior_type
 def geometric_beta(x_total, n, prior: Beta, one_start: bool = True) -> Beta:
     """Posterior distribution for a geometric likelihood with a beta prior.
@@ -473,7 +438,6 @@ def get_categorical_dirichlet_posterior_params(
     return get_dirichlet_posterior_params(alpha_prior, x)
 
 
-@deprecate_prior_parameter("dirichlet_prior")
 @validate_prior_type
 def categorical_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     """Posterior distribution of Categorical model with Dirichlet prior.
@@ -491,7 +455,6 @@ def categorical_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     return Dirichlet(alpha=alpha_post)
 
 
-@deprecate_distribution_parameter("dirichlet")
 @validate_distribution_type
 def categorical_dirichlet_predictive(
     distribution: Dirichlet,
@@ -518,7 +481,6 @@ def get_multi_categorical_dirichlet_posterior_params(
     return get_dirichlet_posterior_params(alpha_prior, x)
 
 
-@deprecate_prior_parameter("dirichlet_prior")
 @validate_prior_type
 def multinomial_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     """Posterior distribution of Multinomial model with Dirichlet prior.
@@ -573,7 +535,6 @@ def multinomial_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     return Dirichlet(alpha=alpha_post)
 
 
-@deprecate_distribution_parameter("dirichlet")
 @validate_distribution_type
 def multinomial_dirichlet_predictive(
     distribution: Dirichlet,
@@ -605,7 +566,6 @@ def get_poisson_gamma_posterior_params(
     return alpha_post, beta_post
 
 
-@deprecate_prior_parameter("gamma_prior")
 @validate_prior_type
 def poisson_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     """Posterior distribution for a poisson likelihood with a gamma prior.
@@ -626,7 +586,6 @@ def poisson_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_distribution_parameter("gamma")
 @validate_distribution_type
 def poisson_gamma_predictive(distribution: Gamma, n: NUMERIC = 1) -> NegativeBinomial:
     """Predictive distribution for a poisson likelihood with a gamma distribution.
@@ -650,7 +609,6 @@ def poisson_gamma_predictive(distribution: Gamma, n: NUMERIC = 1) -> NegativeBin
 get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
 
 
-@deprecate_prior_parameter("gamma_prior")
 @validate_prior_type
 def exponential_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     """Posterior distribution for an exponential likelihood with a gamma prior.
@@ -671,7 +629,6 @@ def exponential_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_distribution_parameter("gamma")
 @validate_distribution_type
 def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
     """Predictive distribution for an exponential likelihood with a gamma distribution
@@ -726,7 +683,6 @@ def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
     return Lomax(alpha=distribution.beta, lam=distribution.alpha)
 
 
-@deprecate_prior_parameter("gamma_prior")
 @validate_prior_type
 def gamma_known_shape(
     x_total: NUMERIC,
@@ -795,7 +751,6 @@ def gamma_known_shape(
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_distribution_parameter("gamma")
 @validate_distribution_type
 def gamma_known_shape_predictive(distribution: Gamma, alpha: NUMERIC) -> CompoundGamma:
     """Predictive distribution for a gamma likelihood with a gamma distribution
@@ -836,7 +791,6 @@ def inverse_gamma_known_rate(
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_prior_parameter("normal_prior")
 @validate_prior_type
 def normal_known_variance(
     x_total: NUMERIC,
@@ -906,7 +860,6 @@ def normal_known_variance(
     return Normal(mu=mu_post, sigma=var_post**0.5)
 
 
-@deprecate_distribution_parameter("normal")
 @validate_distribution_type
 def normal_known_variance_predictive(var: NUMERIC, distribution: Normal) -> Normal:
     """Predictive distribution for a normal likelihood with known variance and a normal distribution on mean.
@@ -973,7 +926,6 @@ def normal_known_variance_predictive(var: NUMERIC, distribution: Normal) -> Norm
     return Normal(mu=distribution.mu, sigma=var_posterior_predictive**0.5)
 
 
-@deprecate_prior_parameter("normal_prior")
 @validate_prior_type
 def normal_known_precision(
     x_total: NUMERIC,
@@ -1042,7 +994,6 @@ def normal_known_precision(
     )
 
 
-@deprecate_distribution_parameter("normal")
 @validate_distribution_type
 def normal_known_precision_predictive(
     precision: NUMERIC,
@@ -1127,7 +1078,6 @@ def _normal_known_mean_inverse_gamma_prior(
     return InverseGamma(alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_prior_parameter("inverse_gamma_prior")
 @validate_prior_type
 def normal_known_mean(
     x_total: NUMERIC,
@@ -1166,7 +1116,6 @@ def normal_known_mean(
     return posterior
 
 
-@deprecate_distribution_parameter("inverse_gamma")
 @validate_distribution_type
 def normal_known_mean_predictive(
     mu: NUMERIC,
@@ -1313,7 +1262,6 @@ def normal(
     return prior.__class__(**kwargs)
 
 
-@deprecate_prior_parameter("normal_inverse_gamma_prior")
 @validate_prior_type
 def normal_normal_inverse_gamma(
     x_total: NUMERIC,
@@ -1370,7 +1318,6 @@ def normal_predictive(
     )
 
 
-@deprecate_distribution_parameter("normal_inverse_gamma")
 @validate_distribution_type
 def normal_normal_inverse_gamma_predictive(
     distribution: NormalInverseGamma,
@@ -1392,7 +1339,6 @@ def normal_normal_inverse_gamma_predictive(
     return normal_predictive(distribution=distribution)
 
 
-@deprecate_prior_parameter("normal_inverse_gamma_prior")
 @validate_prior_type
 def linear_regression(
     X: NUMERIC,
@@ -1446,7 +1392,6 @@ def linear_regression(
     )
 
 
-@deprecate_distribution_parameter("normal_inverse_gamma")
 @validate_distribution_type
 def linear_regression_predictive(
     distribution: NormalInverseGamma,
@@ -1477,7 +1422,6 @@ def linear_regression_predictive(
     )
 
 
-@deprecate_prior_parameter("pareto_prior")
 @validate_prior_type
 def uniform_pareto(
     x_max: NUMERIC,
@@ -1525,7 +1469,6 @@ def uniform_pareto(
     return Pareto(x_m=x_m_post, alpha=alpha_post)
 
 
-@deprecate_prior_parameter("gamma_prior")
 @validate_prior_type
 def pareto_gamma(
     n: NUMERIC,
@@ -1594,7 +1537,6 @@ def pareto_gamma(
     return Gamma(alpha=alpha_post, beta=beta_post)
 
 
-@deprecate_prior_parameter("gamma_proportial_prior")
 @validate_prior_type
 def gamma(
     x_total: NUMERIC,
@@ -1624,7 +1566,6 @@ def gamma(
     return GammaProportional(p=p_post, q=q_post, r=r_post, s=s_post)
 
 
-@deprecate_prior_parameter("gamma_known_rate_proportial_prior")
 @validate_prior_type
 def gamma_known_rate(
     x_prod: NUMERIC,
@@ -1652,7 +1593,6 @@ def gamma_known_rate(
     return GammaKnownRateProportional(a=a_post, b=b_post, c=c_post)
 
 
-@deprecate_prior_parameter("beta_proportial_prior")
 @validate_prior_type
 def beta(
     x_prod: NUMERIC,
@@ -1681,7 +1621,6 @@ def beta(
     return BetaProportional(p=p_post, q=q_post, k=k_post)
 
 
-@deprecate_prior_parameter("von_mises_known_concentration_prior")
 @validate_prior_type
 def von_mises_known_concentration(
     cos_total: NUMERIC,
@@ -1716,7 +1655,6 @@ def von_mises_known_concentration(
     return VonMisesKnownConcentration(a=a_post, b=b_post)
 
 
-@deprecate_prior_parameter("von_mises_known_direction_proportial_prior")
 @validate_prior_type
 def von_mises_known_direction(
     centered_cos_total: NUMERIC,
@@ -1870,7 +1808,6 @@ def multivariate_normal_known_precision_predictive(
     return MultivariateNormal(mu=mu_pred, cov=cov_pred)
 
 
-@deprecate_prior_parameter("inverse_wishart_prior")
 @validate_prior_type
 def multivariate_normal_known_mean(
     X: NUMERIC,
@@ -1897,7 +1834,6 @@ def multivariate_normal_known_mean(
     )
 
 
-@deprecate_prior_parameter("normal_inverse_wishart_prior")
 @validate_prior_type
 def multivariate_normal(
     X: NUMERIC,
@@ -1981,7 +1917,6 @@ def multivariate_normal(
     )
 
 
-@deprecate_distribution_parameter("normal_inverse_wishart")
 @validate_distribution_type
 def multivariate_normal_predictive(
     distribution: NormalInverseWishart,
@@ -2086,7 +2021,6 @@ def multivariate_normal_predictive(
     return MultivariateStudentT(mu=mu, sigma=sigma, nu=nu)
 
 
-@deprecate_prior_parameter("normal_inverse_wishart_prior")
 @validate_prior_type
 def log_normal(
     ln_x_total: NUMERIC,
