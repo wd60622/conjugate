@@ -5,9 +5,22 @@ comments: true
 
 Conjugate models work with anything that works like numbers. 
 
+Here are examples of the Binomial and Beta distributions with different
+packages data as input. For more details on this model, see the [Binomial Model
+example](./binomial.md).
+
+## Setup
+
+Import the `binomial_beta` model and the `Beta` distribution:
+
+```python
+from conjugate.distributions import Beta
+from conjugate.models import binomial_beta
+```
+
 ## Polars
 
-For instance, Bayesian models with the Polars package: 
+Bayesian models with the [Polars](https://docs.pola.rs/) package: 
 
 ```python
 import polars as pl
@@ -30,7 +43,8 @@ ax.legend(title="sample size")
 
 ## Models with SQL
 
-For instance, Bayesian models in SQL using the SQL Builder, [PyPika](https://github.com/kayak/pypika)
+Bayesian models in SQL using the SQL Builder,
+[PyPika](https://github.com/kayak/pypika):
 
 ```python
 from pypika import Field 
@@ -47,8 +61,11 @@ print("Posterior alpha:", posterior.alpha)
 print("Posterior beta:", posterior.beta)
 # Posterior alpha: 1+"successes"
 # Posterior beta: 1+"total"-"successes"
+```
 
-# Priors can be fields too
+Even the priors can be fields too:
+
+```python
 alpha = Field("previous_successes") - 1
 beta = Field("previous_failures") - 1
 
@@ -63,7 +80,8 @@ print("Posterior beta:", posterior.beta)
 
 ## PyMC
 
-Using PyMC distributions for sampling with additional uncertainty
+Use [PyMC](https://www.pymc.io/) distributions for sampling with additional
+uncertainty:
 
 ```python 
 import pymc as pm 
