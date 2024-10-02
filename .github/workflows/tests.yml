@@ -7,7 +7,6 @@ on:
       - "pyproject.toml"
       - "tests/**"
 
-
 jobs:
   test:
     runs-on: ${{ matrix.os }}
