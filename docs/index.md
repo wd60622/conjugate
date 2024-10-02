@@ -50,14 +50,14 @@ from conjugate.distributions import Beta, BetaBinomial
 from conjugate.models import binomial_beta, binomial_beta_predictive
 
 # Observed Data
-X = 4
+x = 4
 N = 10
 
 # Analytics
 prior = Beta(1, 1)
 prior_predictive: BetaBinomial = binomial_beta_predictive(n=N, distribution=prior)
 
-posterior: Beta = binomial_beta(n=N, x=X, prior=prior)
+posterior: Beta = binomial_beta(n=N, x=x, prior=prior)
 posterior_predictive: BetaBinomial = binomial_beta_predictive(n=N, distribution=posterior) 
 ```
 
@@ -73,14 +73,14 @@ fig, axes = plt.subplots(ncols=2)
 ax = axes[0]
 ax = posterior.plot_pdf(ax=ax, label="posterior")
 prior.plot_pdf(ax=ax, label="prior")
-ax.axvline(x=X/N, color="black", ymax=0.05, label="MLE")
+ax.axvline(x=x/N, color="black", ymax=0.05, label="MLE")
 ax.set_title("Success Rate")
 ax.legend()
 
 ax = axes[1]
 posterior_predictive.plot_pmf(ax=ax, label="posterior predictive")
 prior_predictive.plot_pmf(ax=ax, label="prior predictive")
-ax.axvline(x=X, color="black", ymax=0.05, label="Sample")
+ax.axvline(x=x, color="black", ymax=0.05, label="Sample")
 ax.set_title("Number of Successes")
 ax.legend()
 plt.show()
