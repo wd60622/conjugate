@@ -5,11 +5,13 @@ on:
     paths: 
       - "conjugate/**"
       - "pyproject.toml"
+      - "tests/**"
 
   pull_request:
     paths: 
       - "conjugate/**"
       - "pyproject.toml"
+      - "tests/**"
 
 jobs:
   run:

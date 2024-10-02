@@ -485,3 +485,15 @@ def test_beta_geometric_random_samples(size: int | None, one_start: bool) -> Non
     else:
         assert isinstance(samples, np.ndarray)
         assert samples.shape == (size,)
+
+
+@pytest.mark.parametrize("one_start", [True, False])
+def test_geometric_slice(one_start: bool) -> None:
+    dist = Geometric(p=np.array([0.25, 0.5, 0.75]), one_start=one_start)
+
+    assert dist[0] == Geometric(p=0.25, one_start=one_start)
+
+    result = dist[:2]
+    expected_distribution = Geometric(p=np.array([0.25, 0.5]), one_start=one_start)
+    np.testing.assert_allclose(result.p, expected_distribution.p)
+    assert result.one_start == expected_distribution.one_start
