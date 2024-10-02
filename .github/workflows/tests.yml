@@ -5,6 +5,7 @@ on:
     paths: 
       - "conjugate/**"
       - "pyproject.toml"
+      - "tests/**"
 
 
 jobs:
