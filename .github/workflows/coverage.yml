@@ -1,5 +1,16 @@
 name: Workflow for Codecov conjugate
-on: [push, pull_request]
+
+on:
+  push:
+    paths: 
+      - "conjugate/**"
+      - "pyproject.toml"
+
+  pull_request:
+    paths: 
+      - "conjugate/**"
+      - "pyproject.toml"
+
 jobs:
   run:
     runs-on: ubuntu-latest
