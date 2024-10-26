@@ -8,6 +8,7 @@ help:
 	@echo "cov: run tests and generate coverage report"
 	@echo "format: run pre-commit hooks"
 	@echo "html: serve documentation"
+	@echo "release: kick off a new release"
 
 test-generate-baseline: 
 	poetry run pytest --mpl-generate-path=tests/example-plots tests/test_example_plots.py
@@ -26,3 +27,6 @@ format:
 html: 
 	open http://localhost:8000/
 	poetry run mkdocs serve
+
+release:
+	gh release create --generate-notes "v$(shell grep -E "^version" pyproject.toml | sed 's/[^0-9\.]*//g')"
