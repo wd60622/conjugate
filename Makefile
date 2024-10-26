@@ -1,5 +1,14 @@
 .PHONY: test cov format html
 
+.DEFAULT_GOAL := help
+
+help: 
+	@echo "test-generate-baseline: generate baseline images for tests"
+	@echo "test: run tests"
+	@echo "cov: run tests and generate coverage report"
+	@echo "format: run pre-commit hooks"
+	@echo "html: serve documentation"
+
 test-generate-baseline: 
 	poetry run pytest --mpl-generate-path=tests/example-plots tests/test_example_plots.py
 
