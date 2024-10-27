@@ -1,5 +1,5 @@
 ---
-comments: true 
+comments: true
 ---
 # Thompson Sampling
 
@@ -10,7 +10,7 @@ which makes use of posterior distributions for the variable of interest.
 ## Minimize Waiting Time
 
 We will assume an exponential distribution wait time for each group with an unknown
-average wait time for each group. 
+average wait time for each group.
 
 The conjugate prior of the exponential distribution is a gamma distribution.
 
@@ -31,7 +31,7 @@ n_groups = len(lam)
 true_dist = Exponential(lam=lam)
 ```
 
-We will create some helper functions to abstract: 
+We will create some helper functions to abstract:
 
 - sampling from the true distribution of a group
 - create the statistics required for Bayesian update of exponential gamma model
@@ -39,18 +39,18 @@ We will create some helper functions to abstract:
 
 ```python
 def sample_true_distribution(
-    group_to_sample: int, 
-    rng, 
+    group_to_sample: int,
+    rng,
     true_dist: Exponential = true_dist,
 ) -> float:
     return true_dist[group_to_sample].dist.rvs(random_state=rng)
 
 
 def bayesian_update_stats(
-    group_sampled: int, 
-    group_sample: float, 
+    group_sampled: int,
+    group_sample: float,
     n_groups: int = n_groups,
-) -> tuple[np.ndarray, np.ndarray]: 
+) -> tuple[np.ndarray, np.ndarray]:
     x = np.zeros(n_groups)
     n = np.zeros(n_groups)
 
@@ -58,9 +58,9 @@ def bayesian_update_stats(
     n[group_sampled] = 1
 
     return x, n
-    
 
-def thompson_step(estimate: Gamma, rng) -> Gamma: 
+
+def thompson_step(estimate: Gamma, rng) -> Gamma:
     sample = estimate.dist.rvs(random_state=rng)
 
     group_to_sample = np.argmin(sample)
@@ -81,7 +81,7 @@ estimate = Gamma(alpha, beta)
 rng = np.random.default_rng(42)
 
 total_samples = 250
-for _ in range(total_samples): 
+for _ in range(total_samples):
     estimate = thompson_step(estimate=estimate, rng=rng)
 ```
 
@@ -96,7 +96,7 @@ ax = axes[0]
 estimate.set_max_value(2).plot_pdf(label=lam, ax=ax)
 ax.legend(title="True Mean")
 ax.set(
-    xlabel="Mean Wait Time", 
+    xlabel="Mean Wait Time",
     title="Posterior Distribution by Group",
 )
 
@@ -104,10 +104,10 @@ ax = axes[1]
 n_times_sampled = estimate.beta - 1
 ax.scatter(lam, n_times_sampled / total_samples)
 ax.set(
-    xlabel="True Mean Wait Time", 
-    ylabel="% of times sampled", 
+    xlabel="True Mean Wait Time",
+    ylabel="% of times sampled",
     ylim=(0, None),
-    title="Exploitation of Best Group", 
+    title="Exploitation of Best Group",
 )
 # Format yaxis as percentage
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:.0%}"))

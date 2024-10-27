@@ -1,15 +1,15 @@
 ---
-comments: true 
+comments: true
 ---
 # Connection to SciPy Distributions
 
 Many distributions have the `dist` attribute which is a <a href=https://docs.scipy.org/doc/scipy/reference/stats.html>scipy.stats distribution</a> object. From there, the methods from scipy.stats to get the pdf, cdf, etc can be leveraged.
 
-```python 
-from conjugate.distribution import Beta 
+```python
+from conjugate.distribution import Beta
 
 beta = Beta(1, 1)
-scipy_dist = beta.dist 
+scipy_dist = beta.dist
 
 print(scipy_dist.mean())
 # 0.5

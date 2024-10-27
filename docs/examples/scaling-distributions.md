@@ -1,9 +1,9 @@
 ---
-comments: true 
+comments: true
 ---
-# Scaling Distributions 
+# Scaling Distributions
 
-Some of the distributions can be scaled by a constant factor or added together. For instance, operations with Poisson distribution represent the number of events in a given time interval. 
+Some of the distributions can be scaled by a constant factor or added together. For instance, operations with Poisson distribution represent the number of events in a given time interval.
 
 ```python
 from conjugate.distributions import Poisson
@@ -30,7 +30,7 @@ plt.show()
 
 ![Scaled Poisson](../images/poisson-scaling-example.png)
 
-The normal distribution also supports scaling making use of the fact that the variance of a scaled normal distribution is the square of the scaling factor. 
+The normal distribution also supports scaling making use of the fact that the variance of a scaled normal distribution is the square of the scaling factor.
 
 ```python
 from conjugate.distributions import Normal

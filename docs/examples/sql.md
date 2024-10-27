@@ -1,13 +1,13 @@
-# Bayesian Models with SQL 
+# Bayesian Models with SQL
 
 
 Because `conjugate-models` works with [general numerical inputs](generalized-inputs.md), we can use Bayesian models in SQL
 with the SQL builder, `PyPika`.
 
-For the example, we will estimate use normal model to estimate the 
-total sales amount by group. 
+For the example, we will estimate use normal model to estimate the
+total sales amount by group.
 
-The example table is called `events` and we will assume a normal model for the 
+The example table is called `events` and we will assume a normal model for the
 column `sales` for each value of the column `group`.
 
 We can create the sufficient statistics needed for `normal_normal_inverse_gamma`
@@ -38,7 +38,7 @@ query = (
 ```
 
 Perform the Bayesian inference as usual, but using the variables reflecting
-the columns. 
+the columns.
 
 ```python
 from conjugate.distributions import NormalInverseGamma
@@ -69,7 +69,7 @@ query = query.select(
 )
 ```
 
-Which results in this query: 
+Which results in this query:
 
 ```sql
 SELECT "group",
@@ -79,4 +79,3 @@ SELECT "group",
 FROM "events"
 GROUP BY "group"
 ```
-

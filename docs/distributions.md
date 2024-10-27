@@ -1,6 +1,6 @@
 ---
-comments: true 
+comments: true
 ---
-# Distributions 
+# Distributions
 
 ::: conjugate.distributions

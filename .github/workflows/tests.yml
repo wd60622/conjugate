@@ -2,12 +2,12 @@ name: Tests
 
 on:
   push:
-    paths: 
+    paths:
       - "conjugate/**"
       - "pyproject.toml"
       - "tests/**"
   pull_request:
-    paths: 
+    paths:
       - "conjugate/**"
       - "pyproject.toml"
       - "tests/**"

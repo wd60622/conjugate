@@ -1,9 +1,9 @@
 ---
-comments: true 
+comments: true
 ---
 # Indexing Parameters
 
-The distributions can be indexed for subsets. 
+The distributions can be indexed for subsets.
 
 ```python
 beta = np.arange(1, 10)

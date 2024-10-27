@@ -1,9 +1,9 @@
 ---
-comments: true 
+comments: true
 ---
 # Generalized Numerical Inputs
 
-Conjugate models work with anything that works like numbers. 
+Conjugate models work with anything that works like numbers.
 
 Here are examples of the Binomial and Beta distributions with different
 packages data as input. For more details on this model, see the [Binomial Model
@@ -20,7 +20,7 @@ from conjugate.models import binomial_beta
 
 ## Polars
 
-Bayesian models with the [Polars](https://docs.pola.rs/) package: 
+Bayesian models with the [Polars](https://docs.pola.rs/) package:
 
 ```python
 import polars as pl
@@ -47,7 +47,7 @@ Bayesian models in SQL using the SQL Builder,
 [PyPika](https://github.com/kayak/pypika):
 
 ```python
-from pypika import Field 
+from pypika import Field
 
 # Columns from table in database
 N = Field("total")
@@ -83,8 +83,8 @@ print("Posterior beta:", posterior.beta)
 Use [PyMC](https://www.pymc.io/) distributions for sampling with additional
 uncertainty:
 
-```python 
-import pymc as pm 
+```python
+import pymc as pm
 
 alpha = pm.Gamma.dist(alpha=1, beta=20)
 beta = pm.Gamma.dist(alpha=1, beta=20)
@@ -93,7 +93,7 @@ beta = pm.Gamma.dist(alpha=1, beta=20)
 N = 10
 X = 4
 
-# Conjugate prior 
+# Conjugate prior
 prior = Beta(alpha=alpha, beta=beta)
 posterior = binomial_beta(n=N, x=X, prior=prior)
 

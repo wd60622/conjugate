@@ -1,12 +1,12 @@
 ---
-comments: true 
+comments: true
 ---
 # Unsupported Posterior Predictive Distributions
 
 Suppose we want to use the Pareto model with a Gamma prior which doesn't have a
-supported distribution for the posterior predictive. 
+supported distribution for the posterior predictive.
 
-We can get posterior predictive samples by: 
+We can get posterior predictive samples by:
 
 1. Sample from the posterior distribution
 2. Sample from the model distribution using posterior samples
@@ -42,9 +42,9 @@ posterior: Gamma = pareto_gamma(
 
 ## 1. Using `conjugate-models`
 
-Since the distributions are vectorized, just: 
+Since the distributions are vectorized, just:
 
-1. Get the number of samples from the posterior 
+1. Get the number of samples from the posterior
 2. Take a single sample from the model distribution
 
 ```python
@@ -56,9 +56,9 @@ posterior_predictive_samples = Pareto(x_m=x_m, alpha=alpha_samples).dist.rvs(ran
 
 ## 2. Using PyMC
 
-Another route would be using PyMC then use the `draw` function. 
+Another route would be using PyMC then use the `draw` function.
 
-```python 
+```python
 import pymc as pm
 
 posterior_alpha = pm.Gamma.dist(alpha=posterior.alpha, beta=posterior.beta)

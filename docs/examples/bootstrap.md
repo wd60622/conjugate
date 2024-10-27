@@ -1,13 +1,13 @@
 ---
-comments: true 
+comments: true
 ---
 # Bootstrap Comparison
 
 In this example, we will compare the bootstrap method with the use of a
 Bayesian model.
 
-Bootstrap is statistical method which relies on resampling of the 
-data in order to estimate the uncertainty of a given statistic. 
+Bootstrap is statistical method which relies on resampling of the
+data in order to estimate the uncertainty of a given statistic.
 
 In order to do this comparison, the [`pandas-bootstrap`
 package](https://wd60622.github.io/pandas-bootstrap/) will be used.
@@ -30,12 +30,12 @@ import matplotlib.pyplot as plt
 import bootstrap
 
 from conjugate.distributions import (
-    Gamma, 
+    Gamma,
     NegativeBinomial,
-    Poisson, 
+    Poisson,
 )
 from conjugate.models import (
-    poisson_gamma, 
+    poisson_gamma,
     poisson_gamma_predictive,
 )
 
@@ -45,7 +45,7 @@ rng = np.random.default_rng(seed)
 true_lambda = 1.5
 true_distribution = Poisson(true_lambda)
 
-def create_data_generator(true_distribution, rng): 
+def create_data_generator(true_distribution, rng):
     def generate_data(size) -> pd.Series:
         return pd.Series(true_distribution.dist.rvs(size=size, random_state=rng))
     return generate_data
@@ -57,10 +57,10 @@ generate_data = create_data_generator(true_distribution, rng)
 ## Bootstrap method
 
 In order to generate the statistic for the bootstrap method, we just need to
-create function that gets the maximum value of the desired sample size. 
+create function that gets the maximum value of the desired sample size.
 
 The `boot` attribute of the `pandas.Series` is an object from
-`pandas-bootstrap` to facilitate the bootstrap process. Read more about it in the 
+`pandas-bootstrap` to facilitate the bootstrap process. Read more about it in the
 documentation [here](https://wd60622.github.io/pandas-bootstrap/extensions/).
 
 ```python
@@ -71,7 +71,7 @@ def stat(data: pd.Series, n: int) -> int:
     return data.sample(frac=1).iloc[:n].max()
 
 def create_bootstrap_stat(n_new: int, samples: int):
-    def bootstrap_stat(data: pd.Series) -> pd.Series: 
+    def bootstrap_stat(data: pd.Series) -> pd.Series:
         return data.boot.get_samples(stat, n=n_new, B=samples)
     return bootstrap_stat
 
@@ -90,8 +90,8 @@ def get_posterior_predictive(data: pd.Series, prior: Gamma) -> NegativeBinomial:
     posterior = poisson_gamma(x_total=x_total, n=n, prior=prior)
     return poisson_gamma_predictive(distribution=posterior)
 
-def create_conjugate_stat(n_new: int, samples: int, prior: Gamma): 
-    def conjugate_stat(data: pd.Series) -> pd.Series: 
+def create_conjugate_stat(n_new: int, samples: int, prior: Gamma):
+    def conjugate_stat(data: pd.Series) -> pd.Series:
         posterior_predictive = get_posterior_predictive(data, prior)
         return pd.Series(
             posterior_predictive
@@ -116,10 +116,10 @@ ns = [5, 25, 50, 100]
 nrows = 2
 ncols = 2
 fig, axes = plt.subplots(
-    nrows=nrows, 
-    ncols=ncols, 
+    nrows=nrows,
+    ncols=ncols,
     figsize=(ncols * 5, nrows * 5),
-    sharex=True, 
+    sharex=True,
     sharey=True,
 )
 
