@@ -1,9 +1,10 @@
 """Making use of the tool to analyze post engagement on LinkedIn
 
-Incorporate prior knowledge of the average engagement rate on LinkedIn into 
+Incorporate prior knowledge of the average engagement rate on LinkedIn into
 the few data points I have from my posts. Then, use the model to make some visuals.
 
 """
+
 import pandas as pd
 import numpy as np
 
