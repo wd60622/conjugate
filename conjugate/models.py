@@ -111,7 +111,7 @@ def get_binomial_beta_posterior_params(
 
 
 @validate_prior_type
-def binomial_beta(n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
+def binomial_beta(*, n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a binomial likelihood with a beta prior.
 
     Args:
@@ -166,7 +166,7 @@ def binomial_beta(n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
 
 
 @validate_distribution_type
-def binomial_beta_predictive(n: NUMERIC, distribution: Beta) -> BetaBinomial:
+def binomial_beta_predictive(*, n: NUMERIC, distribution: Beta) -> BetaBinomial:
     """Posterior predictive distribution for a binomial likelihood with a beta prior.
 
     Args:
@@ -221,7 +221,7 @@ def binomial_beta_predictive(n: NUMERIC, distribution: Beta) -> BetaBinomial:
 
 
 @validate_prior_type
-def bernoulli_beta(x: NUMERIC, prior: Beta) -> Beta:
+def bernoulli_beta(*, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a bernoulli likelihood with a beta prior.
 
     Args:
@@ -256,7 +256,7 @@ def bernoulli_beta(x: NUMERIC, prior: Beta) -> Beta:
 
 
 @validate_distribution_type
-def bernoulli_beta_predictive(distribution: Beta) -> BetaBinomial:
+def bernoulli_beta_predictive(*, distribution: Beta) -> BetaBinomial:
     """Predictive distribution for a bernoulli likelihood with a beta prior.
 
     Use for either prior or posterior predictive distribution.
@@ -272,7 +272,7 @@ def bernoulli_beta_predictive(distribution: Beta) -> BetaBinomial:
 
 
 @validate_prior_type
-def negative_binomial_beta(r: NUMERIC, n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
+def negative_binomial_beta(*, r: NUMERIC, n: NUMERIC, x: NUMERIC, prior: Beta) -> Beta:
     """Posterior distribution for a negative binomial likelihood with a beta prior.
 
     Assumed known number of failures r
@@ -295,6 +295,7 @@ def negative_binomial_beta(r: NUMERIC, n: NUMERIC, x: NUMERIC, prior: Beta) -> B
 
 @validate_distribution_type
 def negative_binomial_beta_predictive(
+    *,
     r: NUMERIC,
     distribution: Beta,
 ) -> BetaNegativeBinomial:
@@ -315,6 +316,7 @@ def negative_binomial_beta_predictive(
 
 @validate_prior_type
 def hypergeometric_beta_binomial(
+    *,
     x_total: NUMERIC,
     n: NUMERIC,
     prior: BetaBinomial,
@@ -342,7 +344,7 @@ def hypergeometric_beta_binomial(
 
 
 @validate_prior_type
-def geometric_beta(x_total, n, prior: Beta, one_start: bool = True) -> Beta:
+def geometric_beta(*, x_total, n, prior: Beta, one_start: bool = True) -> Beta:
     """Posterior distribution for a geometric likelihood with a beta prior.
 
     Args:
@@ -401,6 +403,7 @@ def geometric_beta(x_total, n, prior: Beta, one_start: bool = True) -> Beta:
 
 @validate_distribution_type
 def geometric_beta_predictive(
+    *,
     distribution: Beta,
     one_start: bool = True,
 ) -> BetaGeometric:
@@ -432,6 +435,7 @@ def get_dirichlet_posterior_params(alpha_prior: NUMERIC, x: NUMERIC) -> NUMERIC:
 
 
 def get_categorical_dirichlet_posterior_params(
+    *,
     alpha_prior: NUMERIC,
     x: NUMERIC,
 ) -> NUMERIC:
@@ -439,7 +443,7 @@ def get_categorical_dirichlet_posterior_params(
 
 
 @validate_prior_type
-def categorical_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
+def categorical_dirichlet(*, x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     """Posterior distribution of Categorical model with Dirichlet prior.
 
     Args:
@@ -457,6 +461,7 @@ def categorical_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
 
 @validate_distribution_type
 def categorical_dirichlet_predictive(
+    *,
     distribution: Dirichlet,
     n: NUMERIC = 1,
 ) -> DirichletMultinomial:
@@ -475,6 +480,7 @@ def categorical_dirichlet_predictive(
 
 
 def get_multi_categorical_dirichlet_posterior_params(
+    *,
     alpha_prior: NUMERIC,
     x: NUMERIC,
 ) -> NUMERIC:
@@ -482,7 +488,7 @@ def get_multi_categorical_dirichlet_posterior_params(
 
 
 @validate_prior_type
-def multinomial_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
+def multinomial_dirichlet(*, x: NUMERIC, prior: Dirichlet) -> Dirichlet:
     """Posterior distribution of Multinomial model with Dirichlet prior.
 
     Args:
@@ -537,6 +543,7 @@ def multinomial_dirichlet(x: NUMERIC, prior: Dirichlet) -> Dirichlet:
 
 @validate_distribution_type
 def multinomial_dirichlet_predictive(
+    *,
     distribution: Dirichlet,
     n: NUMERIC = 1,
 ) -> DirichletMultinomial:
@@ -555,6 +562,7 @@ def multinomial_dirichlet_predictive(
 
 
 def get_poisson_gamma_posterior_params(
+    *,
     alpha: NUMERIC,
     beta: NUMERIC,
     x_total: NUMERIC,
@@ -567,7 +575,7 @@ def get_poisson_gamma_posterior_params(
 
 
 @validate_prior_type
-def poisson_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
+def poisson_gamma(*, x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     """Posterior distribution for a poisson likelihood with a gamma prior.
 
     Args:
@@ -587,7 +595,11 @@ def poisson_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
 
 
 @validate_distribution_type
-def poisson_gamma_predictive(distribution: Gamma, n: NUMERIC = 1) -> NegativeBinomial:
+def poisson_gamma_predictive(
+    *,
+    distribution: Gamma,
+    n: NUMERIC = 1,
+) -> NegativeBinomial:
     """Predictive distribution for a poisson likelihood with a gamma distribution.
 
     Args:
@@ -610,7 +622,7 @@ get_exponential_gamma_posterior_params = get_poisson_gamma_posterior_params
 
 
 @validate_prior_type
-def exponential_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
+def exponential_gamma(*, x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
     """Posterior distribution for an exponential likelihood with a gamma prior.
 
     Args:
@@ -630,7 +642,7 @@ def exponential_gamma(x_total: NUMERIC, n: NUMERIC, prior: Gamma) -> Gamma:
 
 
 @validate_distribution_type
-def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
+def exponential_gamma_predictive(*, distribution: Gamma) -> Lomax:
     """Predictive distribution for an exponential likelihood with a gamma distribution
 
     Args:
@@ -685,6 +697,7 @@ def exponential_gamma_predictive(distribution: Gamma) -> Lomax:
 
 @validate_prior_type
 def gamma_known_shape(
+    *,
     x_total: NUMERIC,
     n: NUMERIC,
     alpha: NUMERIC,
@@ -752,7 +765,11 @@ def gamma_known_shape(
 
 
 @validate_distribution_type
-def gamma_known_shape_predictive(distribution: Gamma, alpha: NUMERIC) -> CompoundGamma:
+def gamma_known_shape_predictive(
+    *,
+    distribution: Gamma,
+    alpha: NUMERIC,
+) -> CompoundGamma:
     """Predictive distribution for a gamma likelihood with a gamma distribution
 
     Args:
@@ -768,6 +785,7 @@ def gamma_known_shape_predictive(distribution: Gamma, alpha: NUMERIC) -> Compoun
 
 @validate_prior_type
 def inverse_gamma_known_rate(
+    *,
     reciprocal_x_total: NUMERIC,
     n: NUMERIC,
     alpha: NUMERIC,
@@ -793,6 +811,7 @@ def inverse_gamma_known_rate(
 
 @validate_prior_type
 def normal_known_variance(
+    *,
     x_total: NUMERIC,
     n: NUMERIC,
     var: NUMERIC,
@@ -861,7 +880,7 @@ def normal_known_variance(
 
 
 @validate_distribution_type
-def normal_known_variance_predictive(var: NUMERIC, distribution: Normal) -> Normal:
+def normal_known_variance_predictive(*, var: NUMERIC, distribution: Normal) -> Normal:
     """Predictive distribution for a normal likelihood with known variance and a normal distribution on mean.
 
     Args:
@@ -928,6 +947,7 @@ def normal_known_variance_predictive(var: NUMERIC, distribution: Normal) -> Norm
 
 @validate_prior_type
 def normal_known_precision(
+    *,
     x_total: NUMERIC,
     n: NUMERIC,
     precision: NUMERIC,
@@ -996,6 +1016,7 @@ def normal_known_precision(
 
 @validate_distribution_type
 def normal_known_precision_predictive(
+    *,
     precision: NUMERIC,
     distribution: Normal,
 ) -> Normal:
@@ -1066,6 +1087,7 @@ def normal_known_precision_predictive(
 
 
 def _normal_known_mean_inverse_gamma_prior(
+    *,
     x_total: NUMERIC,
     x2_total: NUMERIC,
     n: NUMERIC,
@@ -1080,6 +1102,7 @@ def _normal_known_mean_inverse_gamma_prior(
 
 @validate_prior_type
 def normal_known_mean(
+    *,
     x_total: NUMERIC,
     x2_total: NUMERIC,
     n: NUMERIC,
@@ -1118,6 +1141,7 @@ def normal_known_mean(
 
 @validate_distribution_type
 def normal_known_mean_predictive(
+    *,
     mu: NUMERIC,
     distribution: InverseGamma | ScaledInverseChiSquared,
 ) -> StudentT:
@@ -1213,6 +1237,7 @@ def _normal(
 
 @validate_prior_type
 def normal(
+    *,
     x_total: NUMERIC,
     x2_total: NUMERIC,
     n: NUMERIC,
@@ -1264,6 +1289,7 @@ def normal(
 
 @validate_prior_type
 def normal_normal_inverse_gamma(
+    *,
     x_total: NUMERIC,
     x2_total: NUMERIC,
     n: NUMERIC,
@@ -1294,6 +1320,7 @@ def normal_normal_inverse_gamma(
 
 @validate_distribution_type
 def normal_predictive(
+    *,
     distribution: NormalInverseGamma | NormalGamma,
 ) -> StudentT:
     """Predictive distribution for Normal likelihood.
@@ -1320,6 +1347,7 @@ def normal_predictive(
 
 @validate_distribution_type
 def normal_normal_inverse_gamma_predictive(
+    *,
     distribution: NormalInverseGamma,
 ) -> StudentT:
     """Predictive distribution for Normal likelihood.
@@ -1341,6 +1369,7 @@ def normal_normal_inverse_gamma_predictive(
 
 @validate_prior_type
 def linear_regression(
+    *,
     X: NUMERIC,
     y: NUMERIC,
     prior: NormalInverseGamma,
@@ -1394,6 +1423,7 @@ def linear_regression(
 
 @validate_distribution_type
 def linear_regression_predictive(
+    *,
     distribution: NormalInverseGamma,
     X: NUMERIC,
     eye=np.eye,
@@ -1424,6 +1454,7 @@ def linear_regression_predictive(
 
 @validate_prior_type
 def uniform_pareto(
+    *,
     x_max: NUMERIC,
     n: NUMERIC,
     prior: Pareto,
@@ -1471,6 +1502,7 @@ def uniform_pareto(
 
 @validate_prior_type
 def pareto_gamma(
+    *,
     n: NUMERIC,
     ln_x_total: NUMERIC,
     x_m: NUMERIC,
@@ -1539,6 +1571,7 @@ def pareto_gamma(
 
 @validate_prior_type
 def gamma(
+    *,
     x_total: NUMERIC,
     x_prod: NUMERIC,
     n: NUMERIC,
@@ -1568,6 +1601,7 @@ def gamma(
 
 @validate_prior_type
 def gamma_known_rate(
+    *,
     x_prod: NUMERIC,
     n: NUMERIC,
     beta: NUMERIC,
@@ -1595,6 +1629,7 @@ def gamma_known_rate(
 
 @validate_prior_type
 def beta(
+    *,
     x_prod: NUMERIC,
     one_minus_x_prod: NUMERIC,
     n: NUMERIC,
@@ -1623,6 +1658,7 @@ def beta(
 
 @validate_prior_type
 def von_mises_known_concentration(
+    *,
     cos_total: NUMERIC,
     sin_total: NUMERIC,
     n: NUMERIC,
@@ -1657,6 +1693,7 @@ def von_mises_known_concentration(
 
 @validate_prior_type
 def von_mises_known_direction(
+    *,
     centered_cos_total: NUMERIC,
     n: NUMERIC,
     prior: VonMisesKnownDirectionProportional,
@@ -1696,6 +1733,7 @@ def _multivariate_normal_known_precision(
 
 @validate_prior_type
 def multivariate_normal_known_covariance(
+    *,
     n: NUMERIC,
     x_bar: NUMERIC,
     cov: NUMERIC,
@@ -1733,6 +1771,7 @@ def multivariate_normal_known_covariance(
 
 @validate_distribution_type
 def multivariate_normal_known_covariance_predictive(
+    *,
     distribution: MultivariateNormal,
     cov: NUMERIC,
 ) -> MultivariateNormal:
@@ -1753,6 +1792,7 @@ def multivariate_normal_known_covariance_predictive(
 
 @validate_prior_type
 def multivariate_normal_known_precision(
+    *,
     n: NUMERIC,
     x_bar: NUMERIC,
     precision: NUMERIC,
@@ -1788,6 +1828,7 @@ def multivariate_normal_known_precision(
 
 @validate_distribution_type
 def multivariate_normal_known_precision_predictive(
+    *,
     distribution: MultivariateNormal,
     precision: NUMERIC,
     inv: Callable = np.linalg.inv,
@@ -1810,6 +1851,7 @@ def multivariate_normal_known_precision_predictive(
 
 @validate_prior_type
 def multivariate_normal_known_mean(
+    *,
     X: NUMERIC,
     mu: NUMERIC,
     prior: InverseWishart,
@@ -1836,6 +1878,7 @@ def multivariate_normal_known_mean(
 
 @validate_prior_type
 def multivariate_normal(
+    *,
     X: NUMERIC,
     prior: NormalInverseWishart,
     outer=np.outer,
@@ -1919,6 +1962,7 @@ def multivariate_normal(
 
 @validate_distribution_type
 def multivariate_normal_predictive(
+    *,
     distribution: NormalInverseWishart,
 ) -> MultivariateStudentT:
     """Multivariate normal likelihood with normal inverse wishart distribution.
@@ -2023,6 +2067,7 @@ def multivariate_normal_predictive(
 
 @validate_prior_type
 def log_normal(
+    *,
     ln_x_total: NUMERIC,
     ln_x2_total: NUMERIC,
     n: NUMERIC,
@@ -2100,6 +2145,7 @@ def log_normal(
 
 @validate_prior_type
 def weibull_inverse_gamma_known_shape(
+    *,
     n: NUMERIC,
     x_beta_total: NUMERIC,
     prior: InverseGamma,

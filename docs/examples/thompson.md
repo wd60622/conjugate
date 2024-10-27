@@ -68,7 +68,7 @@ def thompson_step(estimate: Gamma, rng) -> Gamma:
     group_sample = sample_true_distribution(group_to_sample, rng=rng)
     x, n = bayesian_update_stats(group_to_sample, group_sample)
 
-    return exponential_gamma(x, n, prior=estimate)
+    return exponential_gamma(x_total=x, n=n, prior=estimate)
 ```
 
 After defining a prior / initial estimate for each of the distributions, we can use a for loop in
