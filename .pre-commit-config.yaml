@@ -1,6 +1,6 @@
 ---
 ci:
-  autofix_prs: false
+  autofix_prs: true
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
