@@ -1097,8 +1097,8 @@
 
 <h1 id="unsupported-posterior-predictive-distributions">Unsupported Posterior Predictive Distributions</h1>
 <p>Suppose we want to use the Pareto model with a Gamma prior which doesn't have a
-supported distribution for the posterior predictive. </p>
-<p>We can get posterior predictive samples by: </p>
+supported distribution for the posterior predictive.</p>
+<p>We can get posterior predictive samples by:</p>
 <ol>
 <li>Sample from the posterior distribution</li>
 <li>Sample from the model distribution using posterior samples</li>
@@ -1129,9 +1129,9 @@ supported distribution for the posterior predictive. </p>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="1-using-conjugate-models">1. Using <code>conjugate-models</code></h2>
-<p>Since the distributions are vectorized, just: </p>
+<p>Since the distributions are vectorized, just:</p>
 <ol>
-<li>Get the number of samples from the posterior </li>
+<li>Get the number of samples from the posterior</li>
 <li>Take a single sample from the model distribution</li>
 </ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1_000</span>
@@ -1140,7 +1140,7 @@ supported distribution for the posterior predictive. </p>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">posterior_predictive_samples</span> <span class="o">=</span> <span class="n">Pareto</span><span class="p">(</span><span class="n">x_m</span><span class="o">=</span><span class="n">x_m</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_samples</span><span class="p">)</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="2-using-pymc">2. Using PyMC</h2>
-<p>Another route would be using PyMC then use the <code>draw</code> function. </p>
+<p>Another route would be using PyMC then use the <code>draw</code> function.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">pymc</span> <span class="k">as</span> <span class="nn">pm</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">posterior_alpha</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Gamma</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">posterior</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">posterior</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span>
@@ -1195,7 +1195,7 @@ supported distribution for the posterior predictive. </p>
         : "light"
 
       // Instruct Giscus to set theme
-      giscus.setAttribute("data-theme", theme) 
+      giscus.setAttribute("data-theme", theme)
     }
 
     // Register event handlers after documented loaded
