@@ -1,8 +1,8 @@
 # Conjugate Models
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Tests](https://github.com/wd60622/conjugate/actions/workflows/tests.yml/badge.svg)](https://github.com/wd60622/conjugate/actions/workflows/tests.yml) 
-[![PyPI version](https://badge.fury.io/py/conjugate-models.svg)](https://badge.fury.io/py/conjugate-models) 
+[![Tests](https://github.com/wd60622/conjugate/actions/workflows/tests.yml/badge.svg)](https://github.com/wd60622/conjugate/actions/workflows/tests.yml)
+[![PyPI version](https://badge.fury.io/py/conjugate-models.svg)](https://badge.fury.io/py/conjugate-models)
 [![docs](https://github.com/wd60622/conjugate/actions/workflows/docs.yml/badge.svg)](https://wd60622.github.io/conjugate/)
 [![codecov](https://codecov.io/github/wd60622/conjugate/branch/main/graph/badge.svg)](https://app.codecov.io/github/wd60622/conjugate)
 
@@ -11,11 +11,11 @@ Bayesian conjugate models in Python
 
 ## Installation
 
-```bash 
+```bash
 pip install conjugate-models
 ```
 
-## Features 
+## Features
 
 - [Connection to Scipy Distributions](https://wd60622.github.io/conjugate/examples/scipy-connection) with `dist` attribute
 - [Built in Plotting](https://wd60622.github.io/conjugate/examples/plotting) with `plot_pdf`, `plot_pmf`, and `plot_cdf` methods
@@ -25,7 +25,7 @@ pip install conjugate-models
     - Out of box compatibility with `polars`, `pandas`, `numpy`, and more.
 - [Unsupported Distributions](https://wd60622.github.io/conjugate/examples/pymc-sampling) for sampling from unsupported distributions
 
-## Supported Models 
+## Supported Models
 
 Many likelihoods are supported including
 
@@ -41,7 +41,7 @@ Many likelihoods are supported including
 1. Pass data and prior into model from `models` modules
 1. Analytics with posterior and posterior predictive distributions
 
-```python 
+```python
 from conjugate.distributions import Beta, BetaBinomial
 from conjugate.models import binomial_beta, binomial_beta_predictive
 
@@ -54,7 +54,7 @@ prior = Beta(1, 1)
 prior_predictive: BetaBinomial = binomial_beta_predictive(n=N, distribution=prior)
 
 posterior: Beta = binomial_beta(n=N, x=x, prior=prior)
-posterior_predictive: BetaBinomial = binomial_beta_predictive(n=N, distribution=posterior) 
+posterior_predictive: BetaBinomial = binomial_beta_predictive(n=N, distribution=posterior)
 ```
 
 From here, do any analysis you'd like!

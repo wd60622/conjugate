@@ -1,5 +1,5 @@
 ---
-comments: true 
+comments: true
 ---
 # Plotting Distributions
 
@@ -8,13 +8,13 @@ methods. The `plot_pdf` method is used for continuous distributions and the
 `plot_pmf` method is used for discrete distributions.
 
 Similarly, all distributions have a `plot_cdf` method for plotting the
-cumulative distribution function.   
+cumulative distribution function.
 
 There is limited support for some distributions like the `Dirichlet` or those
 without a `dist` scipy.
 
 
-```python 
+```python
 from conjugate.distributions import Beta, Gamma, Normal
 
 import matplotlib.pyplot as plt

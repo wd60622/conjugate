@@ -1,7 +1,7 @@
 ---
-comments: true 
+comments: true
 ---
-# Binomial Model 
+# Binomial Model
 
 The [Binomial
 distribution](https://en.wikipedia.org/wiki/Binomial_distribution) models the
@@ -11,22 +11,22 @@ data.
 
 This example demonstrates how to fit a Binomial model with a Beta prior and
 compares the prior and posterior distributions as well as the predictive
-distributions with the true distribution of 
+distributions with the true distribution of
 
 ## Import modules
 
-Import the required distributions: 
+Import the required distributions:
 
 - `Binomial`: The assumed model likelihood in order to generate synthetic data
 - `Beta`: Prior for `Binomial` distribution
 - `BetaBinomial`: The predictive distribution for the `Binomial` model
 
-and the functions: 
+and the functions:
 
 - `binomial_beta`: get the posterior distribution from prior and data
 - `binomial_beta_predictive`: get the predictive distribution
 
-```python 
+```python
 from conjugate.distributions import Beta, Binomial, BetaBinomial
 from conjugate.models import binomial_beta, binomial_beta_predictive
 
@@ -64,12 +64,12 @@ Get the predictive distribution for `n` new trials with
 
 ```python
 prior_predictive: BetaBinomial = binomial_beta_predictive(
-    n=N, 
-    distribution=prior, 
+    n=N,
+    distribution=prior,
 )
 posterior_predictive: BetaBinomial = binomial_beta_predictive(
-    n=N, 
-    distribution=posterior, 
+    n=N,
+    distribution=posterior,
 )
 ```
 
@@ -80,7 +80,7 @@ well as the predictive distributions with the true distribution.
 
 ```python
 
-# Figure 
+# Figure
 fig, axes = plt.subplots(ncols=2, nrows=1, figsize=(8, 4))
 
 # Prior and Posterior

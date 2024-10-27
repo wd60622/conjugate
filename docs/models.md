@@ -1,6 +1,6 @@
 ---
-comments: true 
+comments: true
 ---
-# Models 
+# Models
 
 ::: conjugate.models

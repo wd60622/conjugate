@@ -1,13 +1,13 @@
 ---
-comments: true 
+comments: true
 ---
 # Vectorized Inputs
 
-All data and priors will allow for vectorized assuming the shapes work for broadcasting. 
+All data and priors will allow for vectorized assuming the shapes work for broadcasting.
 
 The plotting also supports arrays of results
 
-```python 
+```python
 import numpy as np
 
 from conjugate.distributions import Beta
@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 N = 10
 x = 4
 
-# Analytics 
+# Analytics
 prior = Beta(alpha=1, beta=np.array([1, 10]))
 posterior = binomial_beta(n=N, x=x, prior=prior)
 

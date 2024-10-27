@@ -1,5 +1,5 @@
 ---
-comments: true 
+comments: true
 ---
 
 We can fit linear regression that includes a predictive distribution for new data using a conjugate prior. This example only has one covariate, but the same approach can be used for multiple covariates.
@@ -32,7 +32,7 @@ y = intercept + slope * x + rng.normal(scale=sigma, size=n_points)
 
 ## Define Prior and Find Posterior
 
-There needs to be a prior for the intercept, slope, and the variance. 
+There needs to be a prior for the intercept, slope, and the variance.
 
 ```python
 prior = NormalInverseGamma(
@@ -72,7 +72,7 @@ df_samples = pd.DataFrame(samples, index=x_new)
 
 ## Plot Results
 
-We can see that the posterior predictive distribution begins to widen as we move away from the data. 
+We can see that the posterior predictive distribution begins to widen as we move away from the data.
 
 Overall, the posterior predictive distribution is a good fit for the data. The true line is within the 95% posterior predictive interval.
 

@@ -2,7 +2,7 @@
 
 .DEFAULT_GOAL := help
 
-help: 
+help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z0-9_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
 
 test-generate-baseline: ## Generate baseline images for tests
@@ -12,7 +12,7 @@ test: ## Run tests
 	poetry run pytest tests
 
 cov:  ## Run tests and generate coverage report
-	poetry run pytest tests 
+	poetry run pytest tests
 	coverage html
 	open htmlcov/index.html
 

@@ -31,7 +31,7 @@ repo_url: https://github.com/wd60622/conjugate
 edit_uri: blob/main/docs/
 site_url: https://wd60622.github.io/conjugate
 
-extra: 
+extra:
   homepage: https://wd60622.github.io/
   social:
     - icon: fontawesome/brands/github
@@ -39,12 +39,12 @@ extra:
 
 nav:
   - Overview: index.md
-  - Modules: 
+  - Modules:
     - Models: models.md
     - Distributions: distributions.md
     - Mixins: mixins.md
-  - Examples: 
-    - Case Studies: 
+  - Examples:
+    - Case Studies:
       - Binomial Model: examples/binomial.md
       - Bayesian Update: examples/bayesian-update.md
       - Thompson Sampling: examples/thompson.md
@@ -52,7 +52,7 @@ nav:
       - Unsupported Distributions: examples/unsupported-distributions.md
       - Inference in SQL: examples/sql.md
       - Bootstrap Comparison: examples/bootstrap.md
-    - Features: 
+    - Features:
       - Plotting: examples/plotting.md
       - SciPy Distributions: examples/scipy-connection.md
       - Sampling Distributions: examples/sampling-distributions.md
@@ -78,10 +78,10 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-  - pymdownx.arithmatex: 
+  - pymdownx.arithmatex:
       generic: true
 
-extra_javascript: 
+extra_javascript:
   - javascripts/mathjax.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js 
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
