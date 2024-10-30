@@ -28,6 +28,6 @@ jobs:
       - name: Run tests and collect coverage
         run: pytest
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v4.6.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
