@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://wd60622.github.io/conjugate/examples/scipy-connection/">
+        <link rel="canonical" href="https://wd60622.github.io/conjugate/examples/limit/">
       
       
-        <link rel="prev" href="../plotting/">
+        <link rel="prev" href="../bootstrap/">
       
       
-        <link rel="next" href="../sampling-distributions/">
+        <link rel="next" href="../plotting/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>SciPy Distributions - Conjugate Models</title>
+        <title>Limit Estimation - Conjugate Models</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#connection-to-scipy-distributions" class="md-skip">
+        <a href="#determining-limit-size-for-api-requests" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SciPy Distributions
+              Limit Estimation
             
           </span>
         </div>
@@ -522,8 +522,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -554,13 +556,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
         
           
           <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
@@ -574,7 +574,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
             Case Studies
@@ -732,10 +732,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../limit/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Limit Estimation
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -744,6 +764,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#modeling-the-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modeling the Data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#determining-the-limit-size-from-the-predictive-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Determining the Limit Size from the Predictive Distribution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualizing-the-predictive-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualizing the Predictive Distributions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -761,8 +828,6 @@
                 
   
   
-    
-  
   
   
     
@@ -793,11 +858,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
         
           
           <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
@@ -811,7 +878,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             Features
@@ -843,19 +910,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../scipy-connection/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -864,7 +922,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1010,6 +1067,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#modeling-the-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modeling the Data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#determining-the-limit-size-from-the-predictive-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Determining the Limit Size from the Predictive Distribution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualizing-the-predictive-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualizing the Predictive Distributions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1026,20 +1118,110 @@
   
 
 
-<h1 id="connection-to-scipy-distributions">Connection to SciPy Distributions</h1>
-<p>Many distributions have the <code>dist</code> attribute which is a <a href=https://docs.scipy.org/doc/scipy/reference/stats.html>scipy.stats distribution</a> object. From there, the methods from scipy.stats to get the pdf, cdf, etc can be leveraged.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">conjugate.distribution</span> <span class="kn">import</span> <span class="n">Beta</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">beta</span> <span class="o">=</span> <span class="n">Beta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">scipy_dist</span> <span class="o">=</span> <span class="n">beta</span><span class="o">.</span><span class="n">dist</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">scipy_dist</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 0.5</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">scipy_dist</span><span class="o">.</span><span class="n">ppf</span><span class="p">([</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">]))</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># [0.025 0.975]</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">samples</span> <span class="o">=</span> <span class="n">scipy_dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<h1 id="determining-limit-size-for-api-requests">Determining Limit Size for API Requests</h1>
+<p>Over the 10 hours, I have collected the number of new issues that have come in.
+Each hour is as follows:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span>
 </span></code></pre></div>
+<p>For a next time period, I want to estimate the <code>limit</code> size that I should use
+to get number of new issues that will come in.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>I am not interested in the mean of the data, but rather in a quantile
+of the data in order to determine the upper bound for what might come
+in.</p>
+</div>
+<p>I will using a Poisson-Gamma model to determine the issue distribution.</p>
+<p>The 90th percentile of the predictive distribution will be used to determine
+the limit.</p>
+<h2 id="modeling-the-data">Modeling the Data</h2>
+<p>The <code>Gamma</code> distribution is used as the prior and the <code>poisson_gamma</code> function
+is used to calculate the posterior distribution (just another <code>Gamma</code>
+distribution).</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">conjugate.distributions</span> <span class="kn">import</span> <span class="n">Gamma</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span> <span class="nn">conjugate.models</span> <span class="kn">import</span> <span class="n">poisson_gamma</span><span class="p">,</span> <span class="n">poisson_gamma_predictive</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">prior</span> <span class="o">=</span> <span class="n">Gamma</span><span class="o">.</span><span class="n">from_occurrences_in_intervals</span><span class="p">(</span><span class="n">occurrences</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">intervals</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">posterior</span><span class="p">:</span> <span class="n">Gamma</span> <span class="o">=</span> <span class="n">poisson_gamma</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">x_total</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="determining-the-limit-size-from-the-predictive-distribution">Determining the Limit Size from the Predictive Distribution</h2>
+<p>I have scenario where the <code>limit</code> needs to be determined for the next 35
+minutes. Despite having measured intervals of 1 hour, the predictive
+distribution can be used to determine the number of issues that will come in
+the next 35 minutes by scaling down <code>n</code> by the fraction of the hour.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">minutes</span> <span class="o">=</span> <span class="mi">35</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">window_size</span> <span class="o">=</span> <span class="n">minutes</span> <span class="o">/</span> <span class="mi">60</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">posterior_predictive</span> <span class="o">=</span> <span class="n">poisson_gamma_predictive</span><span class="p">(</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">distribution</span><span class="o">=</span><span class="n">posterior</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">n</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>With this predictive distribution, any statistics can be calculated. For our
+case, we are interested in the 90th percentile so we can use the <code>dist</code>
+attribute to access the numpy distribution which has the <code>ppf</code> method for the
+quantiles.</p>
+<p>The limit size for the next 35 minutes is 3 issues.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">percentile</span> <span class="o">=</span> <span class="mf">0.90</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">limit</span> <span class="o">=</span> <span class="n">posterior_predictive</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">percentile</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># 3.0</span>
+</span></code></pre></div>
+<h2 id="visualizing-the-predictive-distributions">Visualizing the Predictive Distributions</h2>
+<p>We will compare the prior and posterior predictive distributions to see where
+the limit size falls.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Use the <code>poisson_gamma_predictive</code> function with the prior distribution for
+the prior predictive distribution.</p>
+</div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">prior_predictive</span> <span class="o">=</span> <span class="n">poisson_gamma_predictive</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">distribution</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">n</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>We can plot the prior and posterior predictive distributions using either
+<code>plot_pmf</code> or <code>plot_cdf</code> methods and the picked limit.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">def</span> <span class="nf">plot_picked_limit</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">percentile</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">:</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.25</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="p">}</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">x_kwargs</span>  <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="s2">&quot;markersize&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;picked limit&quot;</span><span class="p">,</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="p">}</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">line_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>        <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">alpha</span><span class="p">,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="s2">&quot;linestyle&quot;</span><span class="p">:</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="p">}</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">limit</span><span class="p">],</span> <span class="p">[</span><span class="n">percentile</span><span class="p">],</span> <span class="o">**</span><span class="n">x_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="p">],</span> <span class="p">[</span><span class="n">percentile</span><span class="p">,</span> <span class="n">percentile</span><span class="p">],</span> <span class="o">**</span><span class="n">line_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">limit</span><span class="p">,</span> <span class="n">limit</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">percentile</span><span class="p">],</span> <span class="o">**</span><span class="n">line_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="k">return</span> <span class="n">ax</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="n">max_value</span> <span class="o">=</span> <span class="n">limit</span> <span class="o">*</span> <span class="mf">2.0</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="n">prior_predictive</span><span class="o">.</span><span class="n">set_max_value</span><span class="p">(</span><span class="n">max_value</span><span class="p">)</span><span class="o">.</span><span class="n">plot_cdf</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;prior&quot;</span><span class="p">)</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="n">posterior_predictive</span><span class="o">.</span><span class="n">set_max_value</span><span class="p">(</span><span class="n">max_value</span><span class="p">)</span><span class="o">.</span><span class="n">plot_cdf</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;posterior&quot;</span><span class="p">)</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="n">plot_picked_limit</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">percentile</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="n">padding</span> <span class="o">=</span> <span class="mf">0.025</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="n">padding</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">padding</span><span class="p">),</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>    <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Number of Issues&quot;</span><span class="p">,</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;The predictive </span><span class="si">{</span><span class="n">percentile</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> in next </span><span class="si">{</span><span class="n">minutes</span><span class="si">}</span><span class="s2"> minutes&quot;</span><span class="p">,</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="p">)</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Predictive Distribution&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<!--
+import matplotlib.pyplot as plt
+plt.savefig("docs/images/limit.png")
+plt.close()
+-->
+
+<p><img alt="" src="../../images/limit.png" /></p>
 
 
 
