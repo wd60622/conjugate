@@ -5,10 +5,10 @@ hide:
 # Conjugate Models
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Tests](https://github.com/wd60622/conjugate/actions/workflows/tests.yml/badge.svg)](https://github.com/wd60622/conjugate/actions/workflows/tests.yml)
+[![Tests](https://github.com/williambdean/conjugate/actions/workflows/tests.yml/badge.svg)](https://github.com/williambdean/conjugate/actions/workflows/tests.yml)
 [![PyPI version](https://badge.fury.io/py/conjugate-models.svg)](https://badge.fury.io/py/conjugate-models)
-[![docs](https://github.com/wd60622/conjugate/actions/workflows/docs.yml/badge.svg)](https://wd60622.github.io/conjugate/)
-[![codecov](https://codecov.io/github/wd60622/conjugate/branch/main/graph/badge.svg)](https://app.codecov.io/github/wd60622/conjugate)
+[![docs](https://github.com/williambdean/conjugate/actions/workflows/docs.yml/badge.svg)](https://williambdean.github.io/conjugate/)
+[![codecov](https://codecov.io/github/williambdean/conjugate/branch/main/graph/badge.svg)](https://app.codecov.io/github/williambdean/conjugate)
 
 Bayesian conjugate models in Python
 

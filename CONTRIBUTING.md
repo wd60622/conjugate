@@ -8,8 +8,8 @@ Contributions are welcomed in all forms. These may be bugs, feature requests, do
 
 ## Open an Issue
 
-If you find a bug or have a feature request, please [open an issue](https://github.com/wd60622/conjugate/issues/new) on GitHub.
-Please check that it is not one of the [open issues](https://github.com/wd60622/conjugate/issues).
+If you find a bug or have a feature request, please [open an issue](https://github.com/williambdean/conjugate/issues/new) on GitHub.
+Please check that it is not one of the [open issues](https://github.com/williambdean/conjugate/issues).
 
 ## Local Development Steps
 
@@ -17,13 +17,13 @@ Please check that it is not one of the [open issues](https://github.com/wd60622/
 
 Do this once but keep it up to date
 
-1. [Fork wd60622/conjugate GitHub repo](https://github.com/wd60622/conjugate/fork)
+1. [Fork williambdean/conjugate GitHub repo](https://github.com/williambdean/conjugate/fork)
 1. Clone forked repo and set upstream
 
     ```bash
     git clone git@github.com:<your-username>/conjugate.git
     cd conjugate
-    git remote add upstream git@github.com:wd60622/conjugate.git
+    git remote add upstream git@github.com:williambdean/conjugate.git
     ```
 
 ### Setup Local Development Environment

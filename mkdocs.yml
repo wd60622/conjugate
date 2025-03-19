@@ -27,15 +27,15 @@ theme:
         name: Switch to light mode
 
 repo_name: Conjugate
-repo_url: https://github.com/wd60622/conjugate
+repo_url: https://github.com/williambdean/conjugate
 edit_uri: blob/main/docs/
-site_url: https://wd60622.github.io/conjugate
+site_url: https://williambdean.github.io/conjugate
 
 extra:
-  homepage: https://wd60622.github.io/
+  homepage: https://williambdean.github.io/
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/wd60622/conjugate
+      link: https://github.com/williambdean/conjugate
 
 nav:
   - Overview: index.md
