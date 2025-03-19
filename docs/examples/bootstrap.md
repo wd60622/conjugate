@@ -10,7 +10,7 @@ Bootstrap is statistical method which relies on resampling of the
 data in order to estimate the uncertainty of a given statistic.
 
 In order to do this comparison, the [`pandas-bootstrap`
-package](https://wd60622.github.io/pandas-bootstrap/) will be used.
+package](https://williambdean.github.io/pandas-bootstrap/) will be used.
 
 
 The statistic in this example will be the maximum value of 10 samples.
@@ -61,7 +61,7 @@ create function that gets the maximum value of the desired sample size.
 
 The `boot` attribute of the `pandas.Series` is an object from
 `pandas-bootstrap` to facilitate the bootstrap process. Read more about it in the
-documentation [here](https://wd60622.github.io/pandas-bootstrap/extensions/).
+documentation [here](https://williambdean.github.io/pandas-bootstrap/extensions/).
 
 ```python
 n_new = 10

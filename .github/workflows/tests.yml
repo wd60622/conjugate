@@ -40,5 +40,5 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         name: ${{ matrix.python-version }}
-        slug: wd60622/conjugate
+        slug: williambdean/conjugate
         fail_ci_if_error: false
